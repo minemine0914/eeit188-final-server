@@ -1,7 +1,6 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
