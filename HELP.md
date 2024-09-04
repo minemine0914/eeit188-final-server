@@ -1,4 +1,4 @@
-# Read Me First
+# Read Me First HAHAHA
 The following was discovered as part of building this project:
 
 * The original package name 'com.ispan.eeit188-final' is invalid and this project uses 'com.ispan.eeit188_final' instead.
