@@ -7,8 +7,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Setter
 @Getter
 @Entity
@@ -26,8 +28,5 @@ public class Housed_External_Resource {
 
     @Column(name = "created_at", columnDefinition = "DATETIME2")
     private LocalDateTime createdAt;
-
-    public Housed_External_Resource() {
-    }
 
 }
