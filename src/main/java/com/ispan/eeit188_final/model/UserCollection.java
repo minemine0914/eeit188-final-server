@@ -32,7 +32,6 @@ public class UserCollection {
 
     @PrePersist
     public void onCreate() {
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        this.createdAt = currentTime;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 }
