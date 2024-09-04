@@ -1,13 +1,13 @@
-package com.ispan.eeit188_final;
+package com.ispan.eeit188;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Eeit188FinalApplication {
+public class FinalApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Eeit188FinalApplication.class, args);
+		SpringApplication.run(FinalApplication.class, args);
 	}
 
 }

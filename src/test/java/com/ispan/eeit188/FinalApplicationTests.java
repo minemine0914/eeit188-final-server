@@ -1,10 +1,10 @@
-package com.ispan.eeit188_final;
+package com.ispan.eeit188;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Eeit188FinalApplicationTests {
+class FinalApplicationTests {
 
 	@Test
 	void contextLoads() {
