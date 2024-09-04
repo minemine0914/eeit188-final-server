@@ -2,6 +2,8 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 
+import com.ispan.eeit188_final.model.composite.CartId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

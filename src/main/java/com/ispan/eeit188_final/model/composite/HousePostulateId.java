@@ -1,4 +1,4 @@
-package com.ispan.eeit188_final.model;
+package com.ispan.eeit188_final.model.composite;
 
 import java.util.Objects;
 import java.util.UUID;
