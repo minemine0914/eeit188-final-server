@@ -3,8 +3,15 @@ package com.ispan.eeit188_final.model.composite;
 import java.util.Objects;
 import java.util.UUID;
 
-//@Entity
-//@Table(name = "cart")
+import src.main.java.com.ispan.eeit188_final.model.composite.Embeddable;
+import src.main.java.com.ispan.eeit188_final.model.composite.Getter;
+import src.main.java.com.ispan.eeit188_final.model.composite.NoArgsConstructor;
+import src.main.java.com.ispan.eeit188_final.model.composite.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Embeddable
 public class CartId {
 
 	private UUID userId;
