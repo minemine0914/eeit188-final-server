@@ -9,8 +9,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Setter
 @Getter
 @Entity
@@ -65,8 +67,5 @@ public class Platform_Staff {
     @Lob
     @Column(name = "background_image_blob", columnDefinition = "BLOB")
     private byte[] backgroundImageBlob;
-
-    public Platform_Staff() {
-    }
 
 }
