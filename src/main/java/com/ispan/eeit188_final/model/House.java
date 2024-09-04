@@ -48,6 +48,8 @@ public class House {
     private String region;          // 區域
     @Column(name = "address")
     private String address;         // 地址
+    @Column(name = "price")
+    private Integer price;
 
     // 房源基本設施 幾廳 幾房 幾衛 幾浴 (TinyInt)
     @Column(name = "living_dining_room", columnDefinition = "TINYINT")
@@ -69,7 +71,7 @@ public class House {
     @Column(name = "show")
     private Boolean show;           // 是否刊登顯示
     @Column(name = "user_id")
-    private String userId;          // 擁有者ID
+    private String userId;          // 擁有者ID (UUID)
 
     // 建立/修改 時間
     @Column(name = "create_at")
