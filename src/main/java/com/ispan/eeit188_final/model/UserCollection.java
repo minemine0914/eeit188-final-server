@@ -28,7 +28,7 @@ public class UserCollection {
     @Column(name = "id")
     private UserCollectionId userCollectionId;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
     @PrePersist
