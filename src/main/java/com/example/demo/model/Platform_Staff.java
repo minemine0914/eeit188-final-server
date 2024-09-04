@@ -31,7 +31,7 @@ public class Platform_Staff {
     @Column(name = "gender", columnDefinition = "VARCHAR(10)")
     private String gender;
 
-    @Column(name = "age", columnDefinition = "tinyint")
+    @Column(name = "age", columnDefinition = "TINYINT")
     private Byte age;
 
     @Column(name = "phone", columnDefinition = "VARCHAR(15)")
@@ -43,10 +43,10 @@ public class Platform_Staff {
     @Column(name = "address", columnDefinition = "VARCHAR(50)")
     private String address;
 
-    @Column(name = "email", columnDefinition = "VARCHAR(30)")
+    @Column(name = "email", columnDefinition = "VARCHAR(30)", nullable = false)
     private String email;
 
-    @Column(name = "password", columnDefinition = "VARCHAR(30)")
+    @Column(name = "password", columnDefinition = "VARCHAR(30)", nullable = false)
     private String password;
 
     @Column(name = "about", columnDefinition = "VARCHAR(max)")
