@@ -8,8 +8,8 @@
 		<version>3.2.9</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ispan.eeit188</groupId>
-	<artifactId>final</artifactId>
+	<groupId>com.ispan</groupId>
+	<artifactId>eeit188_final</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>final</name>
 	<description>EEIT188 Final</description>
