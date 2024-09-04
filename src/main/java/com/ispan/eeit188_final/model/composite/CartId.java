@@ -3,10 +3,10 @@ package com.ispan.eeit188_final.model.composite;
 import java.util.Objects;
 import java.util.UUID;
 
-import src.main.java.com.ispan.eeit188_final.model.composite.Embeddable;
-import src.main.java.com.ispan.eeit188_final.model.composite.Getter;
-import src.main.java.com.ispan.eeit188_final.model.composite.NoArgsConstructor;
-import src.main.java.com.ispan.eeit188_final.model.composite.Setter;
+import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class CartId {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(userId,houseId);
+		return Objects.hash(userId, houseId);
 	}
 
 	@Override
@@ -27,12 +27,12 @@ public class CartId {
 		if (this == obj) {
 			return true;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
 		CartId cartId = (CartId) obj;
 		return Objects.equals(userId, cartId.userId)
-				&&Objects.equals(houseId, cartId.houseId);
+				&& Objects.equals(houseId, cartId.houseId);
 	}
-	
+
 }
