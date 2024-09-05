@@ -34,26 +34,29 @@ public class HouseService {
             if (find.isPresent()) {
                 House modify = find.get();
                 // 房源基本資訊
-                modify.setName(house.getName());
-                modify.setCategory(house.getCategory());
-                modify.setInformation(house.getInformation());
-                modify.setLatitudeX(house.getLatitudeX());
-                modify.setLongitudeY(house.getLongitudeY());
-                modify.setCountry(house.getCountry());
-                modify.setCity(house.getCity());
-                modify.setRegion(house.getRegion());
-                modify.setAddress(house.getAddress());
-                modify.setPrice(house.getPrice());
+                Optional.ofNullable(house.getName()).ifPresent(modify::setName);
+                Optional.ofNullable(house.getCategory()).ifPresent(modify::setCategory);
+                Optional.ofNullable(house.getInformation()).ifPresent(modify::setInformation);
+                Optional.ofNullable(house.getLatitudeX()).ifPresent(modify::setLatitudeX);
+                Optional.ofNullable(house.getLongitudeY()).ifPresent(modify::setLongitudeY);
+                Optional.ofNullable(house.getCountry()).ifPresent(modify::setCountry);
+                Optional.ofNullable(house.getCity()).ifPresent(modify::setCity);
+                Optional.ofNullable(house.getRegion()).ifPresent(modify::setRegion);
+                Optional.ofNullable(house.getAddress()).ifPresent(modify::setAddress);
+                Optional.ofNullable(house.getPrice()).ifPresent(modify::setPrice);
+
                 // 房源基本設施 幾廳 幾房 幾衛 幾浴
-                modify.setLivingDiningRoom(house.getLivingDiningRoom());
-                modify.setBedroom(house.getBedroom());
-                modify.setRestroom(house.getRestroom());
-                modify.setBathroom(house.getBathroom());
+                Optional.ofNullable(house.getLivingDiningRoom()).ifPresent(modify::setLivingDiningRoom);
+                Optional.ofNullable(house.getBedroom()).ifPresent(modify::setBedroom);
+                Optional.ofNullable(house.getRestroom()).ifPresent(modify::setRestroom);
+                Optional.ofNullable(house.getBathroom()).ifPresent(modify::setBathroom);
+
                 // 常態設施
-                modify.setKitchen(house.getKitchen());
-                modify.setBalcony(house.getBalcony());
+                Optional.ofNullable(house.getKitchen()).ifPresent(modify::setKitchen);
+                Optional.ofNullable(house.getBalcony()).ifPresent(modify::setBalcony);
+
                 // 狀態 (擁有者不更動)
-                modify.setShow(house.getShow());
+                Optional.ofNullable(house.getShow()).ifPresent(modify::setShow);
                 // 儲存修改
                 return houseRepo.save(modify);
             }

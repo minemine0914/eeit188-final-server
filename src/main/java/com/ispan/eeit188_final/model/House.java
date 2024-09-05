@@ -1,13 +1,19 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -27,7 +33,7 @@ import lombok.Setter;
 public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", columnDefinition = "UNIQUEIDENTIFIER" )
+    @Column(name = "id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID id;
 
     // 房源基本資訊
@@ -41,7 +47,7 @@ public class House {
     private Double latitudeX;       // 經度
     @Column(name = "longitude_y", columnDefinition = "FLOAT")
     private Double longitudeY;      // 緯度
-    @Column(name = "country", columnDefinition = "FLOAT")
+    @Column(name = "country", columnDefinition = "VARCHAR(50)")
     private String country;         // 國家
     @Column(name = "city", columnDefinition = "VARCHAR(50)")
     private String city;            // 縣市
@@ -79,6 +85,11 @@ public class House {
     private Timestamp createdAt;    // 建立時間
     @Column(name = "update_at", columnDefinition = "DATETIME2")
     private Timestamp updatedAt;    // 修改時間
+
+    // 房源的價格範圍
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PriceRange> priceRanges;
 
     @PrePersist
     public void onCreate() {
