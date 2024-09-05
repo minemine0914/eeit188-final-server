@@ -16,15 +16,27 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "postulate")
-public class Postulate {
+@Table(name = "ticket")
+public class Ticket {
 
 	@Id
 	@Column(name = "id",columnDefinition = "uniqueidentifier")
 	private UUID id;
 	
-	@Column(name = "postulate", columnDefinition = "varchar(15)")
-	private String postulate;
+	@Column(name = "qrCode", columnDefinition = "varchar(max)")
+	private String qrCode;
+	
+	@Column(name = "userId", columnDefinition = "uniqueidentifier")
+	private UUID userId;
+	
+	@Column(name = "houseId", columnDefinition = "uniqueidentifier")
+	private UUID houseId;
+	
+	@Column(name = "startedAt", columnDefinition = "datetime2")
+	private Timestamp startedAt;
+	
+	@Column(name = "endedAt", columnDefinition = "datetime2")
+	private Timestamp endedAt;
 	
 	@Column(name = "createdAt", columnDefinition = "datetime2")
 	private Timestamp createdAt;
