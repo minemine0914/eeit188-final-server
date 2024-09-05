@@ -27,29 +27,29 @@ import lombok.Setter;
 public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "UNIQUEIDENTIFIER" )
     private UUID id;
 
     // 房源基本資訊
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "VARCHAR(50)")
     private String name;            // 房源名稱
-    @Column(name = "category")
+    @Column(name = "category", columnDefinition = "VARCHAR(15)")
     private String category;        // 類型
-    @Column(name = "information")
+    @Column(name = "information", columnDefinition = "VARCHAR(MAX)")
     private String information;     // 詳細資訊
-    @Column(name = "latitude_x")
+    @Column(name = "latitude_x", columnDefinition = "FLOAT")
     private Double latitudeX;       // 經度
-    @Column(name = "longitude_y")
+    @Column(name = "longitude_y", columnDefinition = "FLOAT")
     private Double longitudeY;      // 緯度
-    @Column(name = "country")
+    @Column(name = "country", columnDefinition = "FLOAT")
     private String country;         // 國家
-    @Column(name = "city")
+    @Column(name = "city", columnDefinition = "VARCHAR(50)")
     private String city;            // 縣市
-    @Column(name = "region")
+    @Column(name = "region", columnDefinition = "VARCHAR(50)")
     private String region;          // 區域
-    @Column(name = "address")
+    @Column(name = "address", columnDefinition = "VARCHAR(50)")
     private String address;         // 地址
-    @Column(name = "price")
+    @Column(name = "price", columnDefinition = "INT")
     private Integer price;          // 初始價格
 
     // 房源基本設施 幾廳 幾房 幾衛 幾浴 (TinyInt)
@@ -63,21 +63,21 @@ public class House {
     private Short bathroom;         // 淋浴間
 
     // 常態設施 (True/False)
-    @Column(name = "kitchen")
+    @Column(name = "kitchen", columnDefinition = "BIT")
     private Boolean kitchen;        // 廚房
-    @Column(name = "balcony")
+    @Column(name = "balcony", columnDefinition = "BIT")
     private Boolean balcony;        // 陽台
 
     // 狀態
-    @Column(name = "show")
+    @Column(name = "show", columnDefinition = "BIT")
     private Boolean show;           // 是否刊登顯示
-    @Column(name = "user_id")
+    @Column(name = "user_id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID userId;            // 擁有者ID (UUID)
 
     // 建立/修改 時間
-    @Column(name = "create_at")
+    @Column(name = "create_at", columnDefinition = "DATETIME2")
     private Timestamp createdAt;    // 建立時間
-    @Column(name = "update_at")
+    @Column(name = "update_at", columnDefinition = "DATETIME2")
     private Timestamp updatedAt;    // 修改時間
 
     @PrePersist
