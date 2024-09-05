@@ -64,7 +64,7 @@ public class User {
     private Timestamp createdAt;
 
     @Column(name = "updated_at", columnDefinition = "datetime2")
-    private Timestamp updatetedAt;
+    private Timestamp updatedAt;
 
     @Column(name = "headshot_image_base64", columnDefinition = "varchar(max)")
     private String headshotImageBase64;
@@ -80,6 +80,6 @@ public class User {
 
     @PreUpdate
     public void onUpdate() {
-        this.updatetedAt = new Timestamp(System.currentTimeMillis());
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }

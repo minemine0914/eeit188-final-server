@@ -7,6 +7,10 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.Ticket;
@@ -33,6 +37,12 @@ public class TicketService {
 
 	public List<Ticket> findAll() {
 		return ticketRepository.findAll();
+	}
+
+	public Page<Ticket> findAll(Integer pageNum, Integer pageSize, Boolean desc, String orderBy) {
+		// pageNum starts from 1
+		Pageable p = PageRequest.of(pageNum - 1, pageSize, desc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy);
+		return ticketRepository.findAll(p);
 	}
 
 	public void deleteById(UUID id) {
@@ -74,6 +84,13 @@ public class TicketService {
 		return null;
 	}
 
+	public Ticket create(Ticket ticket) {
+		if (ticket.getCreatedAt() == null) {
+			ticket.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		}
+		return ticketRepository.save(ticket);
+	}
+
 	public Ticket update(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
@@ -105,6 +122,14 @@ public class TicketService {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
+
+	public Ticket update(Ticket ticket) {
+		Optional<Ticket> dbTicket = ticketRepository.findById(ticket.getId());
+		if (dbTicket.isPresent()) {
+			return ticketRepository.save(ticket);
+		}
+		return null;
+	}
+
 }
