@@ -23,15 +23,6 @@ public class HousePostulate {
 	@EmbeddedId
 	private HousePostulateId id;
 	
-//	@MapsId("postulateId")
-//	private UUID postulateId;
-	
-//	@MapsId("houseId")
-//	private UUID houseId;
-	
-	@Column(name = "postulate", columnDefinition = "varchar(15)")
-	private String postulate;
-	
 	@Column(name = "createdAt", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 	
