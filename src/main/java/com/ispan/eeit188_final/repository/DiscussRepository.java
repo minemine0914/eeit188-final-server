@@ -4,8 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ispan.eeit188_final.model.Postulate;
+import com.ispan.eeit188_final.model.Discuss;
 
-public interface PostulateRepository extends JpaRepository<Postulate, UUID> {
-
+public interface DiscussRepository extends JpaRepository<Discuss, UUID> {
 }
