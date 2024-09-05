@@ -10,27 +10,25 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
-
 @Entity
 @Table(name = "transaction_record")
 public class TransactionRecord {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    @Column(name = "house_id")
+    @Column(name = "house_id", columnDefinition = "uniqueidentifier")
     private UUID houseId;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", columnDefinition = "uniqueidentifier")
     private UUID userId;
 
-    @Column(name = "cash_flow")
+    @Column(name = "cash_flow", columnDefinition = "int")
     private int cashFlow;
 
-    @Column(name = "deal")
+    @Column(name = "deal", columnDefinition = "varchar(10)")
     private String deal;
 
     @Column(name = "created_at", columnDefinition = "datetime2")

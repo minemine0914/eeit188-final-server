@@ -16,16 +16,16 @@ public class Discuss {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    @Column(name = "discuss")
+    @Column(name = "discuss", columnDefinition = "varchar(max)")
     private String discuss;
 
-    @Column(name = "show")
+    @Column(name = "show", columnDefinition = "bit")
     private boolean show;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
     @Column(name = "user_id", columnDefinition = "uniqueidentifier")
