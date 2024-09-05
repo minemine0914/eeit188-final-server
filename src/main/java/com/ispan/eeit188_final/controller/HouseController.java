@@ -1,10 +1,14 @@
 package com.ispan.eeit188_final.controller;
 
+import java.util.Map;
 import java.util.UUID;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ispan.eeit188_final.model.House;
@@ -22,15 +26,24 @@ public class HouseController {
     @Autowired
     private HouseService houseService;
 
-    @GetMapping("/find/{id}")
-    public House findById(@PathVariable String id) {
-        
-        return houseService.findById(UUID.fromString(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<House> findById(@PathVariable String id) {
+        House house = houseService.findById(UUID.fromString(id));
+        if (house != null) {
+            return ResponseEntity.ok(house);
+        }
+        return ResponseEntity.notFound().build(); // Return 404 NotFound
+    }
+
+    @GetMapping("/all")
+    public Page<House> all(@RequestParam Map<String, String> allParams) {
+        // Example: http://localhost:8080/house/all?page=0&limit=10&dir=true&order=createdAt
+        JSONObject jsonParams = new JSONObject(allParams);
+        return houseService.findAll(jsonParams.toString());
     }
     
-    @PostMapping("/find")
-    public Page<House> findQuery(@RequestBody String jsonString) {
+    @PostMapping("/search")
+    public Page<House> search(@RequestBody String jsonString) {
         return houseService.find(jsonString);
     }
-    
 }
