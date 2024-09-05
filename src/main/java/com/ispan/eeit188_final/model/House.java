@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +28,7 @@ public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private String id;
+    private UUID id;
 
     // 房源基本資訊
     @Column(name = "name")
@@ -49,7 +50,7 @@ public class House {
     @Column(name = "address")
     private String address;         // 地址
     @Column(name = "price")
-    private Integer price;
+    private Integer price;          // 初始價格
 
     // 房源基本設施 幾廳 幾房 幾衛 幾浴 (TinyInt)
     @Column(name = "living_dining_room", columnDefinition = "TINYINT")
@@ -71,13 +72,13 @@ public class House {
     @Column(name = "show")
     private Boolean show;           // 是否刊登顯示
     @Column(name = "user_id")
-    private String userId;          // 擁有者ID (UUID)
+    private UUID userId;            // 擁有者ID (UUID)
 
     // 建立/修改 時間
     @Column(name = "create_at")
-    private Timestamp createdAt;     // 建立時間
+    private Timestamp createdAt;    // 建立時間
     @Column(name = "update_at")
-    private Timestamp updatedAt;     // 修改時間
+    private Timestamp updatedAt;    // 修改時間
 
     @PrePersist
     public void onCreate() {
