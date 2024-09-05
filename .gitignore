@@ -34,3 +34,12 @@ replay_pid*
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Java target
+/target
+
+# Eclipse
+.classpath
+.project
+.factorypath
+.settings
