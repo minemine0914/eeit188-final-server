@@ -28,54 +28,53 @@ import lombok.Setter;
 public class User {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "uniqueidentifier")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "varchar(15)")
     private String name;
 
-    @Column(name = "gender")
+    @Column(name = "gender", columnDefinition = "varchar(10)")
     private String gender;
 
-    @Column(name = "age")
+    @Column(name = "age", columnDefinition = "tinyint")
     private Short age;
 
-    @Column(name = "phone")
+    @Column(name = "phone", columnDefinition = "varchar(15)")
     private String phone;
 
-    @Column(name = "mobile_phone")
+    @Column(name = "mobile_phone", columnDefinition = "varchar(15)")
     private String mobilePhone;
 
-    @Column(name = "address")
+    @Column(name = "address", columnDefinition = "varchar(50)")
     private String address;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", columnDefinition = "varchar(30)", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", columnDefinition = "varchar(30)", nullable = false)
     private String password;
 
-    @Column(name = "about")
+    @Column(name = "about", columnDefinition = "varchar(max)")
     private String about;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", columnDefinition = "datetime2")
     private Timestamp updatetedAt;
 
-    @Column(name = "headshot_image_base64")
+    @Column(name = "headshot_image_base64", columnDefinition = "varchar(max)")
     private String headshotImageBase64;
 
     @Lob
-    @Column(name = "background_image_blob")
+    @Column(name = "background_image_blob", columnDefinition = "varbinary(max)")
     private byte[] backgroundImageBlob;
 
     @PrePersist
     public void onCreate() {
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        this.createdAt = currentTime;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 
     @PreUpdate

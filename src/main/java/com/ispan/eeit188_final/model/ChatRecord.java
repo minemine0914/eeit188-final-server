@@ -26,31 +26,30 @@ import lombok.Setter;
 public class ChatRecord {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "uniqueidentifier")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "chat")
+    @Column(name = "chat", columnDefinition = "varchar(max)")
     private String chat;
 
-    @Column(name = "show")
+    @Column(name = "show", columnDefinition = "bit")
     private Boolean show;
 
-    @Column(name = "sender_id")
+    @Column(name = "sender_id", columnDefinition = "uniqueidentifier")
     private UUID senderId;
 
-    @Column(name = "receiver_id")
+    @Column(name = "receiver_id", columnDefinition = "uniqueidentifier")
     private UUID receiverId;
 
-    @Column(name = "platform_staff_id")
+    @Column(name = "platform_staff_id", columnDefinition = "uniqueidentifier")
     private UUID platformStaffId;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
     @PrePersist
     public void onCreate() {
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        this.createdAt = currentTime;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 }

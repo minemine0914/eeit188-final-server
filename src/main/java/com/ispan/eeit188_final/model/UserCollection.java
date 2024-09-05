@@ -25,14 +25,14 @@ import lombok.Setter;
 public class UserCollection {
 
     @EmbeddedId
+    @Column(name = "id")
     private UserCollectionId userCollectionId;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
     @PrePersist
     public void onCreate() {
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        this.createdAt = currentTime;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 }
