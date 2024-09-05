@@ -22,8 +22,11 @@ public class Discuss_External_Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ur", columnDefinition = "VARCHAR(MAX)")
-    private String ur;
+    @Column(name = "Id", columnDefinition = "UUID")
+    private UUID Id;
+
+    @Column(name = "url", columnDefinition = "VARCHAR(MAX)")
+    private String url;
 
     @Column(name = "discuss_id", columnDefinition = "UUID")
     private UUID DiscussId;
