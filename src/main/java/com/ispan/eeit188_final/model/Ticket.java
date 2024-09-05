@@ -1,11 +1,16 @@
 package com.ispan.eeit188_final.model;
 
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -20,30 +25,73 @@ import lombok.Setter;
 public class Ticket {
 
 	@Id
-	@Column(name = "id",columnDefinition = "uniqueidentifier")
+	@GeneratedValue(strategy = GenerationType.UUID)
+	@Column(name = "id", columnDefinition = "uniqueidentifier")
 	private UUID id;
-	
+
 	@Column(name = "qrCode", columnDefinition = "varchar(max)")
 	private String qrCode;
 	
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "user_id", referencedColumnName = "id")
+//	private User user;
 	@Column(name = "userId", columnDefinition = "uniqueidentifier")
 	private UUID userId;
-	
+
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "house_id", referencedColumnName = "id")
+//	private House house;
 	@Column(name = "houseId", columnDefinition = "uniqueidentifier")
 	private UUID houseId;
-	
+
 	@Column(name = "startedAt", columnDefinition = "datetime2")
 	private Timestamp startedAt;
-	
+
 	@Column(name = "endedAt", columnDefinition = "datetime2")
 	private Timestamp endedAt;
-	
+
 	@Column(name = "createdAt", columnDefinition = "datetime2")
 	private Timestamp createdAt;
-	
+
 	@PrePersist
-    public void onCreate() {
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-    }
-	
+	public void onCreate() {
+		this.createdAt = new Timestamp(System.currentTimeMillis());
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		String newLine = System.getProperty("line.separator");
+
+		result.append(this.getClass().getName());
+		result.append(" {");
+		result.append(newLine);
+
+		// determine fields declared in this class only (no fields of superclass)
+		Field[] fields = this.getClass().getDeclaredFields();
+
+		// print field names paired with their values
+		for (Field field : fields) {
+			if (field.getName().indexOf("$$_hibernate") != -1) {
+				continue;
+			}
+			result.append("  ");
+			result.append(field.getName());
+			result.append(": ");
+			// requires access to private field:
+			try {
+				result.append(field.get(this));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			result.append(newLine);
+		}
+		result.append("}");
+
+		return result.toString();
+
+//		return String.format("[id=%s, qrCode=%s, userId=%s, houseId=%s, startedAt=%s, endedAt=%s, createdAt=%s]", 
+//				id.toString(), qrCode, userId.toString(), houseId.toString(), startedAt.toString(), endedAt.toString(), createdAt.toString());
+	}
+
 }

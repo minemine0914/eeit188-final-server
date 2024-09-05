@@ -7,6 +7,10 @@ import com.ispan.eeit188_final.model.composite.CartId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,11 +26,19 @@ public class Cart {
 
 	@EmbeddedId
 	private CartId id;
-	
-//	private UUID userId;
-//	private UUID houseId;
+
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
+	
+	@MapsId("userId")
+	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User user;
+
+	@MapsId("houseId")
+	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "house_id", referencedColumnName = "id")
+	private House house;
 	
 	@PrePersist
     public void onCreate() {

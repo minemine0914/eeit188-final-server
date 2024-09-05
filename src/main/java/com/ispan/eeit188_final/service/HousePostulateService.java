@@ -8,21 +8,24 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.Cart;
+import com.ispan.eeit188_final.model.HousePostulate;
 import com.ispan.eeit188_final.model.composite.CartId;
+import com.ispan.eeit188_final.model.composite.HousePostulateId;
 import com.ispan.eeit188_final.repository.CartRepository;
+import com.ispan.eeit188_final.repository.HousePostulateRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-public class CartService {
+public class HousePostulateService {
 
 	@Autowired
-	private CartRepository cartRepository;
+	private HousePostulateRepository housePostulateRepository;
 
-	public Cart findById(CartId id) {
+	public HousePostulate findById(HousePostulateId id) {
 		if (id != null) {
-			Optional<Cart> optional = cartRepository.findById(id);
+			Optional<HousePostulate> optional = housePostulateRepository.findById(id);
 			if (optional.isPresent()) {
 				return optional.get();
 			}
@@ -30,21 +33,21 @@ public class CartService {
 		return null;
 	}
 
-	public List<Cart> findAll() {
-		return cartRepository.findAll();
+	public List<HousePostulate> findAll() {
+		return housePostulateRepository.findAll();
 	}
 
-	public void deleteById(CartId id) {
+	public void deleteById(HousePostulateId id) {
 		if (id != null) {
-			cartRepository.deleteById(id);
+			housePostulateRepository.deleteById(id);
 		}
 	}
 
 	public void deleteAll() {
-		cartRepository.deleteAll();
+		housePostulateRepository.deleteAll();
 	}
 
-	public Cart create(String json) {
+	public HousePostulate create(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
 
@@ -52,11 +55,11 @@ public class CartService {
 //			Integer id = obj.isNull("id") ? null : obj.getInt("id");
 //
 //			if (id != null) {
-//				Optional<Cart> optional = cartRepository.findById(id);
+//				Optional<Cart> optional = housePostulateRepository.findById(id);
 //				if (optional.isEmpty()) {
 //					Cart insert = new Cart().setId(id);
 //
-//					return cartRepository.save(insert);
+//					return housePostulateRepository.save(insert);
 //				}
 //			}
 			//=====================================================
