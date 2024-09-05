@@ -3,6 +3,7 @@ package com.ispan.eeit188_final.model.composite;
 import java.util.Objects;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class HousePostulateId {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(postulateId,houseId);
+		return Objects.hash(postulateId, houseId);
 	}
 
 	@Override
@@ -27,12 +28,12 @@ public class HousePostulateId {
 		if (this == obj) {
 			return true;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
 		HousePostulateId housePostulateId = (HousePostulateId) obj;
 		return Objects.equals(postulateId, housePostulateId.postulateId)
-				&&Objects.equals(houseId, housePostulateId.houseId);
+				&& Objects.equals(houseId, housePostulateId.houseId);
 	}
 
 }
