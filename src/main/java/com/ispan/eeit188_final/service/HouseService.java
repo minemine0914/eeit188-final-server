@@ -21,14 +21,14 @@ public class HouseService {
     @Autowired
     private HouseRepository houseRepo;
 
-    // 新增 (House)
+    // 新增
     public House create(House house) {
+        // TODO: feature: check user_id....
         return houseRepo.save(house);
     }
 
-    // 修改 (House)
-    public House modify(House house) {
-        UUID id = house.getId();
+    // 修改
+    public House modify(UUID id, House house) {
         if (id != null) {
             Optional<House> find = houseRepo.findById(id);
             if (find.isPresent()) {
@@ -52,7 +52,7 @@ public class HouseService {
                 // 常態設施
                 modify.setKitchen(house.getKitchen());
                 modify.setBalcony(house.getBalcony());
-                // 狀態 (擁有者不修改)
+                // 狀態 (擁有者不更動)
                 modify.setShow(house.getShow());
                 // 儲存修改
                 return houseRepo.save(modify);
@@ -61,18 +61,19 @@ public class HouseService {
         return null;
     }
 
-    // 刪除 (id)
+    // 刪除
     public Boolean delete(UUID id) {
         if (id != null) {
             Optional<House> find = houseRepo.findById(id);
             if (find.isPresent()) {
                 houseRepo.deleteById(id);
+                return true;
             }
         }
         return false;
     }
 
-    // 查詢 (id)
+    // 查詢
     public House findById(UUID id) {
         if (id != null) {
             Optional<House> find = houseRepo.findById(id);
@@ -83,7 +84,7 @@ public class HouseService {
         return null;
     }
 
-    // 取得全部 (分頁)
+    // 查詢所有
     public Page<House> findAll(String jsonString) {
         /*
          * JSON keys: page, limit, dir, order
@@ -101,13 +102,8 @@ public class HouseService {
         return houseRepo.findAll(PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC)));
     }
 
-    // 條件查詢 (分頁)
+    // 條件查詢
     public Page<House> find(String jsonString) {
-        /*
-         * JSON keys:
-         * page, limit, dir, order,
-         * <Entity: House>
-         */
         // 預設 頁數 限制
         Integer defaultPage = 0;
         Integer defaultLimit = 10;
