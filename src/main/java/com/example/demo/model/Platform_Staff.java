@@ -26,7 +26,7 @@ public class Platform_Staff {
     @Column(name = "id", columnDefinition = "UUID")
     private UUID id;
 
-    @Column(name = "name", columnDefinition = "VARCHAR(30)")
+    @Column(name = "name", columnDefinition = "VARCHAR(30)", nullable = false)
     private String name;
 
     @Column(name = "role", columnDefinition = "VARCHAR(15)")
