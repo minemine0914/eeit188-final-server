@@ -2,7 +2,7 @@ package com.ispan.eeit188_final.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,8 +35,8 @@ public class Platform_Staff {
     @Column(name = "gender", columnDefinition = "VARCHAR(10)")
     private String gender;
 
-    @Column(name = "age", columnDefinition = "TINYINT")
-    private Byte age;
+    @Column(name = "birthday", columnDefinition = "DATE")
+    private Date birthday;
 
     @Column(name = "phone", columnDefinition = "VARCHAR(15)")
     private String phone;
