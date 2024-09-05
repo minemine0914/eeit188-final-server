@@ -1,11 +1,10 @@
 package com.ispan.eeit188_final.repository;
 
-import java.util.UUID;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ispan.eeit188_final.model.Postulate;
+import com.ispan.eeit188_final.model.HousePostulate;
+import com.ispan.eeit188_final.model.composite.HousePostulateId;
 
-public interface HousePostulateRepository extends JpaRepository<Postulate, UUID> {
+public interface HousePostulateRepository extends JpaRepository<HousePostulate, HousePostulateId> {
 
 }
