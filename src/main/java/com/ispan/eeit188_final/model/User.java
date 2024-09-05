@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -32,14 +33,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", columnDefinition = "varchar(15)")
+    @Column(name = "name", columnDefinition = "varchar(15)", nullable = false)
     private String name;
 
     @Column(name = "gender", columnDefinition = "varchar(10)")
     private String gender;
 
-    @Column(name = "age", columnDefinition = "tinyint")
-    private Short age;
+    @Column(name = "birthday", columnDefinition = "date")
+    private Date birthday;
 
     @Column(name = "phone", columnDefinition = "varchar(15)")
     private String phone;
