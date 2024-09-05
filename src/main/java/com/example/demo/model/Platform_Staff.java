@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -62,9 +61,6 @@ public class Platform_Staff {
 
     @Column(name = "updated_at", columnDefinition = "DATETIME2")
     private LocalDateTime updatedAt;
-
-    @JoinColumn(name = "manager_id", columnDefinition = "UUID")
-    private UUID manager_id;
 
     @Column(name = "headshot_image_base64", columnDefinition = "VARCHAR(MAX)")
     private String headshotImageBase64;
