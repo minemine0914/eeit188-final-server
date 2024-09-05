@@ -1,11 +1,14 @@
 package com.ispan.eeit188_final.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -23,8 +26,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public String findById(UUID id) {
-        if (id != null && id.toString() != "") {
+    public ResponseEntity<String> findById(UUID id) {
+        if (id != null && !id.toString().isEmpty()) {
             Optional<User> optional = userRepository.findById(id);
 
             if (optional.isPresent()) {
@@ -42,26 +45,66 @@ public class UserService {
                             .put("password", user.getPassword())
                             .put("about", user.getAbout())
                             .put("createdAt", user.getCreatedAt())
-                            .put("updatetedAt", user.getUpdatetedAt())
+                            .put("updatedAt", user.getUpdatedAt())
                             .put("headshotImageBase64", user.getHeadshotImageBase64())
                             .put("backgroundImageBlob", user.getBackgroundImageBlob());
 
-                    return obj.toString();
+                    return ResponseEntity.ok(obj.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("{\"message\": \"Error creating JSON: " + e.getMessage() + "\"}");
                 }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("{\"message\": \"User not found\"}");
             }
         }
 
-        return null;
+        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
     }
 
-    public Page<User> getUsers(int pageNo, int pageSize) {
+    public ResponseEntity<String> getUsers(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        return userRepository.findAll(pageable);
+        Page<User> users = userRepository.findAll(pageable);
+
+        try {
+            JSONArray usersArray = new JSONArray();
+
+            for (User user : users.getContent()) {
+                JSONObject obj = new JSONObject()
+                        .put("name", user.getName())
+                        .put("gender", user.getGender())
+                        .put("birthday", user.getBirthday())
+                        .put("phone", user.getPhone())
+                        .put("mobilePhone", user.getMobilePhone())
+                        .put("address", user.getAddress())
+                        .put("email", user.getEmail())
+                        .put("about", user.getAbout())
+                        .put("createdAt", user.getCreatedAt())
+                        .put("updatedAt", user.getUpdatedAt())
+                        .put("headshotImageBase64", user.getHeadshotImageBase64())
+                        .put("backgroundImageBlob", user.getBackgroundImageBlob());
+
+                usersArray.put(obj);
+            }
+
+            JSONObject response = new JSONObject()
+                    .put("users", usersArray)
+                    .put("currentPage", users.getNumber())
+                    .put("totalItems", users.getTotalElements())
+                    .put("totalPages", users.getTotalPages())
+                    .put("pageSize", users.getSize());
+
+            return ResponseEntity.ok(response.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"message\": \"Error creating JSON response: " + e.getMessage() + "\"}");
+        }
     }
 
-    public String createUser(String jsonRequest, byte[] backgroundImageBlob) {
+    public ResponseEntity<String> createUser(String jsonRequest, byte[] backgroundImageBlob) {
         if (jsonRequest != null && !jsonRequest.isEmpty()) {
             try {
                 JSONObject obj = new JSONObject(jsonRequest);
@@ -79,7 +122,7 @@ public class UserService {
 
                 // Handle birthday parsing
                 Date birthday = null;
-                if (!obj.isNull("birthday")) {
+                if (!obj.isNull("birthday") && !obj.getString("birthday").isEmpty()) {
                     String birthdayStr = obj.getString("birthday");
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     try {
@@ -87,23 +130,29 @@ public class UserService {
 
                         // Check if birthday is today or before
                         if (birthday.after(new Date())) {
-                            return "Birthday cannot be in the future";
+                            return ResponseEntity.badRequest()
+                                    .body("{\"message\": \"Birthday cannot be in the future\"}");
                         }
                     } catch (ParseException e) {
-                        return "Invalid date format for birthday";
+                        e.printStackTrace();
+                        return ResponseEntity.badRequest()
+                                .body("{\"message\": \"Invalid date format for birthday\"}");
                     }
                 }
 
                 if (name == null || name.length() == 0) {
-                    return "name can't be null or empty string";
+                    return ResponseEntity.badRequest()
+                            .body("{\"message\": \"Name can't be null or empty string\"}");
                 }
 
                 if (email == null || email.length() == 0) {
-                    return "email can't be null or empty string";
+                    return ResponseEntity.badRequest()
+                            .body("{\"message\": \"Email can't be null or empty string\"}");
                 }
 
                 if (password == null || password.length() == 0) {
-                    return "password can't be null or empty string";
+                    return ResponseEntity.badRequest()
+                            .body("{\"message\": \"Password can't be null or empty string\"}");
                 }
 
                 User newUser = new User();
@@ -121,28 +170,36 @@ public class UserService {
 
                 userRepository.save(newUser);
 
-                return "Successfully created user";
+                return ResponseEntity.ok("{\"message\": \"Successfully created user\"}");
             } catch (JSONException e) {
                 e.printStackTrace();
-                return e.getMessage();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
             }
         }
 
-        return "Invalid JSON request";
+        return ResponseEntity.badRequest()
+                .body("{\"message\": \"Invalid JSON request\"}");
     }
 
-    public void deleteById(UUID id) {
-        if (id != null && id.toString() != "") {
+    public ResponseEntity<String> deleteById(UUID id) {
+        if (id != null && !id.toString().isEmpty()) {
             Optional<User> optional = userRepository.findById(id);
 
             if (optional.isPresent()) {
                 userRepository.deleteById(id);
+                return ResponseEntity.ok("{\"message\": \"User deleted successfully\"}");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("{\"message\": \"User not found\"}");
             }
         }
+
+        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
     }
 
-    public String update(UUID id, String jsonRequest, byte[] backgroundImageBlob) {
-        if (id != null && id.toString() != "") {
+    public ResponseEntity<String> update(UUID id, String jsonRequest, byte[] backgroundImageBlob) {
+        if (id != null && !id.toString().isEmpty()) {
             Optional<User> optional = userRepository.findById(id);
 
             if (optional.isPresent()) {
@@ -164,7 +221,7 @@ public class UserService {
 
                     // Handle birthday parsing
                     Date birthday = null;
-                    if (!obj.isNull("birthday")) {
+                    if (!obj.isNull("birthday") && !obj.getString("birthday").isEmpty()) {
                         String birthdayStr = obj.getString("birthday");
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
@@ -172,23 +229,29 @@ public class UserService {
 
                             // Check if birthday is today or before
                             if (birthday.after(new Date())) {
-                                return "Birthday cannot be in the future";
+                                return ResponseEntity.badRequest()
+                                        .body("{\"message\": \"Birthday cannot be in the future\"}");
                             }
                         } catch (ParseException e) {
-                            return "Invalid date format for birthday";
+                            e.printStackTrace();
+                            return ResponseEntity.badRequest()
+                                    .body("{\"message\": \"Invalid date format for birthday\"}");
                         }
                     }
 
                     if (name == null || name.length() == 0) {
-                        return "name can't be null or empty string";
+                        return ResponseEntity.badRequest()
+                                .body("{\"message\": \"name can't be null or empty string\"}");
                     }
 
                     if (email == null || email.length() == 0) {
-                        return "email can't be null or empty string";
+                        return ResponseEntity.badRequest()
+                                .body("{\"message\": \"email can't be null or empty string\"}");
                     }
 
                     if (password == null || password.length() == 0) {
-                        return "password can't be null or empty string";
+                        return ResponseEntity.badRequest()
+                                .body("{\"message\": \"password can't be null or empty string\"}");
                     }
 
                     user.setName(name);
@@ -205,14 +268,16 @@ public class UserService {
 
                     userRepository.save(user);
 
-                    return "Successfully updated user";
+                    return ResponseEntity.ok("{\"message\": \"Successfully updated user\"}");
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    return e.getMessage();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
                 }
             }
         }
 
-        return "Invalid ID";
+        return ResponseEntity.badRequest()
+                .body("{\"message\": \"Invalid ID\"}");
     }
 }
