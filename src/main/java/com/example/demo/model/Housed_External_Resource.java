@@ -5,6 +5,9 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +20,8 @@ import lombok.Setter;
 @Table(name = "Housed_External_Resource") // 地點外部資源
 public class Housed_External_Resource {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ur", columnDefinition = "VARCHAR(MAX)")
     private String ur;
 
