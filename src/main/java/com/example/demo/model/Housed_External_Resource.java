@@ -22,11 +22,14 @@ public class Housed_External_Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ur", columnDefinition = "VARCHAR(MAX)")
-    private String ur;
+    @Column(name = "Id", columnDefinition = "UUID")
+    private UUID Id;
 
     @Column(name = "house_id", columnDefinition = "UUID")
     private UUID HouseId;
+
+    @Column(name = "url", columnDefinition = "VARCHAR(MAX)")
+    private String url;
 
     @Column(name = "type", columnDefinition = "VARCHAR(10)")
     private String type;
