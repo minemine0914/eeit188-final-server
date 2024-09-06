@@ -17,8 +17,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "Chat_External_Resource") // 線上客服外部資源
-public class Chat_External_Resource {
+@Table(name = "ChatExternalResource") // 線上客服外部資源
+public class ChatExternalResource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
