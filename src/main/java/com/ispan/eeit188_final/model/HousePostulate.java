@@ -43,14 +43,14 @@ public class HousePostulate {
 
 	@MapsId("postulateId")
 	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "postulate_id", referencedColumnName = "id")
-//	@JsonBackReference
+	@JoinColumn(name = "postulate_id", referencedColumnName = "id")
+	@JsonBackReference("postulate-housePostulate")
 	private Postulate postulate;
 
 	@MapsId("houseId")
 	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "house_id", referencedColumnName = "id")
-//	@JsonBackReference
+	@JoinColumn(name = "house_id", referencedColumnName = "id")
+	@JsonBackReference("house-housePostulate")
 	private House house;
 
 	@PrePersist
