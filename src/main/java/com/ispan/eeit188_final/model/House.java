@@ -15,6 +15,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -94,11 +97,6 @@ public class House {
     private List<PriceRange> priceRanges;
     
     // 房源的附加設施
-<<<<<<< Updated upstream
-    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference("house-housePostulate")
-    private Set<HousePostulate> housePostulates;
-=======
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "house_postulate",
 	inverseJoinColumns = {@JoinColumn(name="postulate_id",referencedColumnName = "id")},
@@ -106,7 +104,6 @@ public class House {
 	)
     @JsonBackReference
     private Set<Postulate> postulates;
->>>>>>> Stashed changes
 
     @PrePersist
     public void onCreate() {
