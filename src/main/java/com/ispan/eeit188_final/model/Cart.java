@@ -2,6 +2,7 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ispan.eeit188_final.model.composite.CartId;
 
 import jakarta.persistence.Column;
@@ -33,11 +34,13 @@ public class Cart {
 	@MapsId("userId")
 	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "user_id", referencedColumnName = "id")
+//	@JsonBackReference
 	private User user;
 
 	@MapsId("houseId")
 	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "house_id", referencedColumnName = "id")
+//	@JsonBackReference
 	private House house;
 	
 	@PrePersist
