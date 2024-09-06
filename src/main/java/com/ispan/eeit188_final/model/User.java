@@ -54,7 +54,7 @@ public class User {
     @Column(name = "email", columnDefinition = "varchar(30)", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password", columnDefinition = "varchar(30)", nullable = false)
+    @Column(name = "password", columnDefinition = "varchar(max)", nullable = false)
     private String password;
 
     @Column(name = "about", columnDefinition = "varchar(max)")
