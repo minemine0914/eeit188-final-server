@@ -1,11 +1,16 @@
 package com.ispan.eeit188_final.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.Postulate;
@@ -34,6 +39,32 @@ public class PostulateService {
 		return postulateRepository.findAll();
 	}
 
+	public Page<Postulate> findAll(String json) {
+		Integer defalutPageNum = 0;
+		Integer defaultPageSize = 10;
+		
+		JSONObject obj = new JSONObject(json);
+		
+		Integer pageNum = obj.isNull("pageNum") ? defalutPageNum : obj.getInt("pageNum");
+		Integer pageSize = obj.isNull("pageSize") || obj.getInt("pageSize") == 0 ? defaultPageSize : obj.getInt("pageSize");
+		Boolean desc = obj.isNull("desc") ? false : obj.getBoolean("desc");
+		String orderBy = obj.isNull("orderBy") || obj.getString("orderBy").length() == 0 ? "id" : obj.getString("orderBy");
+
+		Pageable p = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
+
+		return postulateRepository.findAll(p);
+	}
+	
+	public Postulate findByName(String name) {
+		if (name != null && name.length() != 0) {
+			List<Postulate> postulates = postulateRepository.findByPostulate(name);
+			if (postulates != null && postulates.size() != 0) {
+				return postulates.get(0);
+			}
+		}
+		return null;
+	}
+	
 	public void deleteById(UUID id) {
 		if (id != null) {
 			postulateRepository.deleteById(id);
@@ -59,6 +90,13 @@ public class PostulateService {
 		return null;
 	}
 
+	public Postulate create(Postulate postulate) {
+		if (postulate.getCreatedAt() == null) {
+			postulate.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		}
+		return postulateRepository.save(postulate);
+	}
+	
 	public Postulate update(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
@@ -73,4 +111,14 @@ public class PostulateService {
 		}
 		return null;
 	}
+	
+	public Postulate update(Postulate postulate) {
+		Optional<Postulate> dbPostulate = postulateRepository.findById(postulate.getId());
+		if (dbPostulate.isPresent()) {
+			return postulateRepository.save(postulate);
+		}
+		return null;
+	}
+	
+	
 }
