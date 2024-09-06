@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -27,6 +28,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public ResponseEntity<String> findById(UUID id) {
         if (id != null && !id.toString().isEmpty()) {
@@ -151,6 +155,9 @@ public class UserService {
                             .body("{\"message\": \"Password can't be null or empty string\"}");
                 }
 
+                // Password hashed
+                String hashedPassword = passwordEncoder.encode(password);
+
                 User newUser = new User();
                 newUser.setName(name);
                 newUser.setGender(gender);
@@ -159,7 +166,7 @@ public class UserService {
                 newUser.setMobilePhone(mobilePhone);
                 newUser.setAddress(address);
                 newUser.setEmail(email);
-                newUser.setPassword(password);
+                newUser.setPassword(hashedPassword);
                 newUser.setAbout(about);
                 newUser.setAvatarBase64(null);
                 newUser.setBackgroundImageBlob(null);
@@ -172,6 +179,44 @@ public class UserService {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
             }
+        }
+
+        return ResponseEntity.badRequest()
+                .body("{\"message\": \"Invalid JSON request\"}");
+    }
+
+    public ResponseEntity<String> login(String jsonRequest) throws JSONException {
+        if (jsonRequest != null && !jsonRequest.isEmpty()) {
+            JSONObject obj = new JSONObject(jsonRequest);
+
+            String email = obj.isNull("email") ? null : obj.getString("email");
+            String password = obj.isNull("password") ? null : obj.getString("password");
+
+            if (email == null || email.length() == 0) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"Email can not be null or empty string\"}");
+            }
+
+            if (password == null || password.length() == 0) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"Password can not be null or empty string\"}");
+            }
+
+            // Fetch the user by email
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("{\"message\": \"Email not found\"}");
+            }
+
+            // Verify the password
+            boolean passwordMatches = passwordEncoder.matches(password, user.getPassword());
+            if (!passwordMatches) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("{\"message\": \"Invalid password\"}");
+            }
+
+            return ResponseEntity.ok("{\"message\": \"Login successful\"}");
         }
 
         return ResponseEntity.badRequest()
@@ -248,6 +293,9 @@ public class UserService {
                                 .body("{\"message\": \"password can't be null or empty string\"}");
                     }
 
+                    // Password hashed
+                    String hashedPassword = passwordEncoder.encode(password);
+
                     user.setName(name);
                     user.setGender(gender);
                     user.setBirthday(birthday);
@@ -255,7 +303,7 @@ public class UserService {
                     user.setMobilePhone(mobilePhone);
                     user.setAddress(address);
                     user.setEmail(email);
-                    user.setPassword(password);
+                    user.setPassword(hashedPassword);
                     user.setAbout(about);
 
                     userRepository.save(user);
@@ -306,8 +354,7 @@ public class UserService {
                 .body("{\"message\": \"Invalid ID\"}");
     }
 
-    public ResponseEntity<String> uploadBackgroundImage(UUID id, MultipartFile backgroundImageBlobFile)
-            throws IOException {
+    public ResponseEntity<String> uploadBackgroundImage(UUID id, MultipartFile backgroundImageBlobFile) {
         if (id == null || id.toString().isEmpty()) {
             return ResponseEntity.badRequest()
                     .body("{\"message\": \"Invalid ID\"}");
@@ -321,12 +368,18 @@ public class UserService {
             if (backgroundImageBlobFile != null && !backgroundImageBlobFile.isEmpty()) {
 
                 // Get the byte[] from the uploaded file
-                byte[] backgroundImageBlobFileBytes = backgroundImageBlobFile.getBytes();
+                byte[] backgroundImageBlobFileBytes;
+                try {
+                    backgroundImageBlobFileBytes = backgroundImageBlobFile.getBytes();
+                    user.setBackgroundImageBlob(backgroundImageBlobFileBytes);
+                    userRepository.save(user);
 
-                user.setBackgroundImageBlob(backgroundImageBlobFileBytes);
-                userRepository.save(user);
-
-                return ResponseEntity.ok("{\"message\": \"Successfully uploaded background image\"}");
+                    return ResponseEntity.ok("{\"message\": \"Successfully uploaded background image\"}");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.badRequest()
+                            .body("{\"message\": \"Parse byte[] error\"}");
+                }
             } else {
                 return ResponseEntity.badRequest()
                         .body("{\"message\": \"backgroundImageBlob file is empty\"}");
