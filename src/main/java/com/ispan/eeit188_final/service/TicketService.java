@@ -189,10 +189,32 @@ public class TicketService {
 		return null;
 	}
 
-	public Ticket update(Ticket ticket) {
+	public Ticket replace(Ticket ticket) {
 		Optional<Ticket> dbTicket = ticketRepository.findById(ticket.getId());
 		if (dbTicket.isPresent()) {
 			return ticketRepository.save(ticket);
+		}
+		return null;
+	}
+	
+	public Ticket modify(Ticket oldTicket, Ticket newTicket) {
+		if(oldTicket != null && newTicket != null) {
+			if(newTicket.getQrCode() != null) {
+				oldTicket.setQrCode(newTicket.getQrCode());
+			}
+			if(newTicket.getHouseId() != null) {
+				oldTicket.setHouseId(newTicket.getHouseId());
+			}
+			if(newTicket.getUserId() != null) {
+				oldTicket.setUserId(newTicket.getUserId());
+			}
+			if(newTicket.getStartedAt() != null) {
+				oldTicket.setStartedAt(newTicket.getStartedAt());
+			}
+			if(newTicket.getEndedAt() != null) {
+				oldTicket.setEndedAt(newTicket.getEndedAt());
+			}
+			return ticketRepository.save(oldTicket);
 		}
 		return null;
 	}
