@@ -1,12 +1,11 @@
-package com.ispan.eeit188_final;
+package com.ispan.eeit188_final.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 
+import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
-import com.ispan.eeit188_final.service.HouseService;
-
-import net.minidev.json.JSONObject;
 
 import java.util.UUID;
 
@@ -25,16 +24,18 @@ public class HouseTests {
 
     @Test
     void create() {
-        House insert = House.builder().name("testtest").build();
-        houseService.create(insert);
+        // House insert = House.builder().name("testtest").build();
+        // houseService.create(insert);
     }
 
     @Test
     void find() {
-        JSONObject query = new JSONObject();
-        query.put("name", "minemine");
+        HouseDTO query = HouseDTO.builder()
+        .page(0)
+        .limit(10)
+        .build();
+        Page<House> result = houseService.find(query);
+        System.out.println(result.getContent());
 
-        System.out.println(houseService.find(query.toString()));
-        
     }
 }

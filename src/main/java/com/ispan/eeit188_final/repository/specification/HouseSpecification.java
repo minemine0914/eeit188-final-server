@@ -2,11 +2,12 @@ package com.ispan.eeit188_final.repository.specification;
 
 import java.util.UUID;
 import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 
-import org.json.JSONObject;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
 
 import jakarta.persistence.criteria.Predicate;
@@ -131,34 +132,33 @@ public class HouseSpecification {
     }
 
     // 多條件查詢
-    public static Specification<House> filterHouses(String jsonString) {
-        JSONObject obj = new JSONObject(jsonString);
+    public static Specification<House> filterHouses(HouseDTO houseDTO) {
         // 房源基本資料
-        String name = obj.isNull("name") ? null : obj.getString("name");
-        String category = obj.isNull("category") ? null : obj.getString("category");
-        String country = obj.isNull("country") ? null : obj.getString("country");
-        String city = obj.isNull("city") ? null : obj.getString("city");
-        String region = obj.isNull("region") ? null : obj.getString("region");
+        String name = Optional.ofNullable(houseDTO.getName()).orElse(null);
+        String category = Optional.ofNullable(houseDTO.getCategory()).orElse(null);
+        String country = Optional.ofNullable(houseDTO.getCountry()).orElse(null);
+        String city = Optional.ofNullable(houseDTO.getCity()).orElse(null);
+        String region = Optional.ofNullable(houseDTO.getRegion()).orElse(null);
         // 房源基本設施
-        Short livingDiningRoom = obj.isNull("city") ? null : Integer.valueOf(obj.getInt("city")).shortValue();
-        Short bedroom = obj.isNull("region") ? null : Integer.valueOf(obj.getInt("region")).shortValue();
-        Short restroom = obj.isNull("address") ? null : Integer.valueOf(obj.getInt("address")).shortValue();
-        Short bathroom = obj.isNull("price") ? null : Integer.valueOf(obj.getInt("price")).shortValue();
+        Short livingDiningRoom = Optional.ofNullable(houseDTO.getLivingDiningRoom()).orElse(null);
+        Short bedroom = Optional.ofNullable(houseDTO.getBedroom()).orElse(null);
+        Short restroom = Optional.ofNullable(houseDTO.getRestroom()).orElse(null);
+        Short bathroom = Optional.ofNullable(houseDTO.getBathroom()).orElse(null);
         // 常態設施
-        Boolean kitchen = obj.isNull("kitchen") ? null : obj.getBoolean("kitchen");
-        Boolean balcony = obj.isNull("balcony") ? null : obj.getBoolean("balcony");
+        Boolean kitchen = Optional.ofNullable(houseDTO.getKitchen()).orElse(null);
+        Boolean balcony = Optional.ofNullable(houseDTO.getBalcony()).orElse(null);
         // 刊登顯示
-        Boolean show = obj.isNull("show") ? null : obj.getBoolean("show");
+        Boolean show = Optional.ofNullable(houseDTO.getShow()).orElse(null);
         // 擁有者ID
-        UUID userId = obj.isNull("userId") ? null : UUID.fromString(obj.getString("userId"));
+        UUID userId = Optional.ofNullable(houseDTO.getUserId()).orElse(null);
         // 經緯度區間
-        Double minLatitudeX = obj.isNull("minLatitudeX") ? null : obj.getDouble("minLatitudeX");
-        Double maxLatitudeX = obj.isNull("maxLatitudeX") ? null : obj.getDouble("maxLatitudeX");
-        Double minLongitudeY = obj.isNull("minLongitudeY") ? null : obj.getDouble("minLongitudeY");
-        Double maxLongitudeY = obj.isNull("maxLongitudeY") ? null : obj.getDouble("maxLongitudeY");
+        Double minLatitudeX = Optional.ofNullable(houseDTO.getMinLatitudeX()).orElse(null);
+        Double maxLatitudeX = Optional.ofNullable(houseDTO.getMaxLatitudeX()).orElse(null);
+        Double minLongitudeY = Optional.ofNullable(houseDTO.getMinLongitudeY()).orElse(null);
+        Double maxLongitudeY = Optional.ofNullable(houseDTO.getMaxLongitudeY()).orElse(null);
         // 價格區間
-        Integer minPrice = obj.isNull("minPrice") ? null : obj.getInt("minPrice");
-        Integer maxPrice = obj.isNull("maxPrice") ? null : obj.getInt("maxPrice");
+        Integer minPrice = Optional.ofNullable(houseDTO.getMinPrice()).orElse(null);
+        Integer maxPrice = Optional.ofNullable(houseDTO.getMaxPrice()).orElse(null);
         return Specification.where(hasName(name))
                 .and(hasCategory(category))
                 .and(hasCountry(country))

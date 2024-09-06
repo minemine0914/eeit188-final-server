@@ -1,21 +1,19 @@
 package com.ispan.eeit188_final.controller;
 
 import java.net.URI;
-import java.util.Map;
 import java.util.UUID;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -94,27 +92,22 @@ public class PriceRangeController {
 
     /** 查詢所有 */
     @GetMapping("/all")
-    public Page<PriceRange> all(@RequestParam Map<String, String> allParams) {
-        JSONObject jsonParams = new JSONObject(allParams);
-        return priceRangeService.findAll(jsonParams.toString());
+    public Page<PriceRange> all(@ModelAttribute PriceRangeDTO priceRangeDTO) {
+        return priceRangeService.findAll(priceRangeDTO);
     }
 
     /**
      * 條件搜尋
      * JSON keys:
-     * 基本資料: name, category, country, city, region
-     * 基本設施: livingDiningRoom, bedroom, restroom, bathroom
-     * 常態設施: kitchen, balcony
-     * 刊登顯示: show
-     * 擁有者Id: userId
-     * 經緯區間: minLatitudeX, maxLatitudeX, minLongitudeY, maxLongitudeY
-     * 價格區間: minPrice, maxPrice
+     * 房源 Id: houseId
+     * 價錢區間: minPrice, maxPrice
+     * 時間區間: startedAt, endedAt
      * 分頁限制: page, limit
      * 欄位排序: dir, order
      */
     @PostMapping("/search")
-    public Page<PriceRange> search(@RequestBody String jsonString) {
-        return priceRangeService.find(jsonString);
+    public Page<PriceRange> search(@RequestBody PriceRangeDTO priceRangeDTO) {
+        return priceRangeService.find(priceRangeDTO);
     }
 
 }
