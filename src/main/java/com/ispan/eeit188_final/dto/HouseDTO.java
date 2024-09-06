@@ -1,9 +1,7 @@
 package com.ispan.eeit188_final.dto;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
