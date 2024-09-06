@@ -13,8 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.ChatExternalResource;
-import com.ispan.eeit188_final.repository.ChatExternalResourceRepository;
-
+import com.ispan.eeit188_final.model.ChatExternalResourceRepository;
 
 @Service
 public class ChatExternalResourceService {
@@ -25,7 +24,7 @@ public class ChatExternalResourceService {
     public ChatExternalResource saveHER(UUID id, UUID ChatRecordId, String url,
             String type, LocalDateTime createdAT) {
 
-                ChatExternalResource cer = new ChatExternalResource();
+        ChatExternalResource cer = new ChatExternalResource();
         cer.setId(id);
         cer.setChatRecordId(ChatRecordId);
         cer.setUrl(url);
@@ -52,7 +51,7 @@ public class ChatExternalResourceService {
         return CerRepo.save(her);
     }
 
-    // public List<Chat_External_Resource> findAllher() {
+    // public List<ChatExternalResource> findAllher() {
     // return CerRepo.findAll();
     // }
 
