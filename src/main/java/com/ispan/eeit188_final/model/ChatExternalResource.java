@@ -21,11 +21,11 @@ import lombok.Setter;
 public class ChatExternalResource {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id", columnDefinition = "UUID")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "Id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID Id;
 
-    @Column(name = "chat_record_id", columnDefinition = "UUID")
+    @Column(name = "chat_record_id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID ChatRecordId;
 
     @Column(name = "url", columnDefinition = "VARCHAR(MAX)")

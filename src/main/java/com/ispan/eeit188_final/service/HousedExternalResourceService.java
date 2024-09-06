@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.HousedExternalResource;
-import com.ispan.eeit188_final.model.HousedExternalResourceRepository;
+import com.ispan.eeit188_final.repository.HousedExternalResourceRepository;
 
 @Service
 public class HousedExternalResourceService {

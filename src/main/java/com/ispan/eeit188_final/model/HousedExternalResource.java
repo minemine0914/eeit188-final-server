@@ -21,11 +21,11 @@ import lombok.Setter;
 public class HousedExternalResource {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id", columnDefinition = "UUID")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "Id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID Id;
 
-    @Column(name = "house_id", columnDefinition = "UUID")
+    @Column(name = "house_id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID HouseId;
 
     @Column(name = "url", columnDefinition = "VARCHAR(MAX)")

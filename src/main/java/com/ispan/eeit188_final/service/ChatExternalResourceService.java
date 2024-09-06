@@ -12,19 +12,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.ispan.eeit188_final.model.Chat_External_Resource;
-import com.ispan.eeit188_final.model.Chat_External_ResourceRepository;
+import com.ispan.eeit188_final.model.ChatExternalResource;
+import com.ispan.eeit188_final.repository.ChatExternalResourceRepository;
+
 
 @Service
-public class Chat_External_ResourceService {
+public class ChatExternalResourceService {
 
     @Autowired
-    private Chat_External_ResourceRepository CerRepo;
+    private ChatExternalResourceRepository CerRepo;
 
-    public Chat_External_Resource saveHER(UUID id, UUID ChatRecordId, String url,
+    public ChatExternalResource saveHER(UUID id, UUID ChatRecordId, String url,
             String type, LocalDateTime createdAT) {
 
-        Chat_External_Resource cer = new Chat_External_Resource();
+                ChatExternalResource cer = new ChatExternalResource();
         cer.setId(id);
         cer.setChatRecordId(ChatRecordId);
         cer.setUrl(url);
@@ -34,8 +35,8 @@ public class Chat_External_ResourceService {
         return CerRepo.save(cer);
     }
 
-    public Chat_External_Resource findherById(UUID id) {
-        Optional<Chat_External_Resource> optional = CerRepo.findById(id);
+    public ChatExternalResource findherById(UUID id) {
+        Optional<ChatExternalResource> optional = CerRepo.findById(id);
         if (optional.isPresent()) {
             return optional.get();
         }
@@ -47,7 +48,7 @@ public class Chat_External_ResourceService {
         CerRepo.deleteById(id);
     }
 
-    public Chat_External_Resource updatePS(Chat_External_Resource her) {
+    public ChatExternalResource updatePS(ChatExternalResource her) {
         return CerRepo.save(her);
     }
 
@@ -55,9 +56,9 @@ public class Chat_External_ResourceService {
     // return CerRepo.findAll();
     // }
 
-    public Page<Chat_External_Resource> findAlHer(int pageNumber, int pageSize) {
+    public Page<ChatExternalResource> findAlHer(int pageNumber, int pageSize) {
         Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt"));
-        Page<Chat_External_Resource> page = CerRepo.findAll(p);
+        Page<ChatExternalResource> page = CerRepo.findAll(p);
         return page;
     }
 }
