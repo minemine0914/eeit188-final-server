@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.json.JSONObject;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.ispan.eeit188_final.dto.PriceRangeDTO;

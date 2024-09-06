@@ -2,7 +2,6 @@ package com.ispan.eeit188_final.service;
 
 import java.util.Optional;
 import java.util.UUID;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,6 +63,7 @@ public class PriceRangeService {
         // 預設 頁數 限制
         Integer defaultPage = 0;
         Integer defaultLimit = 10;
+        // 頁數 限制 排序
         Integer page = Optional.ofNullable(priceRangeDTO.getPage()).orElse(defaultPage);
         Integer limit = Optional.ofNullable(priceRangeDTO.getLimit()).orElse(defaultLimit);
         Boolean dir = Optional.ofNullable(priceRangeDTO.getDir()).orElse(false);
