@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Ticket;
+import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.TicketRepository;
+import com.ispan.eeit188_final.repository.specification.TicketSpecification;
 
 import jakarta.transaction.Transactional;
 
@@ -35,13 +40,65 @@ public class TicketService {
 		return null;
 	}
 
+	public List<Ticket> findByUser(User user) {
+		if (user != null && user.getId() != null) {
+			return ticketRepository.findByUserId(user.getId());
+		}
+		return null;
+	}
+
+	public List<Ticket> findByUserId(UUID userId) {
+		if (userId != null) {
+			return ticketRepository.findByUserId(userId);
+		}
+		return null;
+	}
+
+	public List<Ticket> findByHouse(House house) {
+		if (house != null && house.getId() != null) {
+			return ticketRepository.findByHouseId(house.getId());
+		}
+		return null;
+	}
+
+	public List<Ticket> findByHouseId(UUID houseId) {
+		if (houseId != null) {
+			return ticketRepository.findByHouseId(houseId);
+		}
+		return null;
+	}
+
 	public List<Ticket> findAll() {
 		return ticketRepository.findAll();
 	}
 
 	public Page<Ticket> findAll(Integer pageNum, Integer pageSize, Boolean desc, String orderBy) {
-		// pageNum starts from 1
-		Pageable p = PageRequest.of(pageNum - 1, pageSize, desc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy);
+		Integer defalutPageNum = 0;
+		Integer defaultPageSize = 10;
+
+		pageNum = pageNum == null ? defalutPageNum : pageNum;
+		pageSize = pageSize == null|| pageSize == 0 ? defaultPageSize : pageSize;
+		desc = desc == null ? false : desc;
+		orderBy = orderBy == null || orderBy.length() == 0 ? "id" : orderBy;
+
+		Pageable p = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
+
+		return ticketRepository.findAll(p);
+	}
+	
+	public Page<Ticket> findAll(String json) {
+		Integer defalutPageNum = 0;
+		Integer defaultPageSize = 10;
+		
+		JSONObject obj = new JSONObject(json);
+		
+		Integer pageNum = obj.isNull("pageNum") ? defalutPageNum : obj.getInt("pageNum");
+		Integer pageSize = obj.isNull("pageSize") || obj.getInt("pageSize") == 0 ? defaultPageSize : obj.getInt("pageSize");
+		Boolean desc = obj.isNull("desc") ? false : obj.getBoolean("desc");
+		String orderBy = obj.isNull("orderBy") || obj.getString("orderBy").length() == 0 ? "id" : obj.getString("orderBy");
+
+		Pageable p = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
+
 		return ticketRepository.findAll(p);
 	}
 
@@ -95,7 +152,7 @@ public class TicketService {
 		try {
 			JSONObject obj = new JSONObject(json);
 
-			UUID id = obj.isNull("id") ? null : UUID.fromString(obj.getString(json));
+			UUID id = obj.isNull("id") ? null : UUID.fromString(obj.getString("id"));
 			Ticket dbData = findById(id);
 			if (dbData != null) {
 				String qrCode = obj.isNull("qrCode") ? null : obj.getString("qrCode");
@@ -107,8 +164,16 @@ public class TicketService {
 				UUID userId = UUID.fromString(userIdString);
 				UUID houseId = UUID.fromString(houseIdString);
 
-				Timestamp startedAt = Timestamp.valueOf(startedAtString);
-				Timestamp endedAt = Timestamp.valueOf(endedAtString);
+				Timestamp startedAt;
+				Timestamp endedAt;
+				try {
+					startedAt = Timestamp.valueOf(startedAtString);
+					endedAt = Timestamp.valueOf(endedAtString);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+					System.out.println("日期格式有誤");
+					return null;
+				}
 
 				dbData.setQrCode(qrCode);
 				dbData.setUserId(userId);
@@ -130,6 +195,27 @@ public class TicketService {
 			return ticketRepository.save(ticket);
 		}
 		return null;
+	}
+
+	public Page<Ticket> findByStarted(String json) {
+		Integer defalutPageNum = 0;
+		Integer defaultPageSize = 10;
+
+		JSONObject obj = new JSONObject(json);
+		Integer pageNum = obj.isNull("pageNum") ? defalutPageNum : obj.getInt("pageNum");
+		Integer pageSize = obj.isNull("pageSize") || obj.getInt("pageSize") == 0 ? defaultPageSize : obj.getInt("pageSize");
+		Boolean desc = obj.isNull("desc") ? false : obj.getBoolean("desc");
+		String orderBy = obj.isNull("orderBy") || obj.getString("orderBy").length() == 0 ? "id" : obj.getString("orderBy");
+
+		PageRequest pageRequest;
+		if (orderBy != null) {
+			pageRequest = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
+		} else {
+			pageRequest = PageRequest.of(pageNum, pageSize);
+		}
+		
+		Specification<Ticket> spec = Specification.where(TicketSpecification.filterTickets(json));
+		return ticketRepository.findAll(spec, pageRequest);
 	}
 
 }

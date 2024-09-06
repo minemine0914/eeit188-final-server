@@ -2,7 +2,6 @@ package com.ispan.eeit188_final.service;
 
 import java.util.Optional;
 import java.util.UUID;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.PriceRange;
-import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.PriceRangeRepository;
 import com.ispan.eeit188_final.repository.specification.PriceRangeSpecification;
 
@@ -22,13 +20,7 @@ public class PriceRangeService {
     @Autowired
     private PriceRangeRepository priceRangeRepo;
 
-    @Autowired
-    private HouseRepository houseRepo;
-
     public PriceRange create(PriceRange priceRange) {
-        // if ( houseRepo.existsById(priceRange.getHouse().getId()) ) {
-
-        // }
         return priceRangeRepo.save(priceRange);
     }
 
