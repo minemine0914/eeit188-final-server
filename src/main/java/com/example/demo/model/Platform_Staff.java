@@ -35,7 +35,7 @@ public class Platform_Staff {
     @Column(name = "gender", columnDefinition = "VARCHAR(10)")
     private String gender;
 
-    @Column(name = "birthday", columnDefinition = "DATE")
+    @Column(name = "birthday", columnDefinition = "DATE", nullable = false)
     private Date birthday;
 
     @Column(name = "phone", columnDefinition = "VARCHAR(15)")
