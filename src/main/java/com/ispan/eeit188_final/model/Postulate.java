@@ -41,9 +41,13 @@ public class Postulate {
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
-	@OneToMany(mappedBy = "postulate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference("postulate-housePostulate")
-    private Set<HousePostulate> housePostulates;
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "house_postulate",
+				joinColumns = {@JoinColumn(name="postulate_id",referencedColumnName = "id")},
+				inverseJoinColumns = {@JoinColumn(name="house_id",referencedColumnName = "id")}
+				)
+    @JsonManagedReference
+    private Set<House> houses;
 
 	@PrePersist
 	public void onCreate() {

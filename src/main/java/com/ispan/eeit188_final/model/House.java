@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -93,9 +94,19 @@ public class House {
     private List<PriceRange> priceRanges;
     
     // 房源的附加設施
+<<<<<<< Updated upstream
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference("house-housePostulate")
     private Set<HousePostulate> housePostulates;
+=======
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "house_postulate",
+	inverseJoinColumns = {@JoinColumn(name="postulate_id",referencedColumnName = "id")},
+	joinColumns = {@JoinColumn(name="house_id",referencedColumnName = "id")}
+	)
+    @JsonBackReference
+    private Set<Postulate> postulates;
+>>>>>>> Stashed changes
 
     @PrePersist
     public void onCreate() {
