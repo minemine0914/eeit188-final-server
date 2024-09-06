@@ -14,49 +14,49 @@ import jakarta.persistence.criteria.Predicate;
 public class HouseSpecification {
     // 房源名稱
     public static Specification<House> hasName(String name) {
-        return (root, query, criteriaBuilder) -> {
+        return (root, query, cb) -> {
             if (name == null || name.isEmpty()) {
-                return criteriaBuilder.conjunction(); // 如果 name 為 null 或空字串，返回無條件過濾
+                return cb.conjunction(); // 如果 name 為 null 或空字串，返回無條件過濾
             }
-            return criteriaBuilder.like(root.get("name"), "%" + name + "%"); // 使用 % 符號進行模糊搜尋
+            return cb.like(root.get("name"), "%" + name + "%"); // 使用 % 符號進行模糊搜尋
         };
     }
 
     // 類型
     public static Specification<House> hasCategory(String category) {
-        return (root, query, criteriaBuilder) -> category == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("category"), category);
+        return (root, query, cb) -> category == null ? cb.conjunction()
+                : cb.equal(root.get("category"), category);
     }
 
     // 國家
     public static Specification<House> hasCountry(String country) {
-        return (root, query, criteriaBuilder) -> country == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("country"), country);
+        return (root, query, cb) -> country == null ? cb.conjunction()
+                : cb.equal(root.get("country"), country);
     }
 
     // 縣市
     public static Specification<House> hasCity(String city) {
-        return (root, query, criteriaBuilder) -> city == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("city"), city);
+        return (root, query, cb) -> city == null ? cb.conjunction()
+                : cb.equal(root.get("city"), city);
     }
 
     // 區域
     public static Specification<House> hasRegion(String region) {
-        return (root, query, criteriaBuilder) -> region == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("region"), region);
+        return (root, query, cb) -> region == null ? cb.conjunction()
+                : cb.equal(root.get("region"), region);
     }
 
     // 價格區間 (最小, 最大)
     public static Specification<House> hasPriceBetween(Integer minPrice, Integer maxPrice) {
-        return (root, query, criteriaBuilder) -> {
+        return (root, query, cb) -> {
             if (minPrice == null && maxPrice == null) {
-                return criteriaBuilder.conjunction();
+                return cb.conjunction();
             } else if (minPrice == null) {
-                return criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice);
+                return cb.lessThanOrEqualTo(root.get("price"), maxPrice);
             } else if (maxPrice == null) {
-                return criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice);
+                return cb.greaterThanOrEqualTo(root.get("price"), minPrice);
             } else {
-                return criteriaBuilder.between(root.get("price"), minPrice, maxPrice);
+                return cb.between(root.get("price"), minPrice, maxPrice);
             }
         };
     }
@@ -64,34 +64,34 @@ public class HouseSpecification {
     // 經緯度區間 (最小經度, 最大經度, 最小緯度, 最大緯度)
     public static Specification<House> isWithinLocation(Double minLatitudeX, Double maxLatitudeX,
             Double minLongitudeY, Double maxLongitudeY) {
-        return (root, query, criteriaBuilder) -> {
+        return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (minLatitudeX != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("latitudeX"), minLatitudeX));
+                predicates.add(cb.greaterThanOrEqualTo(root.get("latitudeX"), minLatitudeX));
             }
             if (maxLatitudeX != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("latitudeX"), maxLatitudeX));
+                predicates.add(cb.lessThanOrEqualTo(root.get("latitudeX"), maxLatitudeX));
             }
             if (minLongitudeY != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("longitudeY"), minLongitudeY));
+                predicates.add(cb.greaterThanOrEqualTo(root.get("longitudeY"), minLongitudeY));
             }
             if (maxLongitudeY != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("longitudeY"), maxLongitudeY));
+                predicates.add(cb.lessThanOrEqualTo(root.get("longitudeY"), maxLongitudeY));
             }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 
     // 客廳
     public static Specification<House> hasLivingDiningRoom(Short livingDiningRoom) {
-        return (root, query, criteriaBuilder) -> livingDiningRoom == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("livingDiningRoom"), livingDiningRoom);
+        return (root, query, cb) -> livingDiningRoom == null ? cb.conjunction()
+                : cb.equal(root.get("livingDiningRoom"), livingDiningRoom);
     }
 
     // 房間
     public static Specification<House> hasBedroom(Short bedroom) {
-        return (root, query, criteriaBuilder) -> bedroom == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("bedroom"), bedroom);
+        return (root, query, cb) -> bedroom == null ? cb.conjunction()
+                : cb.equal(root.get("bedroom"), bedroom);
     }
 
     // 衛生間 (馬桶)
@@ -114,23 +114,23 @@ public class HouseSpecification {
 
     // 陽台
     public static Specification<House> hasBalcony(Boolean balcony) {
-        return (root, query, criteriaBuilder) -> balcony == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("balcony"), balcony);
+        return (root, query, cb) -> balcony == null ? cb.conjunction()
+                : cb.equal(root.get("balcony"), balcony);
     }
 
     // 是否上架
     public static Specification<House> isShown(Boolean show) {
-        return (root, query, criteriaBuilder) -> show == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("show"), show);
+        return (root, query, cb) -> show == null ? cb.conjunction()
+                : cb.equal(root.get("show"), show);
     }
 
     // 擁有者ID
     public static Specification<House> hasUserId(UUID userId) {
-        return (root, query, criteriaBuilder) -> userId == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("userId"), userId);
+        return (root, query, cb) -> userId == null ? cb.conjunction()
+                : cb.equal(root.get("userId"), userId);
     }
 
-    // 複合specs (房源名稱, 類型, 最小價錢, 最大價錢, 是否上架)
+    // 多條件查詢
     public static Specification<House> filterHouses(String jsonString) {
         JSONObject obj = new JSONObject(jsonString);
         // 房源基本資料
