@@ -5,9 +5,12 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,6 +28,7 @@ import lombok.Setter;
 @Table(name = "chat_record")
 public class ChatRecord {
 
+    // Data
     @Id
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,18 +40,22 @@ public class ChatRecord {
     @Column(name = "show", columnDefinition = "bit")
     private Boolean show;
 
-    @Column(name = "sender_id", columnDefinition = "uniqueidentifier")
-    private UUID senderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", columnDefinition = "uniqueidentifier")
+    private User senderId;
 
-    @Column(name = "receiver_id", columnDefinition = "uniqueidentifier")
-    private UUID receiverId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id", columnDefinition = "uniqueidentifier")
+    private User receiverId;
 
-    @Column(name = "platform_staff_id", columnDefinition = "uniqueidentifier")
-    private UUID platformStaffId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "platform_staff_id", columnDefinition = "uniqueidentifier")
+    private PlatformStaff platformStaffId;
 
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
+    // Methods
     @PrePersist
     public void onCreate() {
         this.createdAt = new Timestamp(System.currentTimeMillis());
