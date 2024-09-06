@@ -54,7 +54,7 @@ public class PriceRange {
     // 關聯 house.id = price_range.house_id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", columnDefinition = "UNIQUEIDENTIFIER")
-    @JsonBackReference
+    @JsonBackReference("house-priceRange")
     private House house; // 房源
 
     // 自訂序列化 houseId

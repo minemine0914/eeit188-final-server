@@ -39,7 +39,7 @@ public class User {
     @Column(name = "gender", columnDefinition = "varchar(10)")
     private String gender;
 
-    @Column(name = "birthday", columnDefinition = "date")
+    @Column(name = "birthday", columnDefinition = "date", nullable = false)
     private Date birthday;
 
     @Column(name = "phone", columnDefinition = "varchar(15)")
@@ -66,8 +66,8 @@ public class User {
     @Column(name = "updated_at", columnDefinition = "datetime2")
     private Timestamp updatedAt;
 
-    @Column(name = "headshot_image_base64", columnDefinition = "varchar(max)")
-    private String headshotImageBase64;
+    @Column(name = "avatar_base64", columnDefinition = "varchar(max)")
+    private String avatarBase64;
 
     @Lob
     @Column(name = "background_image_blob", columnDefinition = "varbinary(max)")
