@@ -20,7 +20,7 @@ public class HousePostulateServiceTests {
 	@Autowired
 	private HousePostulateService housePostulateService;
 	
-//	@Test
+	@Test
 	public void testCreate() {
 		
 		Object objNull = null;
