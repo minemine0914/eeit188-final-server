@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.ispan.eeit188_final.dto.PriceRangeDTO;
 import com.ispan.eeit188_final.model.PriceRange;
 import com.ispan.eeit188_final.repository.PriceRangeRepository;
 import com.ispan.eeit188_final.repository.specification.PriceRangeSpecification;
@@ -59,42 +60,34 @@ public class PriceRangeService {
         return null;
     }
 
-    public Page<PriceRange> findAll(String jsonString) {
-        /*
-         * JSON keys: page, limit, dir, order
-         */
-        JSONObject obj = new JSONObject(jsonString);
-        Integer defaultPage = 0;
-        Integer defaultLimit = 10;
-        Integer page = obj.isNull("page") ? defaultPage : obj.getInt("page");
-        Integer limit = obj.isNull("limit") ? defaultLimit : obj.getInt("limit");
-        Boolean dir = obj.isNull("dir") ? false : obj.getBoolean("dir");
-        String order = obj.isNull("order") ? null : obj.getString("order");
-        if (order != null) {
-            return priceRangeRepo
-                    .findAll(PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC, order)));
-        }
-        return priceRangeRepo.findAll(PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC)));
-    }
-
-    public Page<PriceRange> find(String jsonString) {
+    public Page<PriceRange> findAll(PriceRangeDTO priceRangeDTO) {
         // 預設 頁數 限制
         Integer defaultPage = 0;
         Integer defaultLimit = 10;
-        JSONObject obj = new JSONObject(jsonString);
+        Integer page = Optional.ofNullable(priceRangeDTO.getPage()).orElse(defaultPage);
+        Integer limit = Optional.ofNullable(priceRangeDTO.getLimit()).orElse(defaultLimit);
+        Boolean dir = Optional.ofNullable(priceRangeDTO.getDir()).orElse(false);
+        String order = Optional.ofNullable(priceRangeDTO.getOrder()).orElse(null);
+        // 是否排序
+        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+        return priceRangeRepo.findAll(PageRequest.of(page, limit, sort));
+    }
+
+    public Page<PriceRange> find(PriceRangeDTO priceRangeDTO) {
+        // 預設 頁數 限制
+        Integer defaultPage = 0;
+        Integer defaultLimit = 10;
         // 頁數 限制 排序
-        Integer page = obj.isNull("page") ? defaultPage : obj.getInt("page");
-        Integer limit = obj.isNull("limit") ? defaultLimit : obj.getInt("limit");
-        Boolean dir = obj.isNull("dir") ? false : obj.getBoolean("dir");
-        String order = obj.isNull("order") ? "id" : obj.getString("order");
+        Integer page = Optional.ofNullable(priceRangeDTO.getPage()).orElse(defaultPage);
+        Integer limit = Optional.ofNullable(priceRangeDTO.getLimit()).orElse(defaultLimit);
+        Boolean dir = Optional.ofNullable(priceRangeDTO.getDir()).orElse(false);
+        String order = Optional.ofNullable(priceRangeDTO.getOrder()).orElse(null);
         // 條件查詢
         Specification<PriceRange> spec = Specification.where(null);
-        spec = spec.and(PriceRangeSpecification.filterPriceRange(jsonString));
-        if (order != null) {
-            return priceRangeRepo.findAll(spec,
-                    PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC, order)));
-        }
-        return priceRangeRepo.findAll(spec, PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC)));
+        spec = spec.and(PriceRangeSpecification.filterPriceRange(priceRangeDTO));
+        // 是否排序
+        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+        return priceRangeRepo.findAll(spec, PageRequest.of(page, limit, sort));
     }
 
 }

@@ -1,11 +1,13 @@
 package com.ispan.eeit188_final.repository.specification;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.json.JSONObject;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.ispan.eeit188_final.dto.PriceRangeDTO;
 import com.ispan.eeit188_final.model.PriceRange;
 
 public class PriceRangeSpecification {
@@ -30,14 +32,12 @@ public class PriceRangeSpecification {
     }
 
     // 多條件查詢
-    public static Specification<PriceRange> filterPriceRange(String jsonString) {
-        // DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        JSONObject obj = new JSONObject(jsonString);
-        UUID houseId = obj.isNull("houseId") ? null : UUID.fromString(obj.getString("houseId"));
-        Integer minPrice = obj.isNull("minPrice") ? null : obj.getInt("minPrice");
-        Integer maxPrice = obj.isNull("maxPrice") ? null : obj.getInt("maxPrice");
-        Timestamp startedAt = obj.isNull("startedAt") ? null : Timestamp.valueOf(obj.getString("startedAt"));
-        Timestamp endedAt = obj.isNull("endedAt") ? null : Timestamp.valueOf(obj.getString("endedAt"));
+    public static Specification<PriceRange> filterPriceRange(PriceRangeDTO priceRangeDTO) {
+        UUID houseId = Optional.ofNullable(priceRangeDTO.getHouseId()).orElse(null);
+        Integer minPrice = Optional.ofNullable(priceRangeDTO.getMinPrice()).orElse(null);
+        Integer maxPrice = Optional.ofNullable(priceRangeDTO.getMaxPrice()).orElse(null);
+        Timestamp startedAt = Optional.ofNullable(priceRangeDTO.getStartedAt()).orElse(null);
+        Timestamp endedAt = Optional.ofNullable(priceRangeDTO.getEndedAt()).orElse(null);
         return Specification.where(hasHouse(houseId))
                 .and(withinDateRange(startedAt, endedAt))
                 .and(hasPriceBetween(minPrice, maxPrice));

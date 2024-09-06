@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -94,9 +95,10 @@ public class PriceRangeController {
 
     /** 查詢所有 */
     @GetMapping("/all")
-    public Page<PriceRange> all(@RequestParam Map<String, String> allParams) {
-        JSONObject jsonParams = new JSONObject(allParams);
-        return priceRangeService.findAll(jsonParams.toString());
+    public Page<PriceRange> all(@ModelAttribute PriceRangeDTO priceRangeDTO) {
+        // JSONObject jsonParams = new JSONObject(allParams);
+        // return priceRangeService.findAll(jsonParams.toString());
+        return priceRangeService.findAll(priceRangeDTO);
     }
 
     /**
@@ -113,8 +115,8 @@ public class PriceRangeController {
      * 欄位排序: dir, order
      */
     @PostMapping("/search")
-    public Page<PriceRange> search(@RequestBody String jsonString) {
-        return priceRangeService.find(jsonString);
+    public Page<PriceRange> search(@RequestBody PriceRangeDTO priceRangeDTO) {
+        return priceRangeService.find(priceRangeDTO);
     }
 
 }
