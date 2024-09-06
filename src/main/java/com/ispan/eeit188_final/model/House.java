@@ -2,6 +2,7 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -13,6 +14,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -90,6 +94,14 @@ public class House {
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<PriceRange> priceRanges;
+    
+    //postulate
+    @ManyToMany
+	@JoinTable(name = "house_postulate", 
+				inverseJoinColumns = @JoinColumn(name = "postulate_id", referencedColumnName = "id"), 
+				 joinColumns= @JoinColumn(name = "house_id", referencedColumnName = "id"))
+	@JsonManagedReference
+	private Set<Postulate> postulates;
 
     @PrePersist
     public void onCreate() {
