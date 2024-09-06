@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -46,7 +48,7 @@ public class UserService {
                             .put("about", user.getAbout())
                             .put("createdAt", user.getCreatedAt())
                             .put("updatedAt", user.getUpdatedAt())
-                            .put("headshotImageBase64", user.getHeadshotImageBase64())
+                            .put("avatarBase64", user.getAvatarBase64())
                             .put("backgroundImageBlob", user.getBackgroundImageBlob());
 
                     return ResponseEntity.ok(obj.toString());
@@ -83,18 +85,14 @@ public class UserService {
                         .put("about", user.getAbout())
                         .put("createdAt", user.getCreatedAt())
                         .put("updatedAt", user.getUpdatedAt())
-                        .put("headshotImageBase64", user.getHeadshotImageBase64())
+                        .put("avatarBase64", user.getAvatarBase64())
                         .put("backgroundImageBlob", user.getBackgroundImageBlob());
 
                 usersArray.put(obj);
             }
 
             JSONObject response = new JSONObject()
-                    .put("users", usersArray)
-                    .put("currentPage", users.getNumber())
-                    .put("totalItems", users.getTotalElements())
-                    .put("totalPages", users.getTotalPages())
-                    .put("pageSize", users.getSize());
+                    .put("users", usersArray);
 
             return ResponseEntity.ok(response.toString());
         } catch (JSONException e) {
@@ -104,7 +102,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<String> createUser(String jsonRequest, byte[] backgroundImageBlob) {
+    public ResponseEntity<String> createUser(String jsonRequest) {
         if (jsonRequest != null && !jsonRequest.isEmpty()) {
             try {
                 JSONObject obj = new JSONObject(jsonRequest);
@@ -117,8 +115,6 @@ public class UserService {
                 String email = obj.isNull("email") ? null : obj.getString("email");
                 String password = obj.isNull("password") ? null : obj.getString("password");
                 String about = obj.isNull("about") ? null : obj.getString("about");
-                String headshotImageBase64 = obj.isNull("headshotImageBase64") ? null
-                        : obj.getString("headshotImageBase64");
 
                 // Handle birthday parsing
                 Date birthday = null;
@@ -165,8 +161,8 @@ public class UserService {
                 newUser.setEmail(email);
                 newUser.setPassword(password);
                 newUser.setAbout(about);
-                newUser.setHeadshotImageBase64(headshotImageBase64);
-                newUser.setBackgroundImageBlob(backgroundImageBlob);
+                newUser.setAvatarBase64(null);
+                newUser.setBackgroundImageBlob(null);
 
                 userRepository.save(newUser);
 
@@ -198,7 +194,7 @@ public class UserService {
         return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
     }
 
-    public ResponseEntity<String> update(UUID id, String jsonRequest, byte[] backgroundImageBlob) {
+    public ResponseEntity<String> update(UUID id, String jsonRequest) {
         if (id != null && !id.toString().isEmpty()) {
             Optional<User> optional = userRepository.findById(id);
 
@@ -216,8 +212,6 @@ public class UserService {
                     String email = obj.isNull("email") ? null : obj.getString("email");
                     String password = obj.isNull("password") ? null : obj.getString("password");
                     String about = obj.isNull("about") ? null : obj.getString("about");
-                    String headshotImageBase64 = obj.isNull("headshotImageBase64") ? null
-                            : obj.getString("headshotImageBase64");
 
                     // Handle birthday parsing
                     Date birthday = null;
@@ -263,8 +257,6 @@ public class UserService {
                     user.setEmail(email);
                     user.setPassword(password);
                     user.setAbout(about);
-                    user.setHeadshotImageBase64(headshotImageBase64);
-                    user.setBackgroundImageBlob(backgroundImageBlob);
 
                     userRepository.save(user);
 
@@ -274,10 +266,114 @@ public class UserService {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
                 }
+            } else {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"User not found\"}");
             }
         }
 
         return ResponseEntity.badRequest()
                 .body("{\"message\": \"Invalid ID\"}");
+    }
+
+    public ResponseEntity<String> uploadAvater(UUID id, String jsonRequest) {
+        if (id != null && !id.toString().isEmpty()) {
+            Optional<User> optional = userRepository.findById(id);
+
+            if (optional.isPresent()) {
+                User user = optional.get();
+
+                try {
+                    JSONObject obj = new JSONObject(jsonRequest);
+                    String avatar = obj.isNull("avatarBase64") ? null : obj.getString("avatarBase64");
+
+                    user.setAvatarBase64(avatar);
+                    userRepository.save(user);
+
+                    return ResponseEntity.ok("{\"message\": \"Successfully upload avatar\"}");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
+                }
+            } else {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"User not found\"}");
+            }
+        }
+
+        return ResponseEntity.badRequest()
+                .body("{\"message\": \"Invalid ID\"}");
+    }
+
+    public ResponseEntity<String> uploadBackgroundImage(UUID id, MultipartFile backgroundImageBlobFile)
+            throws IOException {
+        if (id == null || id.toString().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("{\"message\": \"Invalid ID\"}");
+        }
+
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isPresent()) {
+            User user = optional.get();
+
+            if (backgroundImageBlobFile != null && !backgroundImageBlobFile.isEmpty()) {
+
+                // Get the byte[] from the uploaded file
+                byte[] backgroundImageBlobFileBytes = backgroundImageBlobFile.getBytes();
+
+                user.setBackgroundImageBlob(backgroundImageBlobFileBytes);
+                userRepository.save(user);
+
+                return ResponseEntity.ok("{\"message\": \"Successfully uploaded background image\"}");
+            } else {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"backgroundImageBlob file is empty\"}");
+            }
+        } else {
+            return ResponseEntity.badRequest()
+                    .body("{\"message\": \"User not found\"}");
+        }
+    }
+
+    public ResponseEntity<String> deleteAvatar(UUID id) {
+        if (id == null || id.toString().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("{\"message\": \"Invalid ID\"}");
+        }
+
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isPresent()) {
+            User user = optional.get();
+            user.setAvatarBase64(null);
+            userRepository.save(user);
+
+            return ResponseEntity.ok("{\"message\": \"Successfully delete avatar\"}");
+        } else {
+            return ResponseEntity.badRequest()
+                    .body("{\"message\": \"User not found\"}");
+        }
+    }
+
+    public ResponseEntity<String> deleteBackgroundImage(UUID id) {
+        if (id == null || id.toString().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("{\"message\": \"Invalid ID\"}");
+        }
+
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isPresent()) {
+            User user = optional.get();
+            user.setBackgroundImageBlob(null);
+            userRepository.save(user);
+
+            return ResponseEntity.ok("{\"message\": \"Successfully delete background image\"}");
+        } else {
+            return ResponseEntity.badRequest()
+                    .body("{\"message\": \"User not found\"}");
+        }
     }
 }
