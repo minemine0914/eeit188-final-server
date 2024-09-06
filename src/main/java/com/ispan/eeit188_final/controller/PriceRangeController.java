@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ispan.eeit188_final.dto.PriceRangeDTO;
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.PriceRange;
+import com.ispan.eeit188_final.service.HouseService;
 import com.ispan.eeit188_final.service.PriceRangeService;
 
 @RestController
@@ -28,15 +31,31 @@ public class PriceRangeController {
     @Autowired
     private PriceRangeService priceRangeService;
 
+    @Autowired
+    HouseService houseService;
+
     /** 新增一筆 */
     @PostMapping("/")
-    public ResponseEntity<PriceRange> create(@RequestBody PriceRange priceRange) {
-        PriceRange created = priceRangeService.create(priceRange);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(created.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(created); // Return 201 Created and redirect to created url
+    public ResponseEntity<PriceRange> create(@RequestBody PriceRangeDTO priceRangeDTO) {
+        House findHouse = houseService.findById(priceRangeDTO.getHouseId());
+        if (findHouse != null) {
+            PriceRange priceRange = PriceRange.builder()
+                    .house(findHouse)
+                    .newPrice(priceRangeDTO.getNewPrice())
+                    .startedAt(priceRangeDTO.getStartedAt())
+                    .endedAt(priceRangeDTO.getEndedAt())
+                    .build();
+            PriceRange created = priceRangeService.create(priceRange);
+            if (created != null) {
+                URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(created.getId())
+                        .toUri();
+                return ResponseEntity.created(location).body(created); // Return 201 Created and redirect to created url
+            }
+            return ResponseEntity.badRequest().build(); // Return 400 BadRequest
+        }
+        return ResponseEntity.notFound().build();// Return 404 NotFound (House id not found)
     }
 
     /** 查詢一筆 */

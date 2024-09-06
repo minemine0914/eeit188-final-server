@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,25 +37,31 @@ public class PriceRange {
     private UUID id;
 
     @Column(name = "new_price", columnDefinition = "INT")
-    private Integer newPrice;       // 浮動價錢
+    private Integer newPrice; // 浮動價錢
 
     // 開始/結束 區間
     @Column(name = "started_at", columnDefinition = "DATETIME2")
-    private Timestamp startedAt;    // 起始時間
+    private Timestamp startedAt; // 起始時間
     @Column(name = "ended_at", columnDefinition = "DATETIME2")
-    private Timestamp endedAt;      // 結束時間
+    private Timestamp endedAt; // 結束時間
 
     // 建立/修改 時間
     @Column(name = "create_at", columnDefinition = "DATETIME2")
-    private Timestamp createdAt;    // 建立時間
+    private Timestamp createdAt; // 建立時間
     @Column(name = "update_at", columnDefinition = "DATETIME2")
-    private Timestamp updatedAt;    // 修改時間
+    private Timestamp updatedAt; // 修改時間
 
     // 關聯 house.id = price_range.house_id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", columnDefinition = "UNIQUEIDENTIFIER")
     @JsonBackReference
-    private House house;            // 房源
+    private House house; // 房源
+
+    // 自訂序列化 houseId
+    @JsonProperty("houseId")
+    public UUID getHouseId() {
+        return house != null ? house.getId() : null;
+    }
 
     @PrePersist
     public void onCreate() {
@@ -65,4 +72,6 @@ public class PriceRange {
     public void onUpdate() {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
+
+    
 }
