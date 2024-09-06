@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.ChatExternalResource;
-import com.ispan.eeit188_final.model.ChatExternalResourceRepository;
+import com.ispan.eeit188_final.repository.ChatExternalResourceRepository;
 
 @Service
 public class ChatExternalResourceService {

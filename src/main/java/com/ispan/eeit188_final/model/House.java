@@ -94,7 +94,6 @@ public class House {
     @PrePersist
     public void onCreate() {
         this.createdAt = new Timestamp(System.currentTimeMillis());
-        // this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
     @PreUpdate

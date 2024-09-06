@@ -2,14 +2,9 @@ package com.ispan.eeit188_final.model.composite;
 
 import java.io.Serializable;
 import java.util.Objects;
-
-import com.ispan.eeit188_final.model.House;
-import com.ispan.eeit188_final.model.User;
+import java.util.UUID;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,18 +15,13 @@ public class UserCollectionId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
-    private User userId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
-    private House houseId;
+    private UUID userId;
+    private UUID houseId;
 
     public UserCollectionId() {
     }
 
-    public UserCollectionId(User userId, House houseId) {
+    public UserCollectionId(UUID userId, UUID houseId) {
         this.userId = userId;
         this.houseId = houseId;
     }

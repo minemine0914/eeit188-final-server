@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.thymeleaf.expression.Messages;
+// import org.thymeleaf.expression.Messages;
 
 import java.util.Date;
 import java.util.List;
@@ -30,8 +30,8 @@ import lombok.Setter;
 public class PlatformStaff {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "UUID")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID id;
 
     @Column(name = "name", columnDefinition = "VARCHAR(30)", nullable = false)
@@ -75,10 +75,10 @@ public class PlatformStaff {
     private String avatarbase64;
 
     @Lob
-    @Column(name = "background_image_blob", columnDefinition = "BLOB")
+    @Column(name = "background_image_blob", columnDefinition = "varbinary(max)")
     private byte[] backgroundImageBlob;
 
-    @OneToMany(mappedBy = "PlatformStaff", cascade = CascadeType.ALL)
-    private List<ChatRecord> ChatRecord;
+    // @OneToMany(mappedBy = "PlatformStaff", cascade = CascadeType.ALL)
+    // private List<ChatRecord> ChatRecord;
 
 }

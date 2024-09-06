@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.DiscussExternalResource;
-import com.ispan.eeit188_final.model.DiscussExternalResourceRepository;
+import com.ispan.eeit188_final.repository.DiscussExternalResourceRepository;
 
 @Service
 public class DiscussExternalResourceService {

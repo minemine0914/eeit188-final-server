@@ -14,7 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.model.PlatformStaff;
-import com.ispan.eeit188_final.model.PlatformStaffRepository;
+import com.ispan.eeit188_final.repository.PlatformStaffRepository;
 
 @Service
 public class PlatformStaffService {
