@@ -43,5 +43,5 @@ public class DiscussExternalResource {
     private LocalDateTime createdAt;
 
     // @OneToMany(mappedBy = "DiscussExternalResource", cascade = CascadeType.ALL)
-    // private List<Discuss> Discuss;
+    // private List<House> House;
 }

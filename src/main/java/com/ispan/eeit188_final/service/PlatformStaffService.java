@@ -22,6 +22,21 @@ public class PlatformStaffService {
     @Autowired
     private PlatformStaffRepository PSRepo;
 
+    // 檢查 email 是否存在
+    public boolean existsByEmail(String email) {
+        return PSRepo.existsByEmail(email);
+    }
+
+    // 檢查 email 是否存在
+    public boolean existsByPassword(String password) {
+        return PSRepo.existsByEmail(password);
+    }
+
+    // 檢查 id 是否存在
+    public boolean existsById(UUID id) {
+        return PSRepo.existsById(id);
+    }
+
     public PlatformStaff savePS(UUID id, String name, String role, String gender, Date birthday,
             String phone, String mobile_phone, String address, String email, String password,
             LocalDateTime createdAt, LocalDateTime updatedAt, String avatarbase64,

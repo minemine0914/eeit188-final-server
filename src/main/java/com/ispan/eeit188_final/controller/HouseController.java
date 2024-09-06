@@ -55,7 +55,7 @@ public class HouseController {
     @PutMapping("/{id}")
     public ResponseEntity<House> update(@PathVariable String id, @RequestBody House house) {
         House finded = houseService.findById(UUID.fromString(id));
-        if ( finded != null ) {
+        if (finded != null) {
             House updated = houseService.modify(UUID.fromString(id), house);
             if (updated != null) {
                 return ResponseEntity.ok(updated); // Return 200 and print updated entity

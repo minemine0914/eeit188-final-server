@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface PlatformStaffRepository extends JpaRepository<PlatformStaff, UUID> {
 
+    boolean existsByEmail(String email);
+
 }
