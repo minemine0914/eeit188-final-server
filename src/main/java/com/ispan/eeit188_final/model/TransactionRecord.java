@@ -5,9 +5,12 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +28,22 @@ public class TransactionRecord {
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    @Column(name = "house_id", columnDefinition = "uniqueidentifier")
-    private UUID houseId;
+    // @Column(name = "house_id", columnDefinition = "uniqueidentifier")
+    // private UUID houseId;
+    
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
+    private House houseId;
 
-    @Column(name = "user_id", columnDefinition = "uniqueidentifier")
-    private UUID userId;
+
+    //@Column(name = "user_id", columnDefinition = "uniqueidentifier")
+    //private UUID userId;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
+    private User userId;
+    
 
     @Column(name = "cash_flow", columnDefinition = "int")
     private int cashFlow;

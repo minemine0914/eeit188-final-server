@@ -5,9 +5,12 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,11 +37,19 @@ public class Discuss {
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
-    @Column(name = "user_id", columnDefinition = "uniqueidentifier")
-    private UUID userId;
+    // @Column(name = "user_id", columnDefinition = "uniqueidentifier")
+    // private UUID userId;
 
-    @Column(name = "house_id", columnDefinition = "uniqueidentifier")
-    private UUID houseId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
+    private User userId;
+
+    // @Column(name = "house_id", columnDefinition = "uniqueidentifier")
+    // private UUID houseId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
+    private House houseId;
 
     @Column(name = "discuss_id", columnDefinition = "uniqueidentifier")
     private UUID discussId;
