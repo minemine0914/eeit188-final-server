@@ -2,8 +2,16 @@ package com.ispan.eeit188_final.model.composite;
 
 import java.io.Serializable;
 import java.util.Objects;
+<<<<<<< HEAD
 import java.util.UUID;
+=======
+// import java.util.UUID;
 
+import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.User;
+>>>>>>> dev-leon
+
+// import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +25,12 @@ public class UserCollectionId implements Serializable {
 
     private UUID userId;
     private UUID houseId;
+
+    // @Column(name = "user_id", columnDefinition = "uniqueidentifier")
+    // private UUID userId;
+
+    // @Column(name = "house_id", columnDefinition = "uniqueidentifier")
+    // private UUID houseId;
 
     public UserCollectionId() {
     }
