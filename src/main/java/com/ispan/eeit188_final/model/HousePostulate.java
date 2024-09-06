@@ -2,6 +2,8 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ispan.eeit188_final.model.composite.HousePostulateId;
 
 import jakarta.persistence.Column;
@@ -22,6 +24,7 @@ import lombok.Setter;
 	@JoinTable(name = "house_postulate", 
 				inverseJoinColumns = @JoinColumn(name = "postulate_id", referencedColumnName = "id"), 
 				 joinColumns= @JoinColumn(name = "house_id", referencedColumnName = "id"))
+	@JsonManagedReference
 	private Set<Postulate> postulates;
 */
 
@@ -35,17 +38,19 @@ public class HousePostulate {
 	@EmbeddedId
 	private HousePostulateId id;
 
-	@Column(name = "createdAt", columnDefinition = "datetime2")
+	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
 	@MapsId("postulateId")
 	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "postulate_id", referencedColumnName = "id")
+//	@JsonBackReference
 	private Postulate postulate;
 
 	@MapsId("houseId")
 	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "house_id", referencedColumnName = "id")
+//	@JsonBackReference
 	private House house;
 
 	@PrePersist

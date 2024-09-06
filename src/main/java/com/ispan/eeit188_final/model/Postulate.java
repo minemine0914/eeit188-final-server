@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,13 +36,14 @@ public class Postulate {
 	@Column(name = "postulate", columnDefinition = "varchar(15)")
 	private String postulate;
 
-	@Column(name = "createdAt", columnDefinition = "datetime2")
+	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
 //	@ManyToMany(fetch = FetchType.LAZY)
 //	@JoinTable(name = "house_postulate", 
 //				joinColumns = @JoinColumn(name = "postulate_id", referencedColumnName = "id"), 
 //				inverseJoinColumns = @JoinColumn(name = "house_id", referencedColumnName = "id"))
+//	@JsonManagedReference
 //	private Set<House> houses;
 
 	@PrePersist

@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,28 +31,30 @@ public class Ticket {
 	@Column(name = "id", columnDefinition = "uniqueidentifier")
 	private UUID id;
 
-	@Column(name = "qrCode", columnDefinition = "varchar(max)")
+	@Column(name = "qr_code", columnDefinition = "varchar(max)")
 	private String qrCode;
 	
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "user_id", referencedColumnName = "id")
+//  @JsonBackReference
 //	private User user;
-	@Column(name = "userId", columnDefinition = "uniqueidentifier")
+	@Column(name = "user_id", columnDefinition = "uniqueidentifier")
 	private UUID userId;
 
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "house_id", referencedColumnName = "id")
+//  @JsonBackReference
 //	private House house;
-	@Column(name = "houseId", columnDefinition = "uniqueidentifier")
+	@Column(name = "house_id", columnDefinition = "uniqueidentifier")
 	private UUID houseId;
 
-	@Column(name = "startedAt", columnDefinition = "datetime2")
+	@Column(name = "started_at", columnDefinition = "datetime2")
 	private Timestamp startedAt;
 
-	@Column(name = "endedAt", columnDefinition = "datetime2")
+	@Column(name = "ended_at", columnDefinition = "datetime2")
 	private Timestamp endedAt;
 
-	@Column(name = "createdAt", columnDefinition = "datetime2")
+	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
 	@PrePersist
