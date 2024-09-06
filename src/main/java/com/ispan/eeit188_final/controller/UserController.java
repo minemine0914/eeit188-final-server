@@ -9,19 +9,19 @@ import com.ispan.eeit188_final.service.UserService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/get-user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<String> getUserById(@PathVariable UUID id) {
 
         return userService.findById(id);
     }
 
-    @GetMapping("/get-users")
+    @GetMapping("/")
     public ResponseEntity<String> getUsers(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
@@ -29,7 +29,7 @@ public class UserController {
         return userService.getUsers(pageNo, pageSize);
     }
 
-    @PostMapping("/create-user")
+    @PostMapping("/")
     public ResponseEntity<String> createUser(
             @RequestBody String jsonRequest,
             @RequestParam("backgroundImageBlob") byte[] backgroundImageBlob) {
@@ -37,13 +37,13 @@ public class UserController {
         return userService.createUser(jsonRequest, backgroundImageBlob);
     }
 
-    @DeleteMapping("/delete-user/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
 
         return userService.deleteById(id);
     }
 
-    @PutMapping("update-user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(
             @PathVariable UUID id,
             @RequestBody String jsonRequest,
