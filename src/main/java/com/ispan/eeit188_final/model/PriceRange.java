@@ -50,8 +50,9 @@ public class PriceRange {
     @Column(name = "update_at", columnDefinition = "DATETIME2")
     private Timestamp updatedAt;    // 修改時間
 
+    // 關聯 house.id = price_range.house_id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "house_id", columnDefinition = "UNIQUEIDENTIFIER", insertable = false, updatable = false)
+    @JoinColumn(name = "house_id", columnDefinition = "UNIQUEIDENTIFIER")
     @JsonBackReference
     private House house;            // 房源
 
