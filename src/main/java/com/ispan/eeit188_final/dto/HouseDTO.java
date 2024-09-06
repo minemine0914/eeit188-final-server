@@ -4,11 +4,13 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class HouseDTO {
     // 用於 Entity 資料
     private UUID id;
