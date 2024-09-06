@@ -92,16 +92,13 @@ public class House {
 
     // 房源的價格範圍
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("house-priceRange")
     private List<PriceRange> priceRanges;
     
     //postulate
-    @ManyToMany
-	@JoinTable(name = "house_postulate", 
-				inverseJoinColumns = @JoinColumn(name = "postulate_id", referencedColumnName = "id"), 
-				 joinColumns= @JoinColumn(name = "house_id", referencedColumnName = "id"))
-	@JsonManagedReference
-	private Set<Postulate> postulates;
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference("house-housePostulate")
+    private Set<HousePostulate> housePostulates;
 
     @PrePersist
     public void onCreate() {

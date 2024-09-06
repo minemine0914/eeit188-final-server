@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -39,12 +41,9 @@ public class Postulate {
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "house_postulate", 
-				joinColumns = @JoinColumn(name = "postulate_id", referencedColumnName = "id"), 
-				inverseJoinColumns = @JoinColumn(name = "house_id", referencedColumnName = "id"))
-	@JsonManagedReference
-	private Set<House> houses;
+	@OneToMany(mappedBy = "postulate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference("postulate-housePostulate")
+    private Set<HousePostulate> housePostulates;
 
 	@PrePersist
 	public void onCreate() {
