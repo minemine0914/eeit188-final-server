@@ -333,7 +333,7 @@ public class UserService {
                 .body("{\"message\": \"Invalid ID\"}");
     }
 
-    public ResponseEntity<String> updatePassword(UUID id, String jsonRequest) {
+    public ResponseEntity<String> checkPassword(UUID id, String jsonRequest) {
         if (id != null && !id.toString().isEmpty()) {
             Optional<User> optional = userRepository.findById(id);
 

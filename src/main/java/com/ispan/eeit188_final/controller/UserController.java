@@ -60,12 +60,12 @@ public class UserController {
         return userService.update(id, jsonRequest);
     }
 
-    @PostMapping("/{id}/update-password")
-    public ResponseEntity<String> updatePassword(
+    @PostMapping("/{id}/check-password")
+    public ResponseEntity<String> checkPassword(
             @PathVariable UUID id,
             @RequestBody String jsonRequest) {
 
-        return userService.updatePassword(id, jsonRequest);
+        return userService.checkPassword(id, jsonRequest);
     }
 
     @PostMapping("/forgot-password")
