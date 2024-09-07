@@ -2,6 +2,7 @@ package com.ispan.eeit188_final.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -105,6 +106,13 @@ public class UserController {
             @RequestParam("backgroundImage") MultipartFile backgroundImage) throws IOException {
 
         return userService.uploadBackgroundImage(id, backgroundImage);
+    }
+
+    // 下載個人主頁背景圖片（byte[]）
+    @GetMapping("/{id}/download-background-image")
+    public ResponseEntity<Resource> downloadBackgroundImage(@PathVariable UUID id) {
+
+        return userService.getBackgroundImage(id);
     }
 
     // 移除大頭貼圖片
