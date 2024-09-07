@@ -60,6 +60,28 @@ public class UserController {
         return userService.update(id, jsonRequest);
     }
 
+    @PostMapping("/{id}/check-password")
+    public ResponseEntity<String> checkPassword(
+            @PathVariable UUID id,
+            @RequestBody String jsonRequest) {
+
+        return userService.checkPassword(id, jsonRequest);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody String jsonRequest) {
+
+        return userService.forgotPassword(jsonRequest);
+    }
+
+    @PutMapping("/{id}/set-new-password")
+    public ResponseEntity<String> setNewPassword(
+            @PathVariable UUID id,
+            @RequestBody String jsonRequest) {
+
+        return userService.setNewPassword(id, jsonRequest);
+    }
+
     @PutMapping("/{id}/upload-avatar")
     public ResponseEntity<String> uploadAvater(@PathVariable UUID id,
             @RequestBody String jsonRequest) {
