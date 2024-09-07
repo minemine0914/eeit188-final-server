@@ -29,9 +29,8 @@ public class UserCollectionController {
     }
 
     // 創建用戶收藏
-    @PostMapping("/{userId}")
-    public ResponseEntity<String> createUserCollection(@PathVariable UUID userId,
-            @RequestBody String jsonRequeest) {
+    @PostMapping("/")
+    public ResponseEntity<String> createUserCollection(@RequestBody String jsonRequeest) {
 
         return userCollectionService.createUserCollection(jsonRequeest);
     }

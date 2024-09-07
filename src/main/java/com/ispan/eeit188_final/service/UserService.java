@@ -281,6 +281,7 @@ public class UserService {
                     if (!obj.isNull("birthday") && !obj.getString("birthday").isEmpty()) {
                         String birthdayStr = obj.getString("birthday");
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
                         try {
                             birthday = dateFormat.parse(birthdayStr);
 
