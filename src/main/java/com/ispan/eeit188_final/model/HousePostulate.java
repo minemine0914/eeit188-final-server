@@ -2,17 +2,11 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ispan.eeit188_final.model.composite.HousePostulateId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -44,13 +38,13 @@ public class HousePostulate {
 	// @MapsId("postulateId")
 	// @ManyToOne(fetch = FetchType.LAZY)
 	// @JoinColumn(name = "postulate_id", referencedColumnName = "id")
-	// @JsonManagedReference
+	// @JsonManagedReference("postulate-housePostulate")
 	// private Postulate postulate;
 
 	// @MapsId("houseId")
 	// @ManyToOne(fetch = FetchType.LAZY)
 	// @JoinColumn(name = "house_id", referencedColumnName = "id")
-	// @JsonManagedReference
+	// @JsonManagedReference("house-housePostulate")
 	// private House house;
 
 	@PrePersist

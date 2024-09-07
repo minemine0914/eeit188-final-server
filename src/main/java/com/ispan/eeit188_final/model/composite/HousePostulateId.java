@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.model.composite;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Embeddable
-public class HousePostulateId {
+public class HousePostulateId implements Serializable{
 
 	// @ManyToOne(fetch = FetchType.LAZY)
 	// @JoinColumn(name = "postulate_id",columnDefinition = "uniqueidentifier")
@@ -24,15 +25,23 @@ public class HousePostulateId {
 	// private House houseId;
 	//
 	// public HousePostulateId(Postulate postulateId, House houseId) {
-	// super();
 	// this.postulateId = postulateId;
 	// this.houseId = houseId;
 	// }
+
+	private static final long serialVersionUID = 1L;
+	
 	@Column(name = "postulate_id")
 	private UUID postulateId;
+	
 	@Column(name = "house_id")
 	private UUID houseId;
 
+	public HousePostulateId(UUID postulateId, UUID houseId) {
+		this.postulateId = postulateId;
+		this.houseId = houseId;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(postulateId, houseId);

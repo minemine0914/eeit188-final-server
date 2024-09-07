@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.model.composite;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,10 +13,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Embeddable
-public class CartId {
-
+public class CartId implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	private UUID userId;
 	private UUID houseId;
+
+	public CartId(UUID userId, UUID houseId) {
+		this.userId = userId;
+		this.houseId = houseId;
+	}
 
 	@Override
 	public int hashCode() {

@@ -7,11 +7,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 
 import com.ispan.eeit188_final.model.HousePostulate;
-import com.ispan.eeit188_final.model.HousePostulate;
-import com.ispan.eeit188_final.model.Ticket;
 import com.ispan.eeit188_final.model.composite.HousePostulateId;
 
 @SpringBootTest
