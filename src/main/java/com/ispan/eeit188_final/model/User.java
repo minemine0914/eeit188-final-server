@@ -3,13 +3,17 @@ package com.ispan.eeit188_final.model;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -35,6 +39,9 @@ public class User {
 
     @Column(name = "name", columnDefinition = "varchar(15)", nullable = false)
     private String name;
+
+    @Column(name = "role", columnDefinition = "varchar(15)")
+    private String role;
 
     @Column(name = "gender", columnDefinition = "varchar(10)")
     private String gender;
@@ -72,6 +79,39 @@ public class User {
     @Lob
     @Column(name = "background_image_blob", columnDefinition = "varbinary(max)")
     private byte[] backgroundImageBlob;
+
+    // Relationship
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Cart> carts;
+
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Ticket> tickets;
+
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<TransactionRecord> transactionRecords;
+
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Coupon> coupons;
+
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<House> houses;
+
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<UserCollection> userCollections;
+
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Discuss> discusses;
+
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<ChatRecord> chatRecords;
 
     @PrePersist
     public void onCreate() {

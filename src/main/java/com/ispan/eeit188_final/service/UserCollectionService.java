@@ -45,8 +45,7 @@ public class UserCollectionService {
 
                     for (UserCollection userCollection : userCollections.getContent()) {
                         JSONObject obj = new JSONObject()
-                                .put("name", userCollection.getUserCollectionId().getHouseId())
-                                .put(null, userCollection.getCreatedAt());
+                                .put("id", userCollection.getUserCollectionId().getHouseId().getId());
 
                         userCollectionsArray.put(obj);
                     }

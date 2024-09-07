@@ -1,13 +1,16 @@
 package com.ispan.eeit188_final.service;
 
+import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -54,6 +57,7 @@ public class UserService {
                 try {
                     JSONObject obj = new JSONObject()
                             .put("name", user.getName())
+                            .put("role", user.getRole())
                             .put("gender", user.getGender())
                             .put("birthday", user.getBirthday())
                             .put("phone", user.getPhone())
@@ -63,8 +67,7 @@ public class UserService {
                             .put("about", user.getAbout())
                             .put("createdAt", user.getCreatedAt())
                             .put("updatedAt", user.getUpdatedAt())
-                            .put("avatarBase64", user.getAvatarBase64())
-                            .put("backgroundImageBlob", user.getBackgroundImageBlob());
+                            .put("avatarBase64", user.getAvatarBase64());
 
                     return ResponseEntity.ok(obj.toString());
                 } catch (JSONException e) {
@@ -91,6 +94,7 @@ public class UserService {
             for (User user : users.getContent()) {
                 JSONObject obj = new JSONObject()
                         .put("name", user.getName())
+                        .put("role", user.getRole())
                         .put("gender", user.getGender())
                         .put("birthday", user.getBirthday())
                         .put("phone", user.getPhone())
@@ -100,8 +104,7 @@ public class UserService {
                         .put("about", user.getAbout())
                         .put("createdAt", user.getCreatedAt())
                         .put("updatedAt", user.getUpdatedAt())
-                        .put("avatarBase64", user.getAvatarBase64())
-                        .put("backgroundImageBlob", user.getBackgroundImageBlob());
+                        .put("avatarBase64", user.getAvatarBase64());
 
                 usersArray.put(obj);
             }
@@ -123,6 +126,7 @@ public class UserService {
                 JSONObject obj = new JSONObject(jsonRequest);
 
                 String name = obj.isNull("name") ? null : obj.getString("name");
+                String role = obj.isNull("role") ? null : obj.getString("role");
                 String gender = obj.isNull("gender") ? null : obj.getString("gender");
                 String phone = obj.isNull("phone") ? null : obj.getString("phone");
                 String mobilePhone = obj.isNull("mobilePhone") ? null : obj.getString("mobilePhone");
@@ -171,6 +175,7 @@ public class UserService {
 
                 User newUser = new User();
                 newUser.setName(name);
+                newUser.setRole(role);
                 newUser.setGender(gender);
                 newUser.setBirthday(birthday);
                 newUser.setPhone(phone);
@@ -269,6 +274,7 @@ public class UserService {
                     JSONObject obj = new JSONObject(jsonRequest);
 
                     String name = obj.isNull("name") ? null : obj.getString("name");
+                    String role = obj.isNull("role") ? null : obj.getString("role");
                     String gender = obj.isNull("gender") ? null : obj.getString("gender");
                     String phone = obj.isNull("phone") ? null : obj.getString("phone");
                     String mobilePhone = obj.isNull("mobilePhone") ? null : obj.getString("mobilePhone");
@@ -281,6 +287,7 @@ public class UserService {
                     if (!obj.isNull("birthday") && !obj.getString("birthday").isEmpty()) {
                         String birthdayStr = obj.getString("birthday");
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
                         try {
                             birthday = dateFormat.parse(birthdayStr);
 
@@ -307,6 +314,7 @@ public class UserService {
                     }
 
                     user.setName(name);
+                    user.setRole(role);
                     user.setGender(gender);
                     user.setBirthday(birthday);
                     user.setPhone(phone);
@@ -529,6 +537,34 @@ public class UserService {
             return ResponseEntity.badRequest()
                     .body("{\"message\": \"User not found\"}");
         }
+    }
+
+    public ResponseEntity<Resource> getBackgroundImage(UUID id) {
+        if (id == null) {
+            return ResponseEntity.badRequest()
+                    .body(new ByteArrayResource("{\"message\": \"Invalid ID\"}".getBytes()));
+        }
+
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isPresent()) {
+            User user = optional.get();
+            byte[] backgroundImageBlob = user.getBackgroundImageBlob();
+
+            if (backgroundImageBlob != null && backgroundImageBlob.length > 0) {
+                ByteArrayResource resource = new ByteArrayResource(backgroundImageBlob);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"backgroundImage.jpg\"")
+                        .contentLength(backgroundImageBlob.length)
+                        .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ByteArrayResource("{\"message\": \"Background image not found\"}".getBytes()));
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ByteArrayResource("{\"message\": \"User not found\"}".getBytes()));
     }
 
     public ResponseEntity<String> deleteBackgroundImage(UUID id) {

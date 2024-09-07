@@ -3,6 +3,9 @@ package com.ispan.eeit188_final.model;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -42,18 +46,19 @@ public class ChatRecord {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", columnDefinition = "uniqueidentifier")
-    private User senderId;
+    private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", columnDefinition = "uniqueidentifier")
-    private User receiverId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "platform_staff_id", columnDefinition = "uniqueidentifier")
-    private PlatformStaff platformStaffId;
+    private User receiver;
 
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
+
+    // Relationship
+    // @OneToMany(mappedBy = "chat_record", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<ChatExternalResource> chatExternalResources;
 
     // Methods
     @PrePersist

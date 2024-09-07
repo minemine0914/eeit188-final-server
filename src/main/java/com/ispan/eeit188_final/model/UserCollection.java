@@ -25,7 +25,6 @@ import lombok.Setter;
 public class UserCollection {
 
     @EmbeddedId
-    @Column(name = "id")
     private UserCollectionId userCollectionId;
 
     @Column(name = "created_at", columnDefinition = "datetime2")
