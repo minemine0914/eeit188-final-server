@@ -56,8 +56,9 @@ public class ChatRecord {
     private Timestamp createdAt;
 
     // Relationship
-    @OneToMany(mappedBy = "chat_record", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatExternalResource> chatExternalResources;
+    // @OneToMany(mappedBy = "chat_record", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<ChatExternalResource> chatExternalResources;
 
     // Methods
     @PrePersist

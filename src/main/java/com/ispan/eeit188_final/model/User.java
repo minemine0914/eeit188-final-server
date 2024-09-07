@@ -29,7 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@Table(name = "[user]")
+@Table(name = "user")
 public class User {
 
     @Id
@@ -81,29 +81,37 @@ public class User {
     private byte[] backgroundImageBlob;
 
     // Relationship
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cart> carts;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Cart> carts;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticket> tickets;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Ticket> tickets;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransactionRecord> transactionRecords;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<TransactionRecord> transactionRecords;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Coupon> coupons;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Coupon> coupons;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<House> houses;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<House> houses;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserCollection> userCollections;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<UserCollection> userCollections;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Discuss> discusses;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<Discuss> discusses;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatRecord> chatRecords;
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // private List<ChatRecord> chatRecords;
 
     @PrePersist
     public void onCreate() {
