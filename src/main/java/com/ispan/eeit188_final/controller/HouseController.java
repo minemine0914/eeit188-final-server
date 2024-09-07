@@ -118,4 +118,18 @@ public class HouseController {
     public Page<House> search(@RequestBody HouseDTO houseDTO) {
         return houseService.find(houseDTO);
     }
+
+    /** 新增設施 */
+    @PostMapping("/{id}/postulate")
+    public House addProsulate(@RequestBody HouseDTO houseDTO) {
+        
+        return null;
+    }
+    
+    /** 刪除設施 */
+    @DeleteMapping("/{id}/postulate")
+    public House deleteProsulate(@RequestBody HouseDTO houseDTO) {
+        
+        return null;
+    }
 }

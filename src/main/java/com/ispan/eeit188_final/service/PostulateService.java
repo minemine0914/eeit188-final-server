@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -30,21 +29,18 @@ public class PostulateService {
 	private PostulateRepository postulateRepository;
 
 	@Autowired
-    private HouseRepository houseRepository;
+	private HouseRepository houseRepository;
 
-    public Page<House> getHouses(PostulateDTO postulateDTO) {
-		// 預設 頁數 限制
-        Integer defaultPage = 0;
-        Integer defaultLimit = 10;
-        // 頁數 限制 排序
-        Integer page = Optional.ofNullable(postulateDTO.getPage()).orElse(defaultPage);
-        Integer limit = Optional.ofNullable(postulateDTO.getLimit()).orElse(defaultLimit);
-        Boolean dir = Optional.ofNullable(postulateDTO.getDir()).orElse(false);
-        String order = Optional.ofNullable(postulateDTO.getOrder()).orElse(null);
-		// 是否排序
-        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
-        return houseRepository.findByPostulateId(postulateDTO.getPostulateId(), PageRequest.of(page, limit, sort));
-    }
+	public Page<House> getHouses(PostulateDTO postulateDTO) {
+		Integer defaultPage = 0;
+		Integer defaultLimit = 10;
+		Integer page = Optional.ofNullable(postulateDTO.getPage()).orElse(defaultPage);
+		Integer limit = Optional.ofNullable(postulateDTO.getLimit()).orElse(defaultLimit);
+		Boolean dir = Optional.ofNullable(postulateDTO.getDir()).orElse(false);
+		String order = Optional.ofNullable(postulateDTO.getOrder()).orElse(null);
+		Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+		return houseRepository.findByPostulateId(postulateDTO.getPostulateId(), PageRequest.of(page, limit, sort));
+	}
 
 	public Postulate findById(UUID id) {
 		if (id != null) {
@@ -60,22 +56,17 @@ public class PostulateService {
 		return postulateRepository.findAll();
 	}
 
-	public Page<Postulate> findAll(String json) {
-		Integer defalutPageNum = 0;
-		Integer defaultPageSize = 10;
-		
-		JSONObject obj = new JSONObject(json);
-		
-		Integer pageNum = obj.isNull("pageNum") ? defalutPageNum : obj.getInt("pageNum");
-		Integer pageSize = obj.isNull("pageSize") || obj.getInt("pageSize") == 0 ? defaultPageSize : obj.getInt("pageSize");
-		Boolean desc = obj.isNull("desc") ? false : obj.getBoolean("desc");
-		String orderBy = obj.isNull("orderBy") || obj.getString("orderBy").length() == 0 ? "id" : obj.getString("orderBy");
-
-		Pageable p = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
-
-		return postulateRepository.findAll(p);
+	public Page<Postulate> findAll(PostulateDTO postulateDTO) {
+		Integer defaultPage = 0;
+		Integer defaultLimit = 10;
+		Integer page = Optional.ofNullable(postulateDTO.getPage()).orElse(defaultPage);
+		Integer limit = Optional.ofNullable(postulateDTO.getLimit()).orElse(defaultLimit);
+		Boolean dir = Optional.ofNullable(postulateDTO.getDir()).orElse(false);
+		String order = Optional.ofNullable(postulateDTO.getOrder()).orElse(null);
+		Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+		return postulateRepository.findAll(PageRequest.of(page, limit, sort));
 	}
-	
+
 	public Postulate findByName(String name) {
 		if (name != null && name.length() != 0) {
 			List<Postulate> postulates = postulateRepository.findByPostulate(name);
@@ -85,7 +76,7 @@ public class PostulateService {
 		}
 		return null;
 	}
-	
+
 	public void deleteById(UUID id) {
 		if (id != null) {
 			postulateRepository.deleteById(id);
@@ -117,7 +108,7 @@ public class PostulateService {
 		}
 		return postulateRepository.save(postulate);
 	}
-	
+
 	public Postulate update(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
@@ -132,7 +123,7 @@ public class PostulateService {
 		}
 		return null;
 	}
-	
+
 	public Postulate update(Postulate postulate) {
 		Optional<Postulate> dbPostulate = postulateRepository.findById(postulate.getId());
 		if (dbPostulate.isPresent()) {
@@ -140,6 +131,5 @@ public class PostulateService {
 		}
 		return null;
 	}
-	
-	
+
 }
