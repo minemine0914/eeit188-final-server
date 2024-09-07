@@ -36,6 +36,9 @@ public class User {
     @Column(name = "name", columnDefinition = "varchar(15)", nullable = false)
     private String name;
 
+    @Column(name = "role", columnDefinition = "varchar(15)")
+    private String role;
+
     @Column(name = "gender", columnDefinition = "varchar(10)")
     private String gender;
 

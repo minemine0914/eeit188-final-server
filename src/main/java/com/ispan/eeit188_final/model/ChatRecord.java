@@ -42,15 +42,11 @@ public class ChatRecord {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", columnDefinition = "uniqueidentifier")
-    private User senderId;
+    private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", columnDefinition = "uniqueidentifier")
-    private User receiverId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "platform_staff_id", columnDefinition = "uniqueidentifier")
-    private PlatformStaff platformStaffId;
+    private User receiver;
 
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
