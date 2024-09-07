@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -94,16 +95,19 @@ public class House {
     // 房源的價格範圍
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("house-priceRange")
-    private List<PriceRange> priceRanges;
+    @Builder.Default
+    private List<PriceRange> priceRanges = new ArrayList<>();
     
     // 房源的附加設施
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "house_postulate",
-	inverseJoinColumns = {@JoinColumn(name="postulate_id",referencedColumnName = "id")},
-	joinColumns = {@JoinColumn(name="house_id",referencedColumnName = "id")}
-	)
-    @JsonBackReference
-    private Set<Postulate> postulates;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "house_postulate",
+        joinColumns = @JoinColumn(name = "house_id"),
+        inverseJoinColumns = @JoinColumn(name = "postulate_id")
+    )
+    @JsonManagedReference("house-postulates")
+    @Builder.Default
+    private List<Postulate> postulates = new ArrayList<>();
 
     @PrePersist
     public void onCreate() {

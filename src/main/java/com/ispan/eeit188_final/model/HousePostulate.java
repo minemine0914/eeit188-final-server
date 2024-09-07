@@ -41,17 +41,17 @@ public class HousePostulate {
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
-	@MapsId("postulateId")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "postulate_id", referencedColumnName = "id")
-	@JsonManagedReference
-	private Postulate postulate;
+	// @MapsId("postulateId")
+	// @ManyToOne(fetch = FetchType.LAZY)
+	// @JoinColumn(name = "postulate_id", referencedColumnName = "id")
+	// @JsonManagedReference
+	// private Postulate postulate;
 
-	@MapsId("houseId")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "house_id", referencedColumnName = "id")
-	@JsonManagedReference
-	private House house;
+	// @MapsId("houseId")
+	// @ManyToOne(fetch = FetchType.LAZY)
+	// @JoinColumn(name = "house_id", referencedColumnName = "id")
+	// @JsonManagedReference
+	// private House house;
 
 	@PrePersist
 	public void onCreate() {

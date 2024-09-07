@@ -5,9 +5,11 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ispan.eeit188_final.dto.PostulateDTO;
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Postulate;
 import com.ispan.eeit188_final.service.PostulateService;
 
@@ -44,8 +48,18 @@ public class PostulateController {
 		return ResponseEntity.ok(postulates);
 	}
 
+	@GetMapping("/{id}/houses")
+	public ResponseEntity<Page<House>> findHousesByPostulateId(@PathVariable UUID id, @ModelAttribute PostulateDTO postulateDTO) {
+		postulateDTO.setPostulateId(id);
+		Page<House> result = postulateService.getHouses(postulateDTO);
+		return ResponseEntity.ok(result);
+	}
+
 	@PostMapping("/")
-	public ResponseEntity<Postulate> create(@RequestBody Postulate postulate) {
+	public ResponseEntity<Postulate> create(@RequestBody PostulateDTO postulateDTO) {
+		Postulate postulate = Postulate.builder()
+				.postulate(postulateDTO.getPostulate())
+				.build();
 		Postulate create = postulateService.create(postulate);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(create.getId())
 				.toUri();

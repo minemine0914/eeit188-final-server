@@ -31,8 +31,28 @@ public class HouseController {
 
     /** 新增一筆 */
     @PostMapping("/")
-    public ResponseEntity<House> create(@RequestBody House house) {
+    public ResponseEntity<House> create(@RequestBody HouseDTO dto) {
         // TODO: feature: check user_id....
+        House house = House.builder()
+        .name(dto.getName())
+        .category(dto.getCategory())
+        .information(dto.getInformation())
+        .latitudeX(dto.getLatitudeX())
+        .longitudeY(dto.getLongitudeY())
+        .country(dto.getCountry())
+        .city(dto.getCity())
+        .region(dto.getRegion())
+        .address(dto.getAddress())
+        .price(dto.getPrice())
+        .livingDiningRoom(dto.getLivingDiningRoom())
+        .bedroom(dto.getBedroom())
+        .restroom(dto.getRestroom())
+        .bathroom(dto.getBathroom())
+        .kitchen(dto.getKitchen())
+        .balcony(dto.getBalcony())
+        .show(dto.getShow())
+        .userId(dto.getUserId())
+        .build();
         House created = houseService.create(house);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

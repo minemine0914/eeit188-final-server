@@ -10,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.ispan.eeit188_final.dto.PostulateDTO;
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Postulate;
+import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.PostulateRepository;
 
 import jakarta.transaction.Transactional;
@@ -24,6 +28,23 @@ public class PostulateService {
 
 	@Autowired
 	private PostulateRepository postulateRepository;
+
+	@Autowired
+    private HouseRepository houseRepository;
+
+    public Page<House> getHouses(PostulateDTO postulateDTO) {
+		// 預設 頁數 限制
+        Integer defaultPage = 0;
+        Integer defaultLimit = 10;
+        // 頁數 限制 排序
+        Integer page = Optional.ofNullable(postulateDTO.getPage()).orElse(defaultPage);
+        Integer limit = Optional.ofNullable(postulateDTO.getLimit()).orElse(defaultLimit);
+        Boolean dir = Optional.ofNullable(postulateDTO.getDir()).orElse(false);
+        String order = Optional.ofNullable(postulateDTO.getOrder()).orElse(null);
+		// 是否排序
+        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+        return houseRepository.findByPostulateId(postulateDTO.getPostulateId(), PageRequest.of(page, limit, sort));
+    }
 
 	public Postulate findById(UUID id) {
 		if (id != null) {
