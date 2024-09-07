@@ -34,25 +34,25 @@ public class HouseController {
     public ResponseEntity<House> create(@RequestBody HouseDTO dto) {
         // TODO: feature: check user_id....
         House house = House.builder()
-        .name(dto.getName())
-        .category(dto.getCategory())
-        .information(dto.getInformation())
-        .latitudeX(dto.getLatitudeX())
-        .longitudeY(dto.getLongitudeY())
-        .country(dto.getCountry())
-        .city(dto.getCity())
-        .region(dto.getRegion())
-        .address(dto.getAddress())
-        .price(dto.getPrice())
-        .livingDiningRoom(dto.getLivingDiningRoom())
-        .bedroom(dto.getBedroom())
-        .restroom(dto.getRestroom())
-        .bathroom(dto.getBathroom())
-        .kitchen(dto.getKitchen())
-        .balcony(dto.getBalcony())
-        .show(dto.getShow())
-        .userId(dto.getUserId())
-        .build();
+                .name(dto.getName())
+                .category(dto.getCategory())
+                .information(dto.getInformation())
+                .latitudeX(dto.getLatitudeX())
+                .longitudeY(dto.getLongitudeY())
+                .country(dto.getCountry())
+                .city(dto.getCity())
+                .region(dto.getRegion())
+                .address(dto.getAddress())
+                .price(dto.getPrice())
+                .livingDiningRoom(dto.getLivingDiningRoom())
+                .bedroom(dto.getBedroom())
+                .restroom(dto.getRestroom())
+                .bathroom(dto.getBathroom())
+                .kitchen(dto.getKitchen())
+                .balcony(dto.getBalcony())
+                .show(dto.getShow())
+                .userId(dto.getUserId())
+                .build();
         House created = houseService.create(house);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -73,12 +73,16 @@ public class HouseController {
 
     /** 修改一筆 */
     @PutMapping("/{id}")
-    public ResponseEntity<House> update(@PathVariable String id, @RequestBody House house) {
+    public ResponseEntity<House> update(@PathVariable String id, @RequestBody HouseDTO houseDTO) {
         House finded = houseService.findById(UUID.fromString(id));
-        if ( finded != null ) {
-            House updated = houseService.modify(UUID.fromString(id), house);
-            if (updated != null) {
-                return ResponseEntity.ok(updated); // Return 200 and print updated entity
+        if (finded != null) {
+            try {
+                House updated = houseService.modify(UUID.fromString(id), houseDTO);
+                if (updated != null) {
+                    return ResponseEntity.ok(updated); // Return 200 and print updated entity
+                }
+            } catch ( IllegalArgumentException e ) {
+                return ResponseEntity.badRequest().build(); // Return 400 BadRequest
             }
             return ResponseEntity.badRequest().build(); // Return 400 BadRequest
         }
@@ -111,6 +115,7 @@ public class HouseController {
      * 擁有者Id: userId
      * 經緯區間: minLatitudeX, maxLatitudeX, minLongitudeY, maxLongitudeY
      * 價格區間: minPrice, maxPrice
+     * 附加設施: postulateId, postulateIds, matchAllPostulates
      * 分頁限制: page, limit
      * 欄位排序: dir, order
      */
@@ -119,17 +124,4 @@ public class HouseController {
         return houseService.find(houseDTO);
     }
 
-    /** 新增設施 */
-    @PostMapping("/{id}/postulate")
-    public House addProsulate(@RequestBody HouseDTO houseDTO) {
-        
-        return null;
-    }
-    
-    /** 刪除設施 */
-    @DeleteMapping("/{id}/postulate")
-    public House deleteProsulate(@RequestBody HouseDTO houseDTO) {
-        
-        return null;
-    }
 }

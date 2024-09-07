@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.repository.specification;
 
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
@@ -9,8 +10,12 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.Postulate;
 
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 public class HouseSpecification {
     // 房源名稱
@@ -67,19 +72,20 @@ public class HouseSpecification {
             Double minLongitudeY, Double maxLongitudeY) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (minLatitudeX != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("latitudeX"), minLatitudeX));
-            }
-            if (maxLatitudeX != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("latitudeX"), maxLatitudeX));
-            }
-            if (minLongitudeY != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("longitudeY"), minLongitudeY));
-            }
-            if (maxLongitudeY != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("longitudeY"), maxLongitudeY));
-            }
-            return cb.and(predicates.toArray(new Predicate[0]));
+            // 處理最小緯度
+            Optional.ofNullable(minLatitudeX)
+                    .ifPresent(val -> predicates.add(cb.greaterThanOrEqualTo(root.get("latitudeX"), val)));
+            // 處理最大緯度
+            Optional.ofNullable(maxLatitudeX)
+                    .ifPresent(val -> predicates.add(cb.lessThanOrEqualTo(root.get("latitudeX"), val)));
+            // 處理最小經度
+            Optional.ofNullable(minLongitudeY)
+                    .ifPresent(val -> predicates.add(cb.greaterThanOrEqualTo(root.get("longitudeY"), val)));
+            // 處理最大經度
+            Optional.ofNullable(maxLongitudeY)
+                    .ifPresent(val -> predicates.add(cb.lessThanOrEqualTo(root.get("longitudeY"), val)));
+            // 如果沒有條件，則返回一個總是為真的條件
+            return predicates.isEmpty() ? cb.conjunction() : cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 
@@ -131,48 +137,106 @@ public class HouseSpecification {
                 : cb.equal(root.get("userId"), userId);
     }
 
+    // 附加設施 (只對單個設施查詢)
+    public static Specification<House> hasPostulateId(UUID postulateId) {
+        return (root, query, cb) -> {
+            if (postulateId == null) {
+                return cb.conjunction(); // 如果沒有提供 ID，返回一個總是為真的條件
+            }
+            Join<House, Postulate> postulatesJoin = root.join("postulates");
+            return cb.equal(postulatesJoin.get("id"), postulateId);
+        };
+    }
+
+    // 附加設施 (其中一個即符合)
+    public static Specification<House> hasPostulateIds(List<UUID> postulateIds) {
+        return (root, query, cb) -> {
+            if (postulateIds == null || postulateIds.isEmpty()) {
+                return cb.conjunction(); // 如果沒有提供 ID 列表，返回一個總是為真的條件
+            }
+            Join<House, Postulate> postulatesJoin = root.join("postulates");
+            return postulatesJoin.get("id").in(postulateIds);
+        };
+    }
+
+    // 附加設施 (必須符合)
+    public static Specification<House> hasAllPostulateIds(List<UUID> postulateIds) {
+        return (root, query, cb) -> {
+            if (postulateIds == null || postulateIds.isEmpty()) {
+                return cb.conjunction(); // 如果沒有提供 ID 列表，返回一個總是為真的條件
+            }
+            Subquery<UUID> subquery = query.subquery(UUID.class);
+            Root<House> subqueryRoot = subquery.from(House.class);
+            Join<House, Postulate> subqueryPostulates = subqueryRoot.join("postulates");
+            subquery.select(subqueryRoot.get("id"))
+                    .where(subqueryPostulates.get("id").in(postulateIds))
+                    .groupBy(subqueryRoot.get("id"))
+                    .having(cb.equal(cb.count(subqueryPostulates.get("id")),
+                            postulateIds.size()));
+
+            return root.get("id").in(subquery);
+        };
+    }
+
     // 多條件查詢
-    public static Specification<House> filterHouses(HouseDTO houseDTO) {
-        // 房源基本資料
-        String name = Optional.ofNullable(houseDTO.getName()).orElse(null);
-        String category = Optional.ofNullable(houseDTO.getCategory()).orElse(null);
-        String country = Optional.ofNullable(houseDTO.getCountry()).orElse(null);
-        String city = Optional.ofNullable(houseDTO.getCity()).orElse(null);
-        String region = Optional.ofNullable(houseDTO.getRegion()).orElse(null);
-        // 房源基本設施
-        Short livingDiningRoom = Optional.ofNullable(houseDTO.getLivingDiningRoom()).orElse(null);
-        Short bedroom = Optional.ofNullable(houseDTO.getBedroom()).orElse(null);
-        Short restroom = Optional.ofNullable(houseDTO.getRestroom()).orElse(null);
-        Short bathroom = Optional.ofNullable(houseDTO.getBathroom()).orElse(null);
-        // 常態設施
-        Boolean kitchen = Optional.ofNullable(houseDTO.getKitchen()).orElse(null);
-        Boolean balcony = Optional.ofNullable(houseDTO.getBalcony()).orElse(null);
-        // 刊登顯示
-        Boolean show = Optional.ofNullable(houseDTO.getShow()).orElse(null);
-        // 擁有者ID
-        UUID userId = Optional.ofNullable(houseDTO.getUserId()).orElse(null);
+    public static Specification<House> filterHouses(HouseDTO dto) {
+        // 條件查詢
+        Specification<House> spec = Specification.where(null);
+        // // 房源基本資料
+        spec = addIfNotNull(spec, dto.getName(), HouseSpecification::hasName);
+        spec = addIfNotNull(spec, dto.getCategory(), HouseSpecification::hasCategory);
+        spec = addIfNotNull(spec, dto.getCountry(), HouseSpecification::hasCountry);
+        spec = addIfNotNull(spec, dto.getCity(), HouseSpecification::hasCity);
+        spec = addIfNotNull(spec, dto.getRegion(), HouseSpecification::hasRegion);
+        // // 房源基本設施
+        spec = addIfNotNull(spec, dto.getLivingDiningRoom(), HouseSpecification::hasLivingDiningRoom);
+        spec = addIfNotNull(spec, dto.getBedroom(), HouseSpecification::hasBedroom);
+        spec = addIfNotNull(spec, dto.getRestroom(), HouseSpecification::hasRestroom);
+        spec = addIfNotNull(spec, dto.getBathroom(), HouseSpecification::hasBathroom);
+        // // 常態設施
+        spec = addIfNotNull(spec, dto.getKitchen(), HouseSpecification::hasKitchen);
+        spec = addIfNotNull(spec, dto.getBalcony(), HouseSpecification::hasBalcony);
+        // // 刊登顯示
+        spec = addIfNotNull(spec, dto.getShow(), HouseSpecification::isShown);
+        // // 擁有者ID
+        spec = addIfNotNull(spec, dto.getUserId(), HouseSpecification::hasUserId);
         // 經緯度區間
-        Double minLatitudeX = Optional.ofNullable(houseDTO.getMinLatitudeX()).orElse(null);
-        Double maxLatitudeX = Optional.ofNullable(houseDTO.getMaxLatitudeX()).orElse(null);
-        Double minLongitudeY = Optional.ofNullable(houseDTO.getMinLongitudeY()).orElse(null);
-        Double maxLongitudeY = Optional.ofNullable(houseDTO.getMaxLongitudeY()).orElse(null);
-        // 價格區間
-        Integer minPrice = Optional.ofNullable(houseDTO.getMinPrice()).orElse(null);
-        Integer maxPrice = Optional.ofNullable(houseDTO.getMaxPrice()).orElse(null);
-        return Specification.where(hasName(name))
-                .and(hasCategory(category))
-                .and(hasCountry(country))
-                .and(hasCity(city))
-                .and(hasRegion(region))
-                .and(hasPriceBetween(minPrice, maxPrice))
-                .and(isWithinLocation(minLatitudeX, maxLatitudeX, minLongitudeY, maxLongitudeY))
-                .and(hasLivingDiningRoom(livingDiningRoom))
-                .and(hasBedroom(bedroom))
-                .and(hasRestroom(restroom))
-                .and(hasBathroom(bathroom))
-                .and(hasKitchen(kitchen))
-                .and(hasBalcony(balcony))
-                .and(isShown(show))
-                .and(hasUserId(userId));
+        spec = spec.and(HouseSpecification.isWithinLocation(
+                dto.getMinLatitudeX(), dto.getMaxLatitudeX(),
+                dto.getMinLongitudeY(), dto.getMaxLongitudeY()));
+        // 價錢區間 (可以則一輸入或min,max都輸入)
+        if (dto.getMinPrice() != null || dto.getMaxPrice() != null) {
+            spec = spec.and(HouseSpecification.hasPriceBetween(
+                    dto.getMinPrice(), dto.getMaxPrice()));
+        }
+        // 附加設施過濾
+        UUID postulateId = dto.getPostulateId();
+        List<UUID> postulateIds = dto.getPostulateIds();
+        Boolean matchAllPostulates = Optional.ofNullable(dto.getMatchAllPostulates()).orElse(false);
+        if (postulateId != null) {
+            // 當有單一設施 ID 時
+            spec = spec.and(HouseSpecification.hasPostulateId(postulateId));
+        } else if (postulateIds != null && !postulateIds.isEmpty()) {
+            // 當有多個設施 ID 時
+            if (postulateIds.size() == 1) {
+                // 如果只有一個 postulateId，直接處理為單一設施過濾
+                postulateId = postulateIds.get(0);
+                spec = spec.and(HouseSpecification.hasPostulateId(postulateId));
+            } else {
+                // 根據 matchAllPostulates 決定是匹配所有還是任意一個
+                if (matchAllPostulates) {
+                    spec = spec.and(HouseSpecification.hasAllPostulateIds(postulateIds));
+                } else {
+                    spec = spec.and(HouseSpecification.hasPostulateIds(postulateIds));
+                }
+            }
+        }
+        return spec;
+    }
+
+    // 輔助方法檢查加入條件
+    private static <T> Specification<House> addIfNotNull(Specification<House> spec, T value,
+            Function<T, Specification<House>> func) {
+        return value != null ? spec.and(func.apply(value)) : spec;
     }
 }

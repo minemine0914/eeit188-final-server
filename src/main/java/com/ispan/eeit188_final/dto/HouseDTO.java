@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -30,14 +31,17 @@ public class HouseDTO {
     private Boolean balcony;
     private Boolean show;
     private UUID userId;
-    // 用於 查詢
+    // 用於 查詢過濾
     private Double minLatitudeX;
     private Double maxLatitudeX;
     private Double minLongitudeY;
     private Double maxLongitudeY;
     private Integer minPrice;
     private Integer maxPrice;
-    // 用於分頁、排序
+    private UUID postulateId;
+    private List<UUID> postulateIds;
+    private Boolean matchAllPostulates;
+    // 用於 分頁、排序
     private Integer page;
     private Integer limit;
     private Boolean dir;
