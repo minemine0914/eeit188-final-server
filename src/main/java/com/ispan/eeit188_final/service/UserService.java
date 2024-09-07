@@ -54,6 +54,7 @@ public class UserService {
                 try {
                     JSONObject obj = new JSONObject()
                             .put("name", user.getName())
+                            .put("role", user.getRole())
                             .put("gender", user.getGender())
                             .put("birthday", user.getBirthday())
                             .put("phone", user.getPhone())
@@ -91,6 +92,7 @@ public class UserService {
             for (User user : users.getContent()) {
                 JSONObject obj = new JSONObject()
                         .put("name", user.getName())
+                        .put("role", user.getRole())
                         .put("gender", user.getGender())
                         .put("birthday", user.getBirthday())
                         .put("phone", user.getPhone())
@@ -123,6 +125,7 @@ public class UserService {
                 JSONObject obj = new JSONObject(jsonRequest);
 
                 String name = obj.isNull("name") ? null : obj.getString("name");
+                String role = obj.isNull("role") ? null : obj.getString("role");
                 String gender = obj.isNull("gender") ? null : obj.getString("gender");
                 String phone = obj.isNull("phone") ? null : obj.getString("phone");
                 String mobilePhone = obj.isNull("mobilePhone") ? null : obj.getString("mobilePhone");
@@ -171,6 +174,7 @@ public class UserService {
 
                 User newUser = new User();
                 newUser.setName(name);
+                newUser.setRole(role);
                 newUser.setGender(gender);
                 newUser.setBirthday(birthday);
                 newUser.setPhone(phone);
@@ -269,6 +273,7 @@ public class UserService {
                     JSONObject obj = new JSONObject(jsonRequest);
 
                     String name = obj.isNull("name") ? null : obj.getString("name");
+                    String role = obj.isNull("role") ? null : obj.getString("role");
                     String gender = obj.isNull("gender") ? null : obj.getString("gender");
                     String phone = obj.isNull("phone") ? null : obj.getString("phone");
                     String mobilePhone = obj.isNull("mobilePhone") ? null : obj.getString("mobilePhone");
@@ -308,6 +313,7 @@ public class UserService {
                     }
 
                     user.setName(name);
+                    user.setRole(role);
                     user.setGender(gender);
                     user.setBirthday(birthday);
                     user.setPhone(phone);
