@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
+import com.ispan.eeit188_final.dto.PostulateDTO;
 import com.ispan.eeit188_final.model.Postulate;
 import com.ispan.eeit188_final.model.Ticket;
 
@@ -17,24 +18,24 @@ public class PostulateServiceTests {
 
 	@Autowired
 	private PostulateService postulateService;
-	
-//	@Test
+
+	// @Test
 	public void testCreate() {
 		Postulate postulate = new Postulate();
 		postulate.setPostulate("TEST_POSTULATE");
 		postulate.setPostulate("AA");
-		
+
 		System.out.println(postulateService.create(postulate));
 	}
-	
-//	@Test
+
+	// @Test
 	public void testFindAll() {
 		List<Postulate> list = postulateService.findAll();
 		for (Postulate postulate : list) {
 			System.out.println(postulate);
 		}
 	}
-	
+
 	@Test
 	public void testFindById() {
 		String id = "05d322e1-42e4-4af1-92c3-33b657b053d2";
@@ -42,34 +43,41 @@ public class PostulateServiceTests {
 		Postulate postulate = postulateService.findById(uuid);
 		System.out.println(postulate);
 	}
-	
-//	@Test
+
+	// @Test
 	public void testFindByName() {
 		String name = "AA";
 		Postulate postulate = postulateService.findByName(name);
 		System.out.println(postulate);
 	}
-	
-//	@Test
-	public void testFindAllPage() {
-		 Integer pageNum = 1;
-		 Integer pageSize = 3;
-		 Boolean desc = false;
-		 String orderBy = "id";
-		
-		JSONObject obj = new JSONObject()
-				.put("pageNum", pageNum)
-				.put("pageSize", pageSize)
-				.put("desc", desc)
-				.put("orderBy", orderBy);
 
-		String json = obj.toString();
-		Page<Postulate> page = postulateService.findAll(json);
+	@Test
+	public void testFindAllPage() {
+		Integer pageNum = 0;
+		Integer pageSize = 30;
+		Boolean desc = false;
+		String orderBy = "id";
+
+		PostulateDTO postulateDTO = PostulateDTO.builder()
+				.page(pageNum)
+				.limit(pageSize)
+				.dir(desc)
+				.order(orderBy)
+				.build();
+
+		// JSONObject obj = new JSONObject()
+		// .put("pageNum", pageNum)
+		// .put("pageSize", pageSize)
+		// .put("desc", desc)
+		// .put("orderBy", orderBy);
+
+		// String json = obj.toString();
+		Page<Postulate> page = postulateService.findAll(postulateDTO);
 
 		System.out.printf("pageNum=%d, pageSize=%d, desc=%b, orderBy=%s\r\n", pageNum, pageSize, desc,
 				orderBy);
 		for (Postulate postulate : page) {
-			System.out.println(postulate.getId());
+			System.out.println(postulate.getId() + " " + postulate.getPostulate());
 		}
 	}
 }
