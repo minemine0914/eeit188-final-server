@@ -19,12 +19,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // 用ID查尋特定用戶
     @GetMapping("/{id}")
     public ResponseEntity<String> getUserById(@PathVariable UUID id) {
 
         return userService.findById(id);
     }
 
+    // 批量查尋用戶
     @GetMapping("/")
     public ResponseEntity<String> getUsers(
             @RequestParam(defaultValue = "0") int pageNo,
@@ -33,6 +35,7 @@ public class UserController {
         return userService.getUsers(pageNo, pageSize);
     }
 
+    // 創建新用戶
     @PostMapping("/")
     public ResponseEntity<String> createUser(
             @RequestBody String jsonRequest) {
@@ -40,18 +43,21 @@ public class UserController {
         return userService.createUser(jsonRequest);
     }
 
+    // 登入功能
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody String jsonRequest) throws JSONException {
 
         return userService.login(jsonRequest);
     }
 
+    // 刪除用戶
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
 
         return userService.deleteById(id);
     }
 
+    // 更新用戶資訊
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(
             @PathVariable UUID id,
@@ -60,6 +66,7 @@ public class UserController {
         return userService.update(id, jsonRequest);
     }
 
+    // 密碼驗證（更新密碼前的驗證機制）
     @PostMapping("/{id}/check-password")
     public ResponseEntity<String> checkPassword(
             @PathVariable UUID id,
@@ -68,12 +75,14 @@ public class UserController {
         return userService.checkPassword(id, jsonRequest);
     }
 
+    // 忘記密碼（發送密碼更新連結到指定email）(未完成)
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody String jsonRequest) {
 
         return userService.forgotPassword(jsonRequest);
     }
 
+    // 設定新密碼
     @PutMapping("/{id}/set-new-password")
     public ResponseEntity<String> setNewPassword(
             @PathVariable UUID id,
@@ -82,6 +91,7 @@ public class UserController {
         return userService.setNewPassword(id, jsonRequest);
     }
 
+    // 上傳大頭貼圖片（base64格式）
     @PutMapping("/{id}/upload-avatar")
     public ResponseEntity<String> uploadAvater(@PathVariable UUID id,
             @RequestBody String jsonRequest) {
@@ -89,6 +99,7 @@ public class UserController {
         return userService.uploadAvater(id, jsonRequest);
     }
 
+    // 上傳個人主頁背景圖片（byte[]）
     @PutMapping("/{id}/upload-background-image")
     public ResponseEntity<String> uploadBackgroundImageBlob(@PathVariable UUID id,
             @RequestParam("backgroundImage") MultipartFile backgroundImage) throws IOException {
@@ -96,12 +107,14 @@ public class UserController {
         return userService.uploadBackgroundImage(id, backgroundImage);
     }
 
+    // 移除大頭貼圖片
     @PutMapping("/{id}/remove-avatar")
     public ResponseEntity<String> removeAvatar(@PathVariable UUID id) {
 
         return userService.deleteAvatar(id);
     }
 
+    // 移除個人主頁背景圖片
     @PutMapping("/{id}/remove-background-image")
     public ResponseEntity<String> removeBackgroundImage(@PathVariable UUID id) {
 
