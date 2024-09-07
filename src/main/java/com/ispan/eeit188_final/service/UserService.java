@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,8 @@ import com.ispan.eeit188_final.repository.UserRepository;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class UserService {
@@ -401,11 +404,24 @@ public class UserService {
 
             String resetLink = "http://localhost:5173/user/reset-password/" + user.getId();
 
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(email);
-            message.setSubject("Password Reset Request");
-            message.setText("Click the following link to reset your password: " + resetLink);
-            mailSender.send(message);
+            String htmlContent = "<p>Click the following link to reset your password:</p>" +
+                    "<a href=\"" + resetLink + "\">Reset Password</a>";
+
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper messageHelper;
+
+            try {
+                messageHelper = new MimeMessageHelper(mimeMessage, true);
+                messageHelper.setFrom("Nomad@example.com");
+                messageHelper.setTo(email);
+                messageHelper.setSubject("Password Reset Request");
+                messageHelper.setText(htmlContent, true);
+                mailSender.send(mimeMessage);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("{\"message\": \"Error seding email: " + e.getMessage() + "\"}");
+            }
 
             return ResponseEntity.ok("{\"message\": \"Successfully send resetLink to target email\"}");
         } catch (JSONException e) {
