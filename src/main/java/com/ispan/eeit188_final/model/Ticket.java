@@ -64,6 +64,7 @@ public class Ticket {
 
 	@Override
 	public String toString() {
+		// 自動抓出所有屬性
 		StringBuilder result = new StringBuilder();
 		String newLine = System.getProperty("line.separator");
 
@@ -76,6 +77,7 @@ public class Ticket {
 
 		// print field names paired with their values
 		for (Field field : fields) {
+			// 不顯示spring產生的屬性
 			if (field.getName().indexOf("$$_hibernate") != -1) {
 				continue;
 			}
