@@ -2,8 +2,12 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
+import org.hibernate.annotations.BatchSize;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -17,6 +21,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -94,7 +100,8 @@ public class House {
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("house-priceRange")
     @Builder.Default
-    private List<PriceRange> priceRanges = new ArrayList<>();
+    // @BatchSize(size = 50)
+    private Set<PriceRange> priceRanges = new HashSet<>();
     
     // 房源的附加設施
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -105,7 +112,8 @@ public class House {
     )
     @JsonManagedReference("house-postulates")
     @Builder.Default
-    private List<Postulate> postulates = new ArrayList<>();
+    // @BatchSize(size = 50)
+    private Set<Postulate> postulates = new HashSet<>();
 
     @PrePersist
     public void onCreate() {
