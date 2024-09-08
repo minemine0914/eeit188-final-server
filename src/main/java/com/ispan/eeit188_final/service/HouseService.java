@@ -6,14 +6,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Postulate;
+import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.PostulateRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
@@ -33,12 +38,36 @@ public class HouseService {
     private UserRepository userRepo;
 
     // 新增
-    public House create(House house) {
-        // TODO: feature: check user_id....
-        return houseRepo.save(house);
+    public House create(HouseDTO houseDTO) {
+        Optional<User> findUser = userRepo.findById(houseDTO.getUserId());
+        if (findUser.isPresent()) {
+            House house = House.builder()
+                    .user(findUser.get())
+                    .name(houseDTO.getName())
+                    .category(houseDTO.getCategory())
+                    .information(houseDTO.getInformation())
+                    .latitudeX(houseDTO.getLatitudeX())
+                    .longitudeY(houseDTO.getLongitudeY())
+                    .country(houseDTO.getCountry())
+                    .city(houseDTO.getCity())
+                    .region(houseDTO.getRegion())
+                    .address(houseDTO.getAddress())
+                    .price(houseDTO.getPrice())
+                    .livingDiningRoom(houseDTO.getLivingDiningRoom())
+                    .bedroom(houseDTO.getBedroom())
+                    .restroom(houseDTO.getRestroom())
+                    .bathroom(houseDTO.getBathroom())
+                    .kitchen(houseDTO.getKitchen())
+                    .balcony(houseDTO.getBalcony())
+                    .show(houseDTO.getShow())
+                    .build();
+            return houseRepo.save(house);
+        }
+        return null;
     }
 
     // 修改
+    @Transactional
     public House modify(UUID id, HouseDTO houseDTO) {
         if (id != null) {
             Optional<House> find = houseRepo.findById(id);
@@ -67,16 +96,23 @@ public class HouseService {
                 Optional.ofNullable(houseDTO.getShow()).ifPresent(modify::setShow);
                 // 附加設施
                 Optional.ofNullable(houseDTO.getPostulateIds()).ifPresent(postulateIds -> {
-                    // 先清空現有設施
-                    modify.getPostulates().clear();
-                    // 如果 postulateIds 不為空，則進行更新
-                    if (!postulateIds.isEmpty()) {
-                        // 查詢設施並檢查長度是否一致
-                        List<Postulate> newPostulates = postulateRepo.findAllById(postulateIds);
-                        if (newPostulates.size() != postulateIds.size()) {
-                            throw new IllegalArgumentException("部分設施無效，請確認傳入的設施ID是否正確。");
-                        }
+                    // 現有的附加設施
+                    Set<Postulate> existingPostulates = new HashSet<>(modify.getPostulates());
+                    // 查詢新的附加設施
+                    List<Postulate> newPostulates = postulateRepo.findAllById(postulateIds);
+                    // 如果新的設施列表大小與提供的 ID 列表大小不一致，則拋出異常
+                    if (newPostulates.size() != postulateIds.size()) {
+                        throw new IllegalArgumentException("部分設施無效，請確認傳入的設施ID是否正確。");
+                    }
+                    // 計算新的附加設施集合
+                    Set<Postulate> newPostulatesSet = new HashSet<>(newPostulates);
+                    // 比較現有附加設施和新的附加設施是否相同
+                    if (!existingPostulates.equals(newPostulatesSet)) {
+                        // 更新附加設施集合
+                        modify.getPostulates().clear();
                         modify.getPostulates().addAll(newPostulates);
+                        // 手動更新修改時間
+                        modify.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
                     }
                 });
                 // 儲存修改

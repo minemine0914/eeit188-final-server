@@ -1,15 +1,13 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.hibernate.annotations.BatchSize;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,8 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -40,6 +37,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "house")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -87,8 +85,8 @@ public class House {
     // 狀態
     @Column(name = "show", columnDefinition = "BIT")
     private Boolean show;           // 是否刊登顯示
-    @Column(name = "user_id", columnDefinition = "UNIQUEIDENTIFIER")
-    private UUID userId;            // 擁有者ID (UUID)
+    // @Column(name = "user_id", columnDefinition = "UNIQUEIDENTIFIER")
+    // private UUID userId;            // 擁有者ID (UUID)
 
     // 建立/修改 時間
     @Column(name = "create_at", columnDefinition = "DATETIME2")
@@ -96,24 +94,32 @@ public class House {
     @Column(name = "update_at", columnDefinition = "DATETIME2")
     private Timestamp updatedAt;    // 修改時間
 
-    // 房源的價格範圍
+    // 關聯 房源的價格範圍
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("house-priceRange")
     @Builder.Default
-    // @BatchSize(size = 50)
     private Set<PriceRange> priceRanges = new HashSet<>();
     
-    // 房源的附加設施
+    // 關聯 房源的附加設施
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
         name = "house_postulate",
         joinColumns = @JoinColumn(name = "house_id"),
         inverseJoinColumns = @JoinColumn(name = "postulate_id")
     )
-    @JsonManagedReference("house-postulates")
+    // @JsonManagedReference("house-postulates")
     @Builder.Default
-    // @BatchSize(size = 50)
     private Set<Postulate> postulates = new HashSet<>();
+
+    // 與 User 的關聯
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
+    private User user;
+    
+    // 自訂序列化 userId
+    @JsonProperty("userId")
+    public UUID userId() {
+        return user != null ? user.getId() : null;
+    }
 
     @PrePersist
     public void onCreate() {
@@ -124,4 +130,5 @@ public class House {
     public void onUpdate() {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
+
 }

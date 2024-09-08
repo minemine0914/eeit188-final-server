@@ -4,7 +4,10 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +33,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "price_range")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PriceRange {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -54,12 +58,12 @@ public class PriceRange {
     // 關聯 house.id = price_range.house_id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", columnDefinition = "UNIQUEIDENTIFIER")
-    @JsonBackReference("house-priceRange")
+    @JsonIgnore
     private House house; // 房源
 
     // 自訂序列化 houseId
     @JsonProperty("houseId")
-    public UUID getHouseId() {
+    public UUID houseId() {
         return house != null ? house.getId() : null;
     }
 

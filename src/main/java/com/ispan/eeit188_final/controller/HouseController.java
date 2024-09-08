@@ -12,7 +12,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.service.HouseService;
+import com.ispan.eeit188_final.service.UserService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,29 +33,8 @@ public class HouseController {
 
     /** 新增一筆 */
     @PostMapping("/")
-    public ResponseEntity<House> create(@RequestBody HouseDTO dto) {
-        // TODO: feature: check user_id....
-        House house = House.builder()
-                .name(dto.getName())
-                .category(dto.getCategory())
-                .information(dto.getInformation())
-                .latitudeX(dto.getLatitudeX())
-                .longitudeY(dto.getLongitudeY())
-                .country(dto.getCountry())
-                .city(dto.getCity())
-                .region(dto.getRegion())
-                .address(dto.getAddress())
-                .price(dto.getPrice())
-                .livingDiningRoom(dto.getLivingDiningRoom())
-                .bedroom(dto.getBedroom())
-                .restroom(dto.getRestroom())
-                .bathroom(dto.getBathroom())
-                .kitchen(dto.getKitchen())
-                .balcony(dto.getBalcony())
-                .show(dto.getShow())
-                .userId(dto.getUserId())
-                .build();
-        House created = houseService.create(house);
+    public ResponseEntity<House> create(@RequestBody HouseDTO houseDTO) {
+        House created = houseService.create(houseDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(created.getId())

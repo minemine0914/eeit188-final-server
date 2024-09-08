@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,6 +32,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "postulate")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Postulate {
 
 	@Id
@@ -43,15 +46,8 @@ public class Postulate {
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
-	// @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	// @JoinTable(name = "house_postulate",
-	// 			joinColumns = {@JoinColumn(name="postulate_id",referencedColumnName = "id")},
-	// 			inverseJoinColumns = {@JoinColumn(name="house_id",referencedColumnName = "id")}
-	// 			)
-    // @JsonBackReference
-    // private Set<House> houses;
 	@ManyToMany(mappedBy = "postulates", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference("house-postulates")
+	@JsonIgnore
 	@Builder.Default
     private List<House> houses = new ArrayList<>();
 
