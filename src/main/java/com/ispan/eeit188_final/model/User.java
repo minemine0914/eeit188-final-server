@@ -4,9 +4,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import java.util.List;
+import java.util.ArrayList;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -86,43 +85,45 @@ public class User {
     // Relationship
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-carts")
-    // private List<Cart> carts;
+    // @Builder.Default
+    // private List<Cart> carts = new ArrayList<>();
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-tickets")
-    // private List<Ticket> tickets;
+    // @Builder.Default
+    // private List<Ticket> tickets = new ArrayList<>();
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-transactionRecords")
-    // private List<TransactionRecord> transactionRecords;
+    // @Builder.Default
+    // private List<TransactionRecord> transactionRecords = new ArrayList<>();
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-coupons")
-    // private List<Coupon> coupons;
+    // @Builder.Default
+    // private List<Coupon> coupons = new ArrayList<>();
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-houses")
-    // private List<House> houses;
+    // @Builder.Default
+    // private List<House> houses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userCollectionId.userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UserCollection> userCollections = new ArrayList<>();
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-userCollections")
-    // private List<UserCollection> userCollections;
+    // @Builder.Default
+    // private List<Discuss> discusses = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-discusses")
-    // private List<Discuss> discusses;
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ChatRecord> sentChatRecords = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @JsonManagedReference("user-chatRecords")
-    // private List<ChatRecord> chatRecords;
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ChatRecord> receivedChatRecords = new ArrayList<>();
 
     @PrePersist
     public void onCreate() {
