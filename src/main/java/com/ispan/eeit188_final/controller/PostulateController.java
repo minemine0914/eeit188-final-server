@@ -47,13 +47,6 @@ public class PostulateController {
 		return ResponseEntity.ok(postulates);
 	}
 
-	@GetMapping("/{id}/houses")
-	public ResponseEntity<Page<House>> findHousesByPostulateId(@PathVariable UUID id, @ModelAttribute PostulateDTO postulateDTO) {
-		postulateDTO.setPostulateId(id);
-		Page<House> result = postulateService.getHouses(postulateDTO);
-		return ResponseEntity.ok(result);
-	}
-
 	@PostMapping("/")
 	public ResponseEntity<Postulate> create(@RequestBody PostulateDTO postulateDTO) {
 		Postulate postulate = Postulate.builder()
