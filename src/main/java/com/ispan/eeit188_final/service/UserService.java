@@ -403,7 +403,7 @@ public class UserService {
                         .body("{\"message\": \"User not found\"}");
             }
 
-            String resetLink = "http://localhost:5173/user/reset-password/" + user.getId();
+            String resetLink = "http://localhost:5173/user/reset-password/";
 
             String htmlContent = "<p>Click the following link to reset your password:</p>" +
                     "<a href=\"" + resetLink + "\">Reset Password</a>";
@@ -418,13 +418,16 @@ public class UserService {
                 messageHelper.setSubject("Password Reset Request");
                 messageHelper.setText(htmlContent, true);
                 mailSender.send(mimeMessage);
+
+                JSONObject response = new JSONObject()
+                        .put("id", user.getId());
+
+                return ResponseEntity.ok(response.toString());
             } catch (MessagingException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("{\"message\": \"Error seding email: " + e.getMessage() + "\"}");
             }
-
-            return ResponseEntity.ok("{\"message\": \"Successfully send resetLink to target email\"}");
         } catch (JSONException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
