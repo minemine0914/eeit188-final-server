@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.List;
@@ -113,7 +112,7 @@ public class User {
     // 關聯 房源
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<House> houses = new HashSet<>() = new ArrayList<>();
+    private Set<House> houses = new HashSet<>();
 
     @OneToMany(mappedBy = "userCollectionId.userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
