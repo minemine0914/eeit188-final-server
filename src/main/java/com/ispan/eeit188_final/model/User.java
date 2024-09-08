@@ -3,6 +3,9 @@ package com.ispan.eeit188_final.model;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -83,34 +86,42 @@ public class User {
     // Relationship
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-carts")
     // private List<Cart> carts;
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-tickets")
     // private List<Ticket> tickets;
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-transactionRecords")
     // private List<TransactionRecord> transactionRecords;
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-coupons")
     // private List<Coupon> coupons;
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-houses")
     // private List<House> houses;
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-userCollections")
     // private List<UserCollection> userCollections;
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-discusses")
     // private List<Discuss> discusses;
 
     // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference("user-chatRecords")
     // private List<ChatRecord> chatRecords;
 
     @PrePersist

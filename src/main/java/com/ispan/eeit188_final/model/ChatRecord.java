@@ -3,6 +3,8 @@ package com.ispan.eeit188_final.model;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -58,6 +60,7 @@ public class ChatRecord {
     // Relationship
     // @OneToMany(mappedBy = "chat_record", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
+    // @JsonBackReference("chat_record-chatExternalResources")
     // private List<ChatExternalResource> chatExternalResources;
 
     // Methods

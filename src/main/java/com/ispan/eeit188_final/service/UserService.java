@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,6 +58,7 @@ public class UserService {
 
                 try {
                     JSONObject obj = new JSONObject()
+                            .put("id", user.getId())
                             .put("name", user.getName())
                             .put("role", user.getRole())
                             .put("gender", user.getGender())
@@ -96,6 +96,7 @@ public class UserService {
 
             for (User user : users.getContent()) {
                 JSONObject obj = new JSONObject()
+                        .put("id", user.getId())
                         .put("name", user.getName())
                         .put("role", user.getRole())
                         .put("gender", user.getGender())

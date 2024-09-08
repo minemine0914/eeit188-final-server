@@ -3,6 +3,7 @@ package com.ispan.eeit188_final.model.composite;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.User;
 
@@ -21,10 +22,12 @@ public class UserCollectionId implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference("user-userCollections")
     @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
     private User userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference("user-userCollections")
     @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
     private House houseId;
 
