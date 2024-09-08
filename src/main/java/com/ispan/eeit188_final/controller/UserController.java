@@ -68,7 +68,7 @@ public class UserController {
     }
 
     // 密碼驗證（更新密碼前的驗證機制）
-    @PostMapping("/{id}/check-password")
+    @PostMapping("/check-password/{id}")
     public ResponseEntity<String> checkPassword(
             @PathVariable UUID id,
             @RequestBody String jsonRequest) {
@@ -76,7 +76,7 @@ public class UserController {
         return userService.checkPassword(id, jsonRequest);
     }
 
-    // 忘記密碼（發送密碼更新連結到指定email）(未完成)
+    // 忘記密碼（發送密碼更新連結到指定email）
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody String jsonRequest) {
 
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     // 設定新密碼
-    @PutMapping("/{id}/set-new-password")
+    @PutMapping("/set-new-password/{id}")
     public ResponseEntity<String> setNewPassword(
             @PathVariable UUID id,
             @RequestBody String jsonRequest) {
@@ -93,7 +93,7 @@ public class UserController {
     }
 
     // 上傳大頭貼圖片（base64格式）
-    @PutMapping("/{id}/upload-avatar")
+    @PutMapping("/upload-avatar/{id}")
     public ResponseEntity<String> uploadAvater(@PathVariable UUID id,
             @RequestBody String jsonRequest) {
 
@@ -101,7 +101,7 @@ public class UserController {
     }
 
     // 上傳個人主頁背景圖片（byte[]）
-    @PutMapping("/{id}/upload-background-image")
+    @PutMapping("/upload-background-image/{id}")
     public ResponseEntity<String> uploadBackgroundImageBlob(@PathVariable UUID id,
             @RequestParam("backgroundImage") MultipartFile backgroundImage) throws IOException {
 
@@ -109,21 +109,21 @@ public class UserController {
     }
 
     // 下載個人主頁背景圖片（byte[]）
-    @GetMapping("/{id}/download-background-image")
+    @GetMapping("/download-background-image/{id}")
     public ResponseEntity<Resource> downloadBackgroundImage(@PathVariable UUID id) {
 
         return userService.getBackgroundImage(id);
     }
 
     // 移除大頭貼圖片
-    @PutMapping("/{id}/remove-avatar")
+    @PutMapping("/remove-avatar/{id}")
     public ResponseEntity<String> removeAvatar(@PathVariable UUID id) {
 
         return userService.deleteAvatar(id);
     }
 
     // 移除個人主頁背景圖片
-    @PutMapping("/{id}/remove-background-image")
+    @PutMapping("/remove-background-image/{id}")
     public ResponseEntity<String> removeBackgroundImage(@PathVariable UUID id) {
 
         return userService.deleteBackgroundImage(id);
