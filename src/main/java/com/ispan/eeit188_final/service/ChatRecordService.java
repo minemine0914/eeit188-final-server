@@ -2,8 +2,8 @@ package com.ispan.eeit188_final.service;
 
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,10 +42,10 @@ public class ChatRecordService {
                     .body("{\"message\": \"Chat record not found\"}");
         }
 
-        JSONArray chatRecordsArray = new JSONArray();
-
         try {
-            for (ChatRecord chatRecord : chatRecords) {
+            JSONArray chatRecordsArray = new JSONArray();
+
+            for (ChatRecord chatRecord : chatRecords.getContent()) {
                 JSONObject obj = new JSONObject()
                         .put("id", chatRecord.getId())
                         .put("chat", chatRecord.getChat())
@@ -142,6 +142,8 @@ public class ChatRecordService {
 
         ChatRecord chatRecord = optional.get();
         chatRecord.setShow(false);
+
+        chatRecordRepository.save(chatRecord);
 
         return ResponseEntity.ok("{\"message\": \"Successfully retract message\"}");
     }
