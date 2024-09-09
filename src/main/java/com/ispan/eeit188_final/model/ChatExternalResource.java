@@ -40,6 +40,10 @@ public class ChatExternalResource {
     @Column(name = "created_at", columnDefinition = "DATETIME2")
     private LocalDateTime createdAt;
 
-    // @OneToMany(mappedBy = "ChatExternalResource", cascade = CascadeType.ALL)
-    // private List<ChatRecord> ChatRecord;
+    /*
+     * @ManyToOne
+     * 
+     * @JoinColumn(name = "ChatRecord_id", insertable = false, updatable = false)
+     * private ChatRecord chatRecord;
+     */
 }

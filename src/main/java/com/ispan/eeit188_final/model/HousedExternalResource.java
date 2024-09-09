@@ -40,6 +40,10 @@ public class HousedExternalResource {
     @Column(name = "created_at", columnDefinition = "DATETIME2")
     private LocalDateTime createdAt;
 
-    // @OneToMany(mappedBy = "HousedExternalResource", cascade = CascadeType.ALL)
-    // private List<Discuss> Discuss;
+    /*
+     * @ManyToOne
+     * 
+     * @JoinColumn(name = "House_id", insertable = false, updatable = false)
+     * private House house;
+     */
 }
