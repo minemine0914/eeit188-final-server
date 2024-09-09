@@ -14,7 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class PostulateDTO {
-    private String postulate;
+    private String name;
+    private String icon;
     // Search houses by postulateId
     private UUID postulateId;
     // 用於分頁、排序
