@@ -27,10 +27,10 @@ public class DiscussController {
     private DiscussService discussService;
 
     // 新增討論
-    @PostMapping
-    public ResponseEntity<Discuss> createDiscuss(@RequestBody DiscussDTO discussDTO) {
-        Discuss createdDiscuss = discussService.createDiscuss(discussDTO);
-        return ResponseEntity.ok(createdDiscuss);
+    @PostMapping("/")
+    public ResponseEntity<?> createDiscuss(@RequestBody DiscussDTO discussDTO) {
+
+        return discussService.createDiscuss(discussDTO);
     }
 
     // 用ID查詢特定討論

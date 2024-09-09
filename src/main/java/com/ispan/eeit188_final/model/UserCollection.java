@@ -2,6 +2,8 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.ispan.eeit188_final.model.composite.UserCollectionId;
 
 import jakarta.persistence.Column;
@@ -22,6 +24,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @Table(name = "user_collection")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class UserCollection {
 
     @EmbeddedId
