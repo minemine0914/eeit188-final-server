@@ -91,10 +91,9 @@ public class User {
     private byte[] backgroundImageBlob;
 
     // Relationship
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @Builder.Default
-    // private List<Cart> carts = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Cart> carts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -105,10 +104,9 @@ public class User {
     @Builder.Default
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @Builder.Default
-    // private List<Coupon> coupons = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Coupon> coupons = new ArrayList<>();
 
     // 關聯 房源
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

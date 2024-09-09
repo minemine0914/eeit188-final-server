@@ -67,11 +67,9 @@ public class Discuss {
     @Builder.Default
     private List<Discuss> discusses = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "discuss", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @Builder.Default
-    // private List<DiscussExternalResource> discussExternalResources = new
-    // ArrayList<>();
+    @OneToMany(mappedBy = "discuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<DiscussExternalResource> discussExternalResources = new ArrayList<>();
 
     @PrePersist
     public void onCreate() {
