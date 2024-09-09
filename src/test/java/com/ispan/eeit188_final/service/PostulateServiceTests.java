@@ -3,7 +3,6 @@ package com.ispan.eeit188_final.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Page;
 
 import com.ispan.eeit188_final.dto.PostulateDTO;
 import com.ispan.eeit188_final.model.Postulate;
-import com.ispan.eeit188_final.model.Ticket;
 
 @SpringBootTest
 public class PostulateServiceTests {
@@ -19,7 +17,7 @@ public class PostulateServiceTests {
 	@Autowired
 	private PostulateService postulateService;
 
-	// @Test
+	 @Test
 	public void testCreate() {
 		Postulate postulate = new Postulate();
 		postulate.setPostulate("TEST_POSTULATE");
@@ -28,7 +26,7 @@ public class PostulateServiceTests {
 		System.out.println(postulateService.create(postulate));
 	}
 
-	// @Test
+	 @Test
 	public void testFindAll() {
 		List<Postulate> list = postulateService.findAll();
 		for (Postulate postulate : list) {
@@ -44,7 +42,7 @@ public class PostulateServiceTests {
 		System.out.println(postulate);
 	}
 
-	// @Test
+	 @Test
 	public void testFindByName() {
 		String name = "AA";
 		Postulate postulate = postulateService.findByName(name);

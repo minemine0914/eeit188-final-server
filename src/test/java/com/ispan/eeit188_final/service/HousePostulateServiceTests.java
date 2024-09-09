@@ -29,7 +29,7 @@ public class HousePostulateServiceTests {
 		System.out.println();
 	}
 	
-//	@Test
+	@Test
 	public void testFindAll() {
 		List<HousePostulate> list = housePostulateService.findAll();
 		for (HousePostulate housePostulate : list) {
@@ -37,7 +37,7 @@ public class HousePostulateServiceTests {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testFindById() {
 		JSONObject json = new JSONObject().put("houseId",UUID.fromString("02DFD239-CEC9-4BE4-B041-A391A2D54EC7")).put("postulateId",UUID.fromString("1019B625-4A03-47D1-976A-4C1194AB6920"));
 		UUID houseUuid = (UUID)json.get("houseId");
