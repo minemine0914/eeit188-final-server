@@ -60,7 +60,7 @@ public class DiscussController {
     }
 
     // 收回討論
-    @PutMapping("/{id}")
+    @PutMapping("/retract/{id}")
     public ResponseEntity<Discuss> retractDiscuss(@PathVariable UUID id) {
         Optional<Discuss> updatedDiscuss = discussService.retractDiscuss(id);
         return updatedDiscuss.map(ResponseEntity::ok)
