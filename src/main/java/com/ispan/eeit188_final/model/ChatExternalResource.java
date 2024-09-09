@@ -27,8 +27,8 @@ public class ChatExternalResource {
     @Column(name = "Id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID Id;
 
-    @Column(name = "chat_record_id", columnDefinition = "UNIQUEIDENTIFIER")
-    private UUID ChatRecordId;
+    @Column(name = "chat_external_resource_id", columnDefinition = "UNIQUEIDENTIFIER")
+    private UUID ChatExternalResourceId;
 
     @Column(name = "url", columnDefinition = "VARCHAR(MAX)")
     private String url;
