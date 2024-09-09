@@ -23,7 +23,7 @@ public class ChatRecordController {
     private ChatRecordService chatRecordService;
 
     // 查詢特定用戶ID的聊天紀錄（包含發送方和接收方）
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public ResponseEntity<String> findByUserId(@PathVariable UUID userId,
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
@@ -39,7 +39,7 @@ public class ChatRecordController {
     }
 
     // 收回訊息功能
-    @PutMapping("/retract/{id}")
+    @PutMapping("/retract/{chatId}")
     public ResponseEntity<String> retractMessage(@PathVariable UUID chatId) {
 
         return chatRecordService.retractMessage(chatId);

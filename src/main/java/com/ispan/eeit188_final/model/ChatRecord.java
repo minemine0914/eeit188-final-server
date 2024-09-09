@@ -3,6 +3,9 @@ package com.ispan.eeit188_final.model;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 // import java.util.List;
 // import java.util.ArrayList;
 
@@ -31,6 +34,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @Table(name = "chat_record")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ChatRecord {
 
     // Data
