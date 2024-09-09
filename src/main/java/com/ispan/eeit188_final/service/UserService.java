@@ -385,7 +385,6 @@ public class UserService {
                 .body("{\"message\": \"Invalid ID\"}");
     }
 
-    /* 未完成 */
     public ResponseEntity<String> forgotPassword(String jsonRequest) {
         try {
             JSONObject obj = new JSONObject(jsonRequest);
