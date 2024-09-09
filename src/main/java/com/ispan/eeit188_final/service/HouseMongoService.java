@@ -39,13 +39,13 @@ public class HouseMongoService {
 		return null;
 	}
 
-	public List<HouseMongo> findByUserIdAndHouseId(UUID userId, UUID houseId) {
-		List<HouseMongo> houses = houseMongoRepository.findByUserIdAndHouseId(userId, houseId);
-		if (houses != null && houses.size() != 0) {
-			return houses;
-		}
-		return null;
-	}
+//	public List<HouseMongo> findByUserIdAndHouseId(UUID userId, UUID houseId) {
+//		List<HouseMongo> houses = houseMongoRepository.findByUserIdAndHouseId(userId, houseId);
+//		if (houses != null && houses.size() != 0) {
+//			return houses;
+//		}
+//		return null;
+//	}
 
 	public HouseMongo update(HouseMongo houseMongo) {
 		return houseMongoRepository.save(houseMongo);
@@ -56,26 +56,26 @@ public class HouseMongoService {
 	}
 
 	// 設為愛心 & 取消愛心
-	public HouseMongo likeHouse(UUID currentUser, UUID currentHouse) {
-		List<HouseMongo> house = houseMongoRepository.findByUserIdAndHouseId(currentUser, currentHouse);
-		if (house != null && house.size() != 0) {
-			house.setLiked(!house.getLiked());
-			return houseMongoRepository.save(house);
-		}
-		return null;
-	}
+//	public HouseMongo likeHouse(UUID currentUser, UUID currentHouse) {
+//		List<HouseMongo> house = houseMongoRepository.findByUserIdAndHouseId(currentUser, currentHouse);
+//		if (house != null && house.size() != 0) {
+//			house.setLiked(!house.getLiked());
+//			return houseMongoRepository.save(house);
+//		}
+//		return null;
+//	}
 
 	// 判斷User是否對House點過查詢(???時間內(永遠)不重複計算)
-	public HouseMongo clickHouse(UUID currentUser, UUID currentHouse) {
-		HouseMongo house = houseMongoRepository.findById(id).orElse(null);
-		if (house != null && currentUser != null && currentHouse != null && currentUser.equals(house.getUserId())
-				&& currentHouse.equals(house.getHouseId()) && !house.getClicked()) {
-			house.setClicked(true);
-			house.setClickDate(new Date());
-			return houseMongoRepository.save(house);
-		}
-		return null;
-	}
+//	public HouseMongo clickHouse(UUID currentUser, UUID currentHouse) {
+//		HouseMongo house = houseMongoRepository.findById(id).orElse(null);
+//		if (house != null && currentUser != null && currentHouse != null && currentUser.equals(house.getUserId())
+//				&& currentHouse.equals(house.getHouseId()) && !house.getClicked()) {
+//			house.setClicked(true);
+//			house.setClickDate(new Date());
+//			return houseMongoRepository.save(house);
+//		}
+//		return null;
+//	}
 
 	// 判斷User是否對House點過分享(永遠不重複計算)
 	public HouseMongo shareHouse(UUID id, UUID currentUser, UUID currentHouse) {

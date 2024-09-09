@@ -41,20 +41,20 @@ public class HouseMongoController {
 		houseMongoService.deleteHouseById(id);
 	}
 
-	@GetMapping("/{userId}/{houseId}/like")
-	public HouseMongo likeHouse(@PathVariable(name = "userId") UUID userId, @PathVariable(name = "houseId") UUID houseId) {
-		return houseMongoService.likeHouse(id);
-	}
-
-	@GetMapping("/{id}/click")
-	public HouseMongo clickHouse(@PathVariable(name = "id") UUID id) {
-		return houseMongoService.clickHouse(id);
-	}
-
-	@GetMapping("/{id}/share")
-	public HouseMongo shareHouse(@PathVariable(name = "id") UUID id) {
-		return houseMongoService.shareHouse(id);
-	}
+//	@GetMapping("/{userId}/{houseId}/like")
+//	public HouseMongo likeHouse(@PathVariable(name = "userId") UUID userId, @PathVariable(name = "houseId") UUID houseId) {
+//		return houseMongoService.likeHouse(id);
+//	}
+//
+//	@GetMapping("/{id}/click")
+//	public HouseMongo clickHouse(@PathVariable(name = "id") UUID id) {
+//		return houseMongoService.clickHouse(id);
+//	}
+//
+//	@GetMapping("/{id}/share")
+//	public HouseMongo shareHouse(@PathVariable(name = "id") UUID id) {
+//		return houseMongoService.shareHouse(id);
+//	}
 	
 //	@GetMapping("/{id}/{rating}")
 //	public HouseMongo getRating(@PathVariable(name = "id") UUID id, @PathVariable(name = "rating") Integer rating) {
