@@ -17,16 +17,16 @@ public class PostulateServiceTests {
 	@Autowired
 	private PostulateService postulateService;
 
-	//  @Test
-	// public void testCreate() {
-	// 	Postulate postulate = new Postulate();
-	// 	postulate.setPostulate("TEST_POSTULATE");
-	// 	postulate.setPostulate("AA");
+	@Test
+	public void testCreate() {
+		Postulate postulate = new Postulate();
+		postulate.setName("TEST_POSTULATE");
+		postulate.setName("AA");
 
-	// 	System.out.println(postulateService.create(postulate));
-	// }
+		System.out.println(postulateService.create(postulate));
+	}
 
-	 @Test
+	@Test
 	public void testFindAll() {
 		List<Postulate> list = postulateService.findAll();
 		for (Postulate postulate : list) {
@@ -42,7 +42,7 @@ public class PostulateServiceTests {
 		System.out.println(postulate);
 	}
 
-	 @Test
+	@Test
 	public void testFindByName() {
 		String name = "AA";
 		Postulate postulate = postulateService.findByName(name);

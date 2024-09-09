@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ispan.eeit188_final.dto.TicketDTO;
 import com.ispan.eeit188_final.model.Ticket;
 import com.ispan.eeit188_final.service.TicketService;
 
@@ -45,19 +46,19 @@ public class TicketController {
     }
     
     @PostMapping("/")
-    public ResponseEntity<Ticket> create(@RequestBody Ticket ticket) {
-    	Ticket create = ticketService.create(ticket);
+    public ResponseEntity<Ticket> create(@RequestBody TicketDTO ticketDto) {
+    	Ticket create = ticketService.create(ticketDto);
     	URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(create.getId()).toUri();
     	return ResponseEntity.created(location).body(create);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Ticket> update(@PathVariable String id, @RequestBody Ticket ticket) {
+    public ResponseEntity<Ticket> update(@PathVariable String id, @RequestBody TicketDTO ticketDto) {
     	if (id!=null&&id.length()!=0) {
     		UUID uuid = UUID.fromString(id);
     		Ticket dbTicket = ticketService.findById(uuid);
     		if(dbTicket!=null) {
-    			Ticket modify = ticketService.modify(dbTicket, ticket);
+    			Ticket modify = ticketService.modify(dbTicket, ticketDto);
     			if(modify != null) {
     				return ResponseEntity.ok(modify);
     			}

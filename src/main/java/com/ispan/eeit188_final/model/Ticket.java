@@ -4,17 +4,18 @@ import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,8 +23,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "ticket")
+@Builder
 public class Ticket {
 
 	@Id
@@ -34,19 +37,19 @@ public class Ticket {
 	@Column(name = "qr_code", columnDefinition = "varchar(max)")
 	private String qrCode;
 
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "user_id", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
 	// @JsonBackReference
-	// private User user;
-	@Column(name = "user_id", columnDefinition = "uniqueidentifier")
-	private UUID userId;
+	private User user;
+	// @Column(name = "user_id", columnDefinition = "uniqueidentifier")
+	// private UUID userId;
 
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "house_id", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
 	// @JsonBackReference
-	// private House house;
-	@Column(name = "house_id", columnDefinition = "uniqueidentifier")
-	private UUID houseId;
+	private House house;
+	// @Column(name = "house_id", columnDefinition = "uniqueidentifier")
+	// private UUID houseId;
 
 	@Column(name = "started_at", columnDefinition = "datetime2")
 	private Timestamp startedAt;

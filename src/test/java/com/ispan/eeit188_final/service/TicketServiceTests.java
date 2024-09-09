@@ -26,8 +26,8 @@ public class TicketServiceTests {
 		Ticket ticket = new Ticket();
 		ticket.setQrCode("TEST_QRCODE");
 		// ======to be modified after @ManyToOne========
-		ticket.setUserId(UUID.randomUUID());
-		ticket.setHouseId(UUID.randomUUID());
+//		ticket.setUserId(UUID.randomUUID());
+//		ticket.setHouseId(UUID.randomUUID());
 		// =============================================
 		ticket.setStartedAt(new Timestamp(86400000));
 		ticket.setEndedAt(new Timestamp(3600000));

@@ -2,8 +2,10 @@ package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -133,6 +135,10 @@ public class House {
     @Builder.Default
     @JsonIgnore
     private Set<Coupon> Coupons = new HashSet<>();
+
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Ticket> tickets = new ArrayList<>();
 
     // 自訂序列化 userId
     @JsonProperty("userId")
