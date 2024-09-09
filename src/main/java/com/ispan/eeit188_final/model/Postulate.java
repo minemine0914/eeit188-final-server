@@ -40,16 +40,20 @@ public class Postulate {
 	@Column(name = "id", columnDefinition = "uniqueidentifier")
 	private UUID id;
 
-	@Column(name = "postulate", columnDefinition = "varchar(15)")
-	private String postulate;
+	@Column(name = "name", columnDefinition = "varchar(15)")
+	private String name;
+
+	@Column(name = "icon", columnDefinition = "varchar(50)")
+	private String icon;
 
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
 	@ManyToMany(mappedBy = "postulates", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnore
+
 	@Builder.Default
-    private List<House> houses = new ArrayList<>();
+	private List<House> houses = new ArrayList<>();
 
 	@PrePersist
 	public void onCreate() {
