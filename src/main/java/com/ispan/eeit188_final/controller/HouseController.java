@@ -12,9 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
-import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.service.HouseService;
-import com.ispan.eeit188_final.service.UserService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +52,7 @@ public class HouseController {
 
     /** 修改一筆 */
     @PutMapping("/{id}")
-    public ResponseEntity<House> update(@PathVariable String id, @RequestBody HouseDTO houseDTO) {
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody HouseDTO houseDTO) {
         House finded = houseService.findById(UUID.fromString(id));
         if (finded != null) {
             try {
@@ -62,10 +60,12 @@ public class HouseController {
                 if (updated != null) {
                     return ResponseEntity.ok(updated); // Return 200 and print updated entity
                 }
-            } catch ( IllegalArgumentException e ) {
-                return ResponseEntity.badRequest().build(); // Return 400 BadRequest
+            } catch (IllegalArgumentException e) {
+                HouseDTO error = HouseDTO.builder().message(e.getMessage()).build();
+                return ResponseEntity.badRequest().body(error); // Return 400 BadRequest
             }
-            return ResponseEntity.badRequest().build(); // Return 400 BadRequest
+            HouseDTO error = HouseDTO.builder().message("修改失敗，請檢查傳入值").build();
+            return ResponseEntity.badRequest().body(error); // Return 400 BadRequest
         }
         return ResponseEntity.notFound().build(); // Return 404 NotFound
     }

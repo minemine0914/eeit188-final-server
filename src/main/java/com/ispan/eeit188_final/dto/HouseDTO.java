@@ -3,6 +3,9 @@ package com.ispan.eeit188_final.dto;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +17,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class HouseDTO {
     // 用於 Entity 資料
     private UUID id;
@@ -50,4 +54,6 @@ public class HouseDTO {
     private Integer limit;
     private Boolean dir;
     private String order;
+    // Exception message
+    private String message;
 }

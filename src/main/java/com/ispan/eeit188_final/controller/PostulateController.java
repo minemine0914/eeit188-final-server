@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ispan.eeit188_final.dto.PostulateDTO;
-import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Postulate;
 import com.ispan.eeit188_final.service.PostulateService;
 

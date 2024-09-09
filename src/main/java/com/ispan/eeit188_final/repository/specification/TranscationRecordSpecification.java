@@ -1,7 +1,6 @@
 package com.ispan.eeit188_final.repository.specification;
 
 import java.util.UUID;
-import java.util.function.Function;
 
 import org.springframework.data.jpa.domain.Specification;
 
