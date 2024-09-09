@@ -94,10 +94,10 @@ public class User {
     // @Builder.Default
     // private List<Cart> carts = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @Builder.Default
-    // private List<Ticket> tickets = new ArrayList<>();
+     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
+     CascadeType.ALL, orphanRemoval = true)
+     @Builder.Default
+     private List<Ticket> tickets = new ArrayList<>();
 
     // 關聯 TransactionRecord
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

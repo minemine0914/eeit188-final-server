@@ -20,8 +20,8 @@ public class PostulateServiceTests {
 	 @Test
 	public void testCreate() {
 		Postulate postulate = new Postulate();
-		postulate.setPostulate("TEST_POSTULATE");
-		postulate.setPostulate("AA");
+		postulate.setName("TEST_POSTULATE");
+		postulate.setName("AA");
 
 		System.out.println(postulateService.create(postulate));
 	}
@@ -75,7 +75,7 @@ public class PostulateServiceTests {
 		System.out.printf("pageNum=%d, pageSize=%d, desc=%b, orderBy=%s\r\n", pageNum, pageSize, desc,
 				orderBy);
 		for (Postulate postulate : page) {
-			System.out.println(postulate.getId() + " " + postulate.getPostulate());
+			System.out.println(postulate.getId() + " " + postulate.getName());
 		}
 	}
 }

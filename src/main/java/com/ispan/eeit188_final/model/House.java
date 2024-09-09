@@ -128,6 +128,14 @@ public class House {
     @JsonIgnore
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
     
+    
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade =
+    	     CascadeType.ALL, orphanRemoval = true)
+    	     @Builder.Default
+    	     private List<Ticket> tickets = new ArrayList<>();
+    
+    
+    
     // 自訂序列化 userId
     @JsonProperty("userId")
     public UUID userId() {
