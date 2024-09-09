@@ -1,7 +1,9 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -86,8 +88,6 @@ public class House {
     // 狀態
     @Column(name = "show", columnDefinition = "BIT")
     private Boolean show;           // 是否刊登顯示
-    // @Column(name = "user_id", columnDefinition = "UNIQUEIDENTIFIER")
-    // private UUID userId;            // 擁有者ID (UUID)
 
     // 建立/修改 時間
     @Column(name = "create_at", columnDefinition = "DATETIME2")
@@ -107,7 +107,6 @@ public class House {
         joinColumns = @JoinColumn(name = "house_id"),
         inverseJoinColumns = @JoinColumn(name = "postulate_id")
     )
-    // @JsonManagedReference("house-postulates")
     @Builder.Default
     private Set<Postulate> postulates = new HashSet<>();
 
@@ -116,6 +115,18 @@ public class House {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
     @JsonIgnore
     private User user;
+
+    // 與 UserCollection 的關聯
+    @OneToMany(mappedBy = "userCollectionId.houseId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    // @JsonIgnore
+    private Set<UserCollection> userCollections = new HashSet<>();
+
+    // 與 TransactionRecord 的關聯
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonIgnore
+    private Set<TransactionRecord> transactionRecords = new HashSet<>();
     
     // 自訂序列化 userId
     @JsonProperty("userId")

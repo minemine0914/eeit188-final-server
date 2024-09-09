@@ -1,12 +1,14 @@
 package com.ispan.eeit188_final.service;
 
+import com.ispan.eeit188_final.dto.DiscussDTO;
 import com.ispan.eeit188_final.model.Discuss;
 import com.ispan.eeit188_final.repository.DiscussRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,51 +18,44 @@ public class DiscussService {
     @Autowired
     private DiscussRepository discussRepository;
 
-    // Create a new discussion
-    public Discuss createDiscuss(String discussText, boolean show, UUID userId, UUID houseId, UUID discussId) {
-        Discuss discuss = new Discuss();
-        discuss.setDiscuss(discussText);
-        discuss.setShow(show);
-        discuss.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        discuss.setUserId(userId);
-        discuss.setHouseId(houseId);
-        discuss.setDiscussId(discussId);
+    public Discuss createDiscuss(DiscussDTO discussDTO) {
+        Discuss discuss = convertDtoToEntity(discussDTO);
         return discussRepository.save(discuss);
     }
 
-    // Retrieve a discussion by ID
     public Optional<Discuss> getDiscuss(UUID id) {
         return discussRepository.findById(id);
     }
 
-    // Retrieve all discussions for a specific house
-    public List<Discuss> getDiscussionsByHouseId(UUID houseId) {
-        return discussRepository.findAll().stream()
-                .filter(discuss -> discuss.getHouseId().equals(houseId))
-                .toList();
+    public Page<Discuss> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        return discussRepository.findByHouseId(houseId, pageRequest);
     }
 
-    // Retrieve all discussions by a specific user
-    public List<Discuss> getDiscussionsByUserId(UUID userId) {
-        return discussRepository.findAll().stream()
-                .filter(discuss -> discuss.getUserId().equals(userId))
-                .toList();
+    public Page<Discuss> getDiscussionsByUserId(UUID userId, int pageNo, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        return discussRepository.findByUserId(userId, pageRequest);
     }
 
-    // Update an existing discussion
-    public Optional<Discuss> updateDiscuss(UUID id, String discussText, boolean show) {
+    public Optional<Discuss> retractDiscuss(UUID id) {
         Optional<Discuss> optionalDiscuss = discussRepository.findById(id);
         if (optionalDiscuss.isPresent()) {
             Discuss discuss = optionalDiscuss.get();
-            discuss.setDiscuss(discussText);
-            discuss.setShow(show);
+            discuss.setShow(false);
             return Optional.of(discussRepository.save(discuss));
         }
         return Optional.empty();
     }
 
-    // Delete a discussion by ID
-    public void deleteDiscuss(UUID id) {
-        discussRepository.deleteById(id);
+    // Utility method to convert DiscussDTO to Discuss entity
+    private Discuss convertDtoToEntity(DiscussDTO discussDTO) {
+        Discuss discuss = new Discuss();
+        discuss.setDiscuss(discussDTO.getDiscuss());
+        discuss.setShow(discussDTO.getShow());
+        discuss.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        discuss.setUser(discussDTO.getUserId());
+        discuss.setHouse(discussDTO.getHouseId());
+        discuss.setDiscussId(discussDTO.getDiscussId());
+        return discuss;
     }
 }
