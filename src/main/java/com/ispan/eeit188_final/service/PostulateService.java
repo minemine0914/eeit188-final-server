@@ -53,7 +53,7 @@ public class PostulateService {
 
 	public Postulate findByName(String name) {
 		if (name != null && name.length() != 0) {
-			List<Postulate> postulates = postulateRepository.findByPostulate(name);
+			List<Postulate> postulates = postulateRepository.findByName(name);
 			if (postulates != null && postulates.size() != 0) {
 				return postulates.get(0);
 			}
@@ -74,10 +74,12 @@ public class PostulateService {
 	public Postulate create(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
-			String postulate = obj.isNull("postulate") ? null : obj.getString("postulate");
+			String name = obj.isNull("name") ? null : obj.getString("name");
+			String icon = obj.isNull("icon") ? null : obj.getString("icon");
 
 			Postulate insert = new Postulate();
-			insert.setPostulate(postulate);
+			insert.setName(name);
+			insert.setIcon(icon);
 
 			return postulateRepository.save(insert);
 		} catch (Exception e) {
@@ -99,7 +101,8 @@ public class PostulateService {
 			UUID id = obj.isNull("id") ? null : UUID.fromString(obj.getString(json));
 			Postulate dbData = findById(id);
 			if (dbData != null) {
-				dbData.setPostulate(obj.isNull("postulate") ? null : obj.getString("postulate"));
+				dbData.setName(obj.isNull("name") ? null : obj.getString("name"));
+				dbData.setIcon(obj.isNull("icon") ? null : obj.getString("icon"));
 				return dbData;
 			}
 		} catch (Exception e) {

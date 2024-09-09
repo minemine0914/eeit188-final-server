@@ -50,7 +50,8 @@ public class PostulateController {
 	@PostMapping("/")
 	public ResponseEntity<Postulate> create(@RequestBody PostulateDTO postulateDTO) {
 		Postulate postulate = Postulate.builder()
-				.postulate(postulateDTO.getPostulate())
+				.name(postulateDTO.getName())
+				.icon(postulateDTO.getIcon())
 				.build();
 		Postulate create = postulateService.create(postulate);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(create.getId())
