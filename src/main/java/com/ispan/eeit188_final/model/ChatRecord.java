@@ -61,7 +61,7 @@ public class ChatRecord {
     private Timestamp createdAt;
 
     // Relationship
-    // @OneToMany(mappedBy = "chat_record", fetch = FetchType.LAZY, cascade =
+    // @OneToMany(mappedBy = "chatRecord", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL, orphanRemoval = true)
     // @Builder.Default
     // private List<ChatExternalResource> chatExternalResources = new ArrayList<>();
