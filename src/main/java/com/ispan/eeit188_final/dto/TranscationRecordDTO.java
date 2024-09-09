@@ -1,7 +1,6 @@
 package com.ispan.eeit188_final.dto;
 
 import java.sql.Timestamp;
-
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -15,17 +14,16 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PriceRangeDTO {
-    // 用於 Entity 資料
+public class TranscationRecordDTO {
+    // 基本資訊
     private UUID id;
-    private Integer newPrice;
-    private Timestamp startedAt;
-    private Timestamp endedAt;
     private UUID houseId;
-    // 用於 查詢
-    private Integer minPrice;
-    private Integer maxPrice;
-    // 用於分頁、排序
+    private UUID userId;
+    private Integer cashFlow;
+    private String deal;
+    private Integer platformIncome;
+    private Timestamp createdAt;
+    // 用於 分頁、排序
     private Integer page;
     private Integer limit;
     private Boolean dir;
