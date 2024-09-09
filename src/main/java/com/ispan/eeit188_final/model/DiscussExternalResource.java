@@ -42,6 +42,10 @@ public class DiscussExternalResource {
     @Column(name = "created_at", columnDefinition = "DATETIME2")
     private LocalDateTime createdAt;
 
-    // @OneToMany(mappedBy = "DiscussExternalResource", cascade = CascadeType.ALL)
-    // private List<Discuss> Discuss;
+    /*
+     * @ManyToOne
+     * 
+     * @JoinColumn(name = "Discuss_id", insertable = false, updatable = false)
+     * private List<Discuss> Discuss;
+     */
 }
