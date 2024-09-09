@@ -49,9 +49,8 @@ public class Postulate {
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
-	@ManyToMany(mappedBy = "postulates", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "postulates", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JsonIgnore
-
 	@Builder.Default
 	private List<House> houses = new ArrayList<>();
 

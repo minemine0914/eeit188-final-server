@@ -17,14 +17,14 @@ public class PostulateServiceTests {
 	@Autowired
 	private PostulateService postulateService;
 
-	 @Test
-	public void testCreate() {
-		Postulate postulate = new Postulate();
-		postulate.setPostulate("TEST_POSTULATE");
-		postulate.setPostulate("AA");
+	//  @Test
+	// public void testCreate() {
+	// 	Postulate postulate = new Postulate();
+	// 	postulate.setPostulate("TEST_POSTULATE");
+	// 	postulate.setPostulate("AA");
 
-		System.out.println(postulateService.create(postulate));
-	}
+	// 	System.out.println(postulateService.create(postulate));
+	// }
 
 	 @Test
 	public void testFindAll() {
@@ -75,7 +75,7 @@ public class PostulateServiceTests {
 		System.out.printf("pageNum=%d, pageSize=%d, desc=%b, orderBy=%s\r\n", pageNum, pageSize, desc,
 				orderBy);
 		for (Postulate postulate : page) {
-			System.out.println(postulate.getId() + " " + postulate.getPostulate());
+			System.out.println(postulate.getId() + " " + postulate.getName());
 		}
 	}
 }

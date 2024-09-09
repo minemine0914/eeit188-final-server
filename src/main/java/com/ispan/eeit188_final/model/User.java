@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.List;
@@ -70,6 +71,7 @@ public class User {
     private String email;
 
     @Column(name = "password", columnDefinition = "varchar(max)", nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(name = "about", columnDefinition = "varchar(max)")
