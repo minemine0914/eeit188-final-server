@@ -163,13 +163,10 @@ public class TicketService {
 			Optional<House> findHouse = houseRepository.findById(ticketDto.getHouseId());
 			Optional<User> findUser = userRepository.findById(ticketDto.getUserId());
 			if (findHouse.isPresent() && findUser.isPresent()) {
-				Ticket ticket = Ticket.builder()
-						.qrCode(ticketDto.getQrCode())
-						.user(findUser.get())
-						.house(findHouse.get())
-						.startedAt(ticketDto.getStartedAt())
-						.endedAt(ticketDto.getEndedAt())
-						.createdAt(ticketDto.getCreatedAt()==null?new Timestamp(System.currentTimeMillis()):ticketDto.getCreatedAt())
+				Ticket ticket = Ticket.builder().qrCode(ticketDto.getQrCode()).user(findUser.get())
+						.house(findHouse.get()).startedAt(ticketDto.getStartedAt()).endedAt(ticketDto.getEndedAt())
+						.createdAt(ticketDto.getCreatedAt() == null ? new Timestamp(System.currentTimeMillis())
+								: ticketDto.getCreatedAt())
 						.build();
 				return ticketRepository.save(ticket);
 			}
@@ -227,27 +224,33 @@ public class TicketService {
 		return null;
 	}
 
-//	public Ticket modify(Ticket oldTicket, Ticket newTicket) {
-//		if (oldTicket != null && newTicket != null) {
-//			if (newTicket.getQrCode() != null) {
-//				oldTicket.setQrCode(newTicket.getQrCode());
-//			}
-//			if (newTicket.getHouseId() != null) {
-//				oldTicket.setHouseId(newTicket.getHouseId());
-//			}
-//			if (newTicket.getUserId() != null) {
-//				oldTicket.setUserId(newTicket.getUserId());
-//			}
-//			if (newTicket.getStartedAt() != null) {
-//				oldTicket.setStartedAt(newTicket.getStartedAt());
-//			}
-//			if (newTicket.getEndedAt() != null) {
-//				oldTicket.setEndedAt(newTicket.getEndedAt());
-//			}
-//			return ticketRepository.save(oldTicket);
-//		}
-//		return null;
-//	}
+	public Ticket modify(Ticket oldTicket, TicketDTO ticketDto) {
+		if (oldTicket != null && ticketDto != null) {
+			if (ticketDto.getQrCode() != null) {
+				oldTicket.setQrCode(ticketDto.getQrCode());
+			}
+			if (ticketDto.getHouseId() != null) {
+				Optional<House> findHouse = houseRepository.findById(ticketDto.getHouseId());
+				if (findHouse.isPresent()) {
+					oldTicket.setHouse(findHouse.get());
+				}
+			}
+			if (ticketDto.getUserId() != null) {
+				Optional<User> findUser = userRepository.findById(ticketDto.getUserId());
+				if (findUser.isPresent()) {
+					oldTicket.setUser(findUser.get());
+				}
+			}
+			if (ticketDto.getStartedAt() != null) {
+				oldTicket.setStartedAt(ticketDto.getStartedAt());
+			}
+			if (ticketDto.getEndedAt() != null) {
+				oldTicket.setEndedAt(ticketDto.getEndedAt());
+			}
+			return ticketRepository.save(oldTicket);
+		}
+		return null;
+	}
 
 	public Page<Ticket> findByStarted(String json) {
 		Integer defalutPageNum = 0;

@@ -53,12 +53,12 @@ public class TicketController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Ticket> update(@PathVariable String id, @RequestBody Ticket ticket) {
+    public ResponseEntity<Ticket> update(@PathVariable String id, @RequestBody TicketDTO ticketDto) {
     	if (id!=null&&id.length()!=0) {
     		UUID uuid = UUID.fromString(id);
     		Ticket dbTicket = ticketService.findById(uuid);
     		if(dbTicket!=null) {
-    			Ticket modify = ticketService.modify(dbTicket, ticket);
+    			Ticket modify = ticketService.modify(dbTicket, ticketDto);
     			if(modify != null) {
     				return ResponseEntity.ok(modify);
     			}
