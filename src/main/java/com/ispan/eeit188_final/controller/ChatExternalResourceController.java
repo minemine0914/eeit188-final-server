@@ -29,7 +29,7 @@ public class ChatExternalResourceController {
     public ChatExternalResource createChatExternalResource(@RequestBody ChatExternalResource chatExternalResource) {
         return cerService.saveCER(
                 chatExternalResource.getId(),
-                chatExternalResource.getChatRecordId(),
+                chatExternalResource.getChatExternalResourceId(),
                 chatExternalResource.getUrl(),
                 chatExternalResource.getType(),
                 chatExternalResource.getCreatedAt());
