@@ -24,13 +24,13 @@ public class HousedExternalResourceController {
     @Autowired
     HousedExternalResourceService HerService;
 
-    @PostMapping("/")
+    @PostMapping("/add")
     public HousedExternalResource housedExternalResource(@RequestBody HousedExternalResource housedExternalResource) {
         return HerService.saveHER(
                 housedExternalResource.getId(),
                 housedExternalResource.getHouseId(),
-                housedExternalResource.getType(),
                 housedExternalResource.getUrl(),
+                housedExternalResource.getType(),
                 housedExternalResource.getCreatedAt());
     }
 
@@ -42,7 +42,7 @@ public class HousedExternalResourceController {
 
     @DeleteMapping("/{id}")
     public void deletehousedExternalResource(@PathVariable UUID id) {
-        HerService.findherById(id);
+        HerService.deleteById(id);
     }
 
     @PutMapping("/{id}")
