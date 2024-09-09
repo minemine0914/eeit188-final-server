@@ -128,6 +128,12 @@ public class House {
     @JsonIgnore
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
+    // 與 Coupon 的關聯
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonIgnore
+    private Set<Coupon> Coupons = new HashSet<>();
+
     // 自訂序列化 userId
     @JsonProperty("userId")
     public UUID userId() {

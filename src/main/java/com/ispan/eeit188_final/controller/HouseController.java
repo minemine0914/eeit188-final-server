@@ -72,8 +72,8 @@ public class HouseController {
 
     /** 刪除一筆 */
     @DeleteMapping("/{id}")
-    public ResponseEntity<House> delete(@PathVariable String id) {
-        boolean deleted = houseService.delete(UUID.fromString(id));
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+        Boolean deleted = houseService.delete(id);
         if (deleted) {
             return ResponseEntity.noContent().build(); // Return 204 NoContent
         }

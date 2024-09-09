@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.service;
 
 import com.ispan.eeit188_final.dto.TranscationRecordDTO;
+import com.ispan.eeit188_final.model.Coupon;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.TransactionRecord;
 import com.ispan.eeit188_final.model.User;
@@ -62,6 +63,17 @@ public class TransactionRecordService {
     // }
     // return null;
     // }
+
+    public Boolean delete(UUID id) {
+        if (id != null) {
+            Optional<TransactionRecord> find = transactionRecordRepo.findById(id);
+            if (find.isPresent()) {
+                transactionRecordRepo.deleteById(id);
+                return true;
+            }
+        }
+        return false;
+    }
 
     public TransactionRecord findById(UUID id) {
         if (id != null) {
