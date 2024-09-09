@@ -40,8 +40,8 @@ public class TicketController {
     }
     
     @GetMapping("/findAll")
-    public ResponseEntity<Page<Ticket>> findAll(@RequestBody String json){
-    	Page<Ticket> tickets = ticketService.findAll(json);
+    public ResponseEntity<Page<Ticket>> findAll(@RequestBody TicketDTO ticketDTO){
+    	Page<Ticket> tickets = ticketService.findAll(ticketDTO);
     	return ResponseEntity.ok(tickets);
     }
     
