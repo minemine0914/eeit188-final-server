@@ -30,8 +30,8 @@ public class DiscussExternalResourceController {
         return derService.saveDER(
                 discussExternalResource.getId(),
                 discussExternalResource.getDiscussId(),
-                discussExternalResource.getType(),
                 discussExternalResource.getUrl(),
+                discussExternalResource.getType(),
                 discussExternalResource.getCreatedAt());
     }
 
