@@ -26,7 +26,7 @@ public class ChatExternalResourceService {
 
         ChatExternalResource cer = new ChatExternalResource();
         cer.setId(id);
-        cer.setChatRecordId(ChatRecordId);
+        cer.setChatExternalResourceId(ChatRecordId);
         cer.setUrl(url);
         cer.setType(type);
         cer.setCreatedAt(createdAT);
