@@ -7,11 +7,13 @@
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Service;
 //
+//import com.ispan.eeit188_final.dto.HouseMongoDTO;
 //import com.ispan.eeit188_final.model.HouseMongo;
 //import com.ispan.eeit188_final.repository.HouseMongoRepository;
 //
 //@Service
 //public class HouseMongoService {
+//
 //	@Autowired
 //	private HouseMongoRepository houseMongoRepository;
 //
@@ -39,55 +41,132 @@
 //		return null;
 //	}
 //
-////	public List<HouseMongo> findByUserIdAndHouseId(UUID userId, UUID houseId) {
-////		List<HouseMongo> houses = houseMongoRepository.findByUserIdAndHouseId(userId, houseId);
-////		if (houses != null && houses.size() != 0) {
-////			return houses;
-////		}
-////		return null;
-////	}
+//	public HouseMongo findByUserIdAndHouseId(UUID userId, UUID houseId) {
+//		HouseMongo house = houseMongoRepository.findByUserIdAndHouseId(userId, houseId);
+//		if (house != null) {
+//			return house;
+//		}
+//		return null;
+//	}
+//
+//	public HouseMongo create(HouseMongo houseMongo) {
+//		System.out.println("1");
+//		if (houseMongo != null && houseMongo.getUserId() != null && houseMongo.getHouseId() != null) {
+//			System.out.println("2");
+//			HouseMongo dbHouseMongo = houseMongoRepository.findByUserIdAndHouseId(houseMongo.getUserId(),
+//					houseMongo.getHouseId());
+//			if (dbHouseMongo == null) {
+//				System.out.println("3");
+//				return houseMongoRepository.save(houseMongo);
+//			}
+//		}
+//		return null;
+//	}
 //
 //	public HouseMongo update(HouseMongo houseMongo) {
 //		return houseMongoRepository.save(houseMongo);
 //	}
 //
-//	public void deleteHouseById(UUID id) {
+//	public void deleteById(UUID id) {
 //		houseMongoRepository.deleteById(id);
 //	}
 //
 //	// 設為愛心 & 取消愛心
-////	public HouseMongo likeHouse(UUID currentUser, UUID currentHouse) {
-////		List<HouseMongo> house = houseMongoRepository.findByUserIdAndHouseId(currentUser, currentHouse);
-////		if (house != null && house.size() != 0) {
-////			house.setLiked(!house.getLiked());
-////			return houseMongoRepository.save(house);
-////		}
-////		return null;
-////	}
-//
-//	// 判斷User是否對House點過查詢(???時間內(永遠)不重複計算)
-////	public HouseMongo clickHouse(UUID currentUser, UUID currentHouse) {
-////		HouseMongo house = houseMongoRepository.findById(id).orElse(null);
-////		if (house != null && currentUser != null && currentHouse != null && currentUser.equals(house.getUserId())
-////				&& currentHouse.equals(house.getHouseId()) && !house.getClicked()) {
-////			house.setClicked(true);
-////			house.setClickDate(new Date());
-////			return houseMongoRepository.save(house);
-////		}
-////		return null;
-////	}
-//
-//	// 判斷User是否對House點過分享(永遠不重複計算)
-//	public HouseMongo shareHouse(UUID id, UUID currentUser, UUID currentHouse) {
-//		HouseMongo house = houseMongoRepository.findById(id).orElse(null);
-//		if (house != null && currentUser != null && currentHouse != null && currentUser.equals(house.getUserId())
-//				&& currentHouse.equals(house.getHouseId()) && !house.getShared()) {
-//			house.setShared(true);
-//			return houseMongoRepository.save(house);
+//	public HouseMongo likeHouse(HouseMongoDTO houseMongoDto) {
+//		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+//			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+//					houseMongoDto.getHouseId());
+//			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+//					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+//				//先判定更新前狀態，再更新(順序不可顛倒)
+//				dbHouse.setLikeDate(dbHouse.getLiked() == false ? new Date() : null);
+//				dbHouse.setLiked(!dbHouse.getLiked());
+//				return houseMongoRepository.save(dbHouse);
+//			}
 //		}
 //		return null;
 //	}
 //
+//	// 判斷User是否對House點過查詢(???時間內(永遠)不重複計算)
+//	public HouseMongo clickHouse(HouseMongoDTO houseMongoDto) {
+//		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+//			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+//					houseMongoDto.getHouseId());
+//			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+//					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+//				if (!dbHouse.getClicked()) {
+//					dbHouse.setClicked(true);
+//					dbHouse.setClickDate(new Date());
+//				}
+//				return houseMongoRepository.save(dbHouse);
+//			}
+//		}
+//		return null;
+//	}
+//
+//	// 判斷User是否對House點過分享(永遠不重複計算)
+//	public HouseMongo shareHouse(HouseMongoDTO houseMongoDto) {
+//		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+//			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+//					houseMongoDto.getHouseId());
+//			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+//					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+//				if (!dbHouse.getShared()) {
+//					dbHouse.setShared(true);
+//					dbHouse.setShareDate(new Date());
+//				}
+//				return houseMongoRepository.save(dbHouse);
+//			}
+//		}
+//		return null;
+//	}
+//
+//	// 重置like(=false)
+//	public HouseMongo resetLikeHouse(HouseMongoDTO houseMongoDto) {
+//		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+//			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+//					houseMongoDto.getHouseId());
+//			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+//					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+//				dbHouse.setLiked(false);
+//				dbHouse.setLikeDate(null);
+//				return houseMongoRepository.save(dbHouse);
+//			}
+//		}
+//		return null;
+//	}
+//
+//	// 重置click(=false)
+//	public HouseMongo resetClickHouse(HouseMongoDTO houseMongoDto) {
+//		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+//			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+//					houseMongoDto.getHouseId());
+//			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+//					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+//				dbHouse.setClicked(false);
+//				dbHouse.setClickDate(null);
+//				return houseMongoRepository.save(dbHouse);
+//			}
+//		}
+//		return null;
+//	}
+//
+//	//重置share
+//	public HouseMongo resetShareHouse(HouseMongoDTO houseMongoDto) {
+//		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+//			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+//					houseMongoDto.getHouseId());
+//			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+//					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+//					dbHouse.setShared(false);
+//					dbHouse.setShareDate(null);
+//				return houseMongoRepository.save(dbHouse);
+//			}
+//		}
+//		return null;
+//	}
+//	
+//	// 評分功能(1~5分別計算數量)
 ////	@GetMapping("/{id}/{rating}")
 ////	public HouseMongo getRating(@PathVariable(name = "id") UUID id, @PathVariable(name = "rating") Integer rating) {
 ////		HouseMongo cc = houseMongoRepository.findById(id).orElse(new HouseMongo());
