@@ -14,6 +14,7 @@ import com.ispan.eeit188_final.service.UserService;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
 

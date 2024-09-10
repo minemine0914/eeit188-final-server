@@ -21,12 +21,10 @@ public class ChatExternalResourceService {
     @Autowired
     private ChatExternalResourceRepository CerRepo;
 
-    public ChatExternalResource saveCER(UUID id, UUID ChatRecordId, String url,
+    public ChatExternalResource saveCER(UUID id, String url,
             String type, LocalDateTime createdAT) {
-
         ChatExternalResource cer = new ChatExternalResource();
         cer.setId(id);
-        cer.setChatExternalResourceId(ChatRecordId);
         cer.setUrl(url);
         cer.setType(type);
         cer.setCreatedAt(createdAT);
