@@ -90,9 +90,9 @@ public class House {
     private Boolean show; // 是否刊登顯示
 
     // 建立/修改 時間
-    @Column(name = "create_at", columnDefinition = "DATETIME2")
+    @Column(name = "created_at", columnDefinition = "DATETIME2")
     private Timestamp createdAt; // 建立時間
-    @Column(name = "update_at", columnDefinition = "DATETIME2")
+    @Column(name = "updated_at", columnDefinition = "DATETIME2")
     private Timestamp updatedAt; // 修改時間
 
     // 關聯 房源的價格範圍
