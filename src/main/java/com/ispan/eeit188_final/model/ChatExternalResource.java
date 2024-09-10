@@ -30,9 +30,6 @@ public class ChatExternalResource {
     @Column(name = "Id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID Id;
 
-    @Column(name = "chat_external_resource_id", columnDefinition = "UNIQUEIDENTIFIER")
-    private UUID ChatExternalResourceId;
-
     @Column(name = "url", columnDefinition = "VARCHAR(MAX)")
     private String url;
 
@@ -45,7 +42,7 @@ public class ChatExternalResource {
 
     @ManyToOne
     @JoinColumn(name = "ChatRecord_id", insertable = false, updatable = false)
-    private ChatRecord chatRecord;
+    private ChatRecord chatRecordId;
 
     @PrePersist
     public void prePersist() {
