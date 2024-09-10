@@ -1,4 +1,4 @@
-package com.ispan.eeit188_final.service;
+package com.ispan.eeit188_final.controller;
 
 import com.ispan.eeit188_final.dto.TranscationRecordDTO;
 import com.ispan.eeit188_final.model.House;

@@ -3,8 +3,7 @@ package com.ispan.eeit188_final.dto;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import com.ispan.eeit188_final.model.House;
-import com.ispan.eeit188_final.model.User;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
