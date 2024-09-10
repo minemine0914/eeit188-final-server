@@ -41,7 +41,7 @@ public class Discuss {
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    @Column(name = "discuss", columnDefinition = "varchar(max)")
+    @Column(name = "discuss", columnDefinition = "nvarchar(max)")
     private String discuss;
 
     @Column(name = "show", columnDefinition = "bit")

@@ -41,7 +41,7 @@ public class TransactionRecord {
     @Column(name = "cash_flow", columnDefinition = "int")
     private Integer cashFlow;
 
-    @Column(name = "deal", columnDefinition = "varchar(10)")
+    @Column(name = "deal", columnDefinition = "nvarchar(10)")
     private String deal;
 
     @Column(name = "platform_income", columnDefinition = "int")

@@ -1,7 +1,7 @@
 package com.ispan.eeit188_final.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+// import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,13 +31,13 @@ public class DiscussExternalResource {
     @Column(name = "Id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID Id;
 
-    @Column(name = "url", columnDefinition = "VARCHAR(MAX)")
+    @Column(name = "url", columnDefinition = "NVARCHAR(MAX)")
     private String url;
 
     @Column(name = "discuss_id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID DiscussId;
 
-    @Column(name = "type", columnDefinition = "VARCHAR(10)")
+    @Column(name = "type", columnDefinition = "NVARCHAR(10)")
     private String type;
 
     @Column(name = "created_at", columnDefinition = "DATETIME2")

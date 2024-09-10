@@ -43,7 +43,7 @@ public class ChatRecord {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "chat", columnDefinition = "varchar(max)")
+    @Column(name = "chat", columnDefinition = "nvarchar(max)")
     private String chat;
 
     @Column(name = "show", columnDefinition = "bit")

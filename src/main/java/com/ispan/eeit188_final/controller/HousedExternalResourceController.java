@@ -15,38 +15,42 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/HousedExternalResource")
+@RequestMapping("/HousedExternalResourceController")
+@CrossOrigin
 public class HousedExternalResourceController {
 
     @Autowired
-    HousedExternalResourceService HerService;
+    private HousedExternalResourceService HerService;
 
     @PostMapping("/add")
-    public HousedExternalResource housedExternalResource(@RequestBody HousedExternalResource housedExternalResource) {
+    public HousedExternalResource HouseExternalResourceController(
+            @RequestBody HousedExternalResource houseExternalResource) {
         return HerService.saveHER(
-                housedExternalResource.getId(),
-                housedExternalResource.getHouseId(),
-                housedExternalResource.getUrl(),
-                housedExternalResource.getType(),
-                housedExternalResource.getCreatedAt());
+                houseExternalResource.getId(),
+                houseExternalResource.getHouseId(),
+                houseExternalResource.getUrl(),
+                houseExternalResource.getType(),
+                houseExternalResource.getCreatedAt());
     }
 
     // 根據 ID 查詢
     @GetMapping("/{id}")
-    public HousedExternalResource getHousedExternalResourceById(@PathVariable UUID id) {
+    public HousedExternalResource getHouseExternalResourceControllerById(@PathVariable UUID id) {
         return HerService.findherById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deletehousedExternalResource(@PathVariable UUID id) {
+    public void deleteHouseExternalResourceController(@PathVariable UUID id) {
         HerService.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public HousedExternalResource updateHousedExternalResource(@RequestBody HousedExternalResource her) {
+    public HousedExternalResource updateHouseExternalResourceController(
+            @RequestBody HousedExternalResource her) {
 
         return HerService.updateHER(her);
     }
