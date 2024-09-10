@@ -21,10 +21,16 @@ public class HouseMongoDTO {
 	public Boolean clicked;
 	public Boolean liked;
 	public Boolean shared;
+	public Integer score;
 	public Date clickDate;
 	public Date likeDate;
 	public Date shareDate;
-//	public Integer[] score;
+	public Date scoreDate;
 
+    // 用於分頁、排序
+    private Integer page;
+    private Integer limit;
+    private Boolean dir;
+    private String order;
 
 }
