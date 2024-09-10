@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.ispan.eeit188_final.model.ChatExternalResource;
 import com.ispan.eeit188_final.service.ChatExternalResourceService;
 
 @RestController
 @RequestMapping("/ChatExternalResource")
+@CrossOrigin
 public class ChatExternalResourceController {
 
     @Autowired
@@ -29,7 +31,6 @@ public class ChatExternalResourceController {
     public ChatExternalResource createChatExternalResource(@RequestBody ChatExternalResource chatExternalResource) {
         return cerService.saveCER(
                 chatExternalResource.getId(),
-                chatExternalResource.getChatExternalResourceId(),
                 chatExternalResource.getUrl(),
                 chatExternalResource.getType(),
                 chatExternalResource.getCreatedAt());
@@ -45,6 +46,7 @@ public class ChatExternalResourceController {
     @DeleteMapping("/{id}")
     public void deleteChatExternalResource(@PathVariable UUID id) {
         cerService.deleteById(id);
+
     }
 
     // 更新
