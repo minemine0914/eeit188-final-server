@@ -49,7 +49,7 @@ public class User {
     @Column(name = "name", columnDefinition = "nvarchar(15)", nullable = false)
     private String name;
 
-    @Column(name = "role", columnDefinition = "varchar(15)")
+    @Column(name = "role", columnDefinition = "nvarchar(15)")
     private String role;
 
     @Column(name = "gender", columnDefinition = "nvarchar(10)")
@@ -58,19 +58,19 @@ public class User {
     @Column(name = "birthday", columnDefinition = "date", nullable = false)
     private Date birthday;
 
-    @Column(name = "phone", columnDefinition = "varchar(15)")
+    @Column(name = "phone", columnDefinition = "nvarchar(15)")
     private String phone;
 
-    @Column(name = "mobile_phone", columnDefinition = "varchar(15)")
+    @Column(name = "mobile_phone", columnDefinition = "nvarchar(15)")
     private String mobilePhone;
 
     @Column(name = "address", columnDefinition = "nvarchar(50)")
     private String address;
 
-    @Column(name = "email", columnDefinition = "varchar(30)", unique = true, nullable = false)
+    @Column(name = "email", columnDefinition = "nvarchar(30)", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password", columnDefinition = "varchar(max)", nullable = false)
+    @Column(name = "password", columnDefinition = "nvarchar(max)", nullable = false)
     @JsonIgnore
     private String password;
 
@@ -83,7 +83,7 @@ public class User {
     @Column(name = "updated_at", columnDefinition = "datetime2")
     private Timestamp updatedAt;
 
-    @Column(name = "avatar_base64", columnDefinition = "varchar(max)")
+    @Column(name = "avatar_base64", columnDefinition = "nvarchar(max)")
     private String avatarBase64;
 
     @Lob

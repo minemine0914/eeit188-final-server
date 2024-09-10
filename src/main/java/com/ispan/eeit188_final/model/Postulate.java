@@ -43,7 +43,7 @@ public class Postulate {
 	@Column(name = "name", columnDefinition = "nvarchar(15)")
 	private String name;
 
-	@Column(name = "icon", columnDefinition = "varchar(50)")
+	@Column(name = "icon", columnDefinition = "nvarchar(50)")
 	private String icon;
 
 	@Column(name = "created_at", columnDefinition = "datetime2")

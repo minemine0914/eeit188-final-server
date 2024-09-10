@@ -38,7 +38,7 @@ public class Coupon {
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    @Column(name = "discount_rate", columnDefinition = "float(10)")
+    @Column(name = "discount_rate", columnDefinition = "real")
     private Double discountRate;
 
     @Column(name = "discount", columnDefinition = "int")

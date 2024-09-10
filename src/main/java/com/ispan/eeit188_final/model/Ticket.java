@@ -34,7 +34,7 @@ public class Ticket {
 	@Column(name = "id", columnDefinition = "uniqueidentifier")
 	private UUID id;
 
-	@Column(name = "qr_code", columnDefinition = "varchar(max)")
+	@Column(name = "qr_code", columnDefinition = "nvarchar(max)")
 	private String qrCode;
 
 	@ManyToOne(fetch = FetchType.LAZY)
