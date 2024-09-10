@@ -8,53 +8,76 @@
 //import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.PutMapping;
 //import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RestController;
 //
+//import com.ispan.eeit188_final.dto.HouseMongoDTO;
 //import com.ispan.eeit188_final.model.HouseMongo;
 //import com.ispan.eeit188_final.service.HouseMongoService;
 //
 //@RestController
 //@RequestMapping("/house/mongo")
 //public class HouseMongoController {
+//	
 //	@Autowired
 //	private HouseMongoService houseMongoService;
 //
-//	@GetMapping("")
-//	public List<HouseMongo> getAll() {
+//	@GetMapping("/")
+//	public List<HouseMongo> findAll() {
 //		return houseMongoService.findAll();
 //	}
 //
 //	@GetMapping("/{id}")
-//	public HouseMongo findHouseById(@PathVariable UUID id) {
+//	public HouseMongo findById(@PathVariable UUID id) {
 //		return houseMongoService.findById(id);
 //	}
 //
-//	@PostMapping("")
+//	@PostMapping("/")
+//	public HouseMongo create(@RequestBody HouseMongo houseMongo) {
+//		return houseMongoService.create(houseMongo);
+//	}
+//	
+//	@PutMapping("/")
 //	public HouseMongo Update(@RequestBody HouseMongo houseMongo) {
 //		return houseMongoService.update(houseMongo);
 //	}
 //
 //	@DeleteMapping("/{id}")
-//	public void deleteHouseById(@PathVariable UUID id) {
-//		houseMongoService.deleteHouseById(id);
+//	public void deleteById(@PathVariable UUID id) {
+//		houseMongoService.deleteById(id);
 //	}
 //
-////	@GetMapping("/{userId}/{houseId}/like")
-////	public HouseMongo likeHouse(@PathVariable(name = "userId") UUID userId, @PathVariable(name = "houseId") UUID houseId) {
-////		return houseMongoService.likeHouse(id);
-////	}
-////
-////	@GetMapping("/{id}/click")
-////	public HouseMongo clickHouse(@PathVariable(name = "id") UUID id) {
-////		return houseMongoService.clickHouse(id);
-////	}
-////
-////	@GetMapping("/{id}/share")
-////	public HouseMongo shareHouse(@PathVariable(name = "id") UUID id) {
-////		return houseMongoService.shareHouse(id);
-////	}
+//	@PostMapping("/like")
+//	public HouseMongo likeHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+//		return houseMongoService.likeHouse(houseMongoDto);
+//	}
+//
+//	@PostMapping("/click")
+//	public HouseMongo clickHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+//		return houseMongoService.clickHouse(houseMongoDto);
+//	}
+//
+//	@PostMapping("/share")
+//	public HouseMongo shareHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+//		return houseMongoService.shareHouse(houseMongoDto);
+//	}
+//
+//	@PostMapping("/reset/like")
+//	public HouseMongo resetLikeHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+//		return houseMongoService.resetLikeHouse(houseMongoDto);
+//	}
+//
+//	@PostMapping("/reset/click")
+//	public HouseMongo resetClickHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+//		return houseMongoService.resetClickHouse(houseMongoDto);
+//	}
+//
+//	@PostMapping("/reset/share")
+//	public HouseMongo resetShareHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+//		return houseMongoService.resetShareHouse(houseMongoDto);
+//	}
 //	
 ////	@GetMapping("/{id}/{rating}")
 ////	public HouseMongo getRating(@PathVariable(name = "id") UUID id, @PathVariable(name = "rating") Integer rating) {
