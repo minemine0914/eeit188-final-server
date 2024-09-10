@@ -1,62 +1,120 @@
 package com.ispan.eeit188_final.service;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.Postulate;
+import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.HouseRepository;
+import com.ispan.eeit188_final.repository.PostulateRepository;
+import com.ispan.eeit188_final.repository.UserRepository;
 import com.ispan.eeit188_final.repository.specification.HouseSpecification;
 
 @Service
 public class HouseService {
+    // 預設值
+    private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
+    private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
+
     @Autowired
     private HouseRepository houseRepo;
+    @Autowired
+    private PostulateRepository postulateRepo;
+    @Autowired
+    private UserRepository userRepo;
 
     // 新增
-    public House create(House house) {
-        // TODO: feature: check user_id....
-        return houseRepo.save(house);
+    public House create(HouseDTO houseDTO) {
+        Optional<User> findUser = userRepo.findById(houseDTO.getUserId());
+        if (findUser.isPresent()) {
+            House house = House.builder()
+                    .user(findUser.get())
+                    .name(houseDTO.getName())
+                    .category(houseDTO.getCategory())
+                    .information(houseDTO.getInformation())
+                    .latitudeX(houseDTO.getLatitudeX())
+                    .longitudeY(houseDTO.getLongitudeY())
+                    .country(houseDTO.getCountry())
+                    .city(houseDTO.getCity())
+                    .region(houseDTO.getRegion())
+                    .address(houseDTO.getAddress())
+                    .price(houseDTO.getPrice())
+                    .livingDiningRoom(houseDTO.getLivingDiningRoom())
+                    .bedroom(houseDTO.getBedroom())
+                    .restroom(houseDTO.getRestroom())
+                    .bathroom(houseDTO.getBathroom())
+                    .kitchen(houseDTO.getKitchen())
+                    .balcony(houseDTO.getBalcony())
+                    .show(houseDTO.getShow())
+                    .build();
+            return houseRepo.save(house);
+        }
+        return null;
     }
 
     // 修改
-    public House modify(UUID id, House house) {
+    @Transactional
+    public House modify(UUID id, HouseDTO houseDTO) {
         if (id != null) {
             Optional<House> find = houseRepo.findById(id);
             if (find.isPresent()) {
                 House modify = find.get();
                 // 房源基本資訊
-                Optional.ofNullable(house.getName()).ifPresent(modify::setName);
-                Optional.ofNullable(house.getCategory()).ifPresent(modify::setCategory);
-                Optional.ofNullable(house.getInformation()).ifPresent(modify::setInformation);
-                Optional.ofNullable(house.getLatitudeX()).ifPresent(modify::setLatitudeX);
-                Optional.ofNullable(house.getLongitudeY()).ifPresent(modify::setLongitudeY);
-                Optional.ofNullable(house.getCountry()).ifPresent(modify::setCountry);
-                Optional.ofNullable(house.getCity()).ifPresent(modify::setCity);
-                Optional.ofNullable(house.getRegion()).ifPresent(modify::setRegion);
-                Optional.ofNullable(house.getAddress()).ifPresent(modify::setAddress);
-                Optional.ofNullable(house.getPrice()).ifPresent(modify::setPrice);
-
+                Optional.ofNullable(houseDTO.getName()).ifPresent(modify::setName);
+                Optional.ofNullable(houseDTO.getCategory()).ifPresent(modify::setCategory);
+                Optional.ofNullable(houseDTO.getInformation()).ifPresent(modify::setInformation);
+                Optional.ofNullable(houseDTO.getLatitudeX()).ifPresent(modify::setLatitudeX);
+                Optional.ofNullable(houseDTO.getLongitudeY()).ifPresent(modify::setLongitudeY);
+                Optional.ofNullable(houseDTO.getCountry()).ifPresent(modify::setCountry);
+                Optional.ofNullable(houseDTO.getCity()).ifPresent(modify::setCity);
+                Optional.ofNullable(houseDTO.getRegion()).ifPresent(modify::setRegion);
+                Optional.ofNullable(houseDTO.getAddress()).ifPresent(modify::setAddress);
+                Optional.ofNullable(houseDTO.getPrice()).ifPresent(modify::setPrice);
                 // 房源基本設施 幾廳 幾房 幾衛 幾浴
-                Optional.ofNullable(house.getLivingDiningRoom()).ifPresent(modify::setLivingDiningRoom);
-                Optional.ofNullable(house.getBedroom()).ifPresent(modify::setBedroom);
-                Optional.ofNullable(house.getRestroom()).ifPresent(modify::setRestroom);
-                Optional.ofNullable(house.getBathroom()).ifPresent(modify::setBathroom);
-
+                Optional.ofNullable(houseDTO.getLivingDiningRoom()).ifPresent(modify::setLivingDiningRoom);
+                Optional.ofNullable(houseDTO.getBedroom()).ifPresent(modify::setBedroom);
+                Optional.ofNullable(houseDTO.getRestroom()).ifPresent(modify::setRestroom);
+                Optional.ofNullable(houseDTO.getBathroom()).ifPresent(modify::setBathroom);
                 // 常態設施
-                Optional.ofNullable(house.getKitchen()).ifPresent(modify::setKitchen);
-                Optional.ofNullable(house.getBalcony()).ifPresent(modify::setBalcony);
-
+                Optional.ofNullable(houseDTO.getKitchen()).ifPresent(modify::setKitchen);
+                Optional.ofNullable(houseDTO.getBalcony()).ifPresent(modify::setBalcony);
                 // 狀態 (擁有者不更動)
-                Optional.ofNullable(house.getShow()).ifPresent(modify::setShow);
+                Optional.ofNullable(houseDTO.getShow()).ifPresent(modify::setShow);
+                // 附加設施
+                Optional.ofNullable(houseDTO.getPostulateIds()).ifPresent(postulateIds -> {
+                    // 現有的附加設施
+                    Set<Postulate> existingPostulates = new HashSet<>(modify.getPostulates());
+                    // 查詢新的附加設施
+                    List<Postulate> newPostulates = postulateRepo.findAllById(postulateIds);
+                    // 如果新的設施列表大小與提供的 ID 列表大小不一致，則拋出異常
+                    if (newPostulates.size() != postulateIds.size()) {
+                        throw new IllegalArgumentException("部分設施無效，請確認傳入的設施ID是否正確。");
+                    }
+                    // 計算新的附加設施集合
+                    Set<Postulate> newPostulatesSet = new HashSet<>(newPostulates);
+                    // 比較現有附加設施和新的附加設施是否相同
+                    if (!existingPostulates.equals(newPostulatesSet)) {
+                        // 更新附加設施集合
+                        modify.getPostulates().clear();
+                        modify.getPostulates().addAll(newPostulates);
+                        // 手動更新修改時間
+                        modify.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+                    }
+                });
                 // 儲存修改
                 return houseRepo.save(modify);
             }
@@ -88,42 +146,26 @@ public class HouseService {
     }
 
     // 查詢所有
-    public Page<House> findAll(String jsonString) {
-        /*
-         * JSON keys: page, limit, dir, order
-         */
-        JSONObject obj = new JSONObject(jsonString);
-        Integer defaultPage = 0;
-        Integer defaultLimit = 10;
-        Integer page = obj.isNull("page") ? defaultPage : obj.getInt("page");
-        Integer limit = obj.isNull("limit") ? defaultLimit : obj.getInt("limit");
-        Boolean dir = obj.isNull("dir") ? false : obj.getBoolean("dir");
-        String order = obj.isNull("order") ? null : obj.getString("order");
-        if (order != null) {
-            return houseRepo.findAll(PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC, order)));
-        }
-        return houseRepo.findAll(PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC)));
+    public Page<House> findAll(HouseDTO houseDTO) {
+        // 頁數 限制 排序
+        Integer page = Optional.ofNullable(houseDTO.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
+        Integer limit = Optional.ofNullable(houseDTO.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
+        Boolean dir = Optional.ofNullable(houseDTO.getDir()).orElse(false);
+        String order = Optional.ofNullable(houseDTO.getOrder()).orElse(null);
+        // 是否排序
+        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+        return houseRepo.findAll(PageRequest.of(page, limit, sort));
     }
 
     // 條件查詢
-    public Page<House> find(String jsonString) {
-        // 預設 頁數 限制
-        Integer defaultPage = 0;
-        Integer defaultLimit = 10;
-        JSONObject obj = new JSONObject(jsonString);
+    public Page<House> find(HouseDTO houseDTO) {
         // 頁數 限制 排序
-        Integer page = obj.isNull("page") ? defaultPage : obj.getInt("page");
-        Integer limit = obj.isNull("limit") ? defaultLimit : obj.getInt("limit");
-        Boolean dir = obj.isNull("dir") ? false : obj.getBoolean("dir");
-        String order = obj.isNull("order") ? "id" : obj.getString("order");
-        // 條件查詢
-        Specification<House> spec = Specification.where(null);
-        spec = spec.and(HouseSpecification.filterHouses(jsonString));
-        if (order != null) {
-            return houseRepo.findAll(spec,
-                    PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC, order)));
-        }
-        return houseRepo.findAll(spec, PageRequest.of(page, limit, Sort.by(dir ? Direction.DESC : Direction.ASC)));
+        Integer page = Optional.ofNullable(houseDTO.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
+        Integer limit = Optional.ofNullable(houseDTO.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
+        Boolean dir = Optional.ofNullable(houseDTO.getDir()).orElse(false);
+        String order = Optional.ofNullable(houseDTO.getOrder()).orElse(null);
+        // 是否排序
+        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+        return houseRepo.findAll(HouseSpecification.filterHouses(houseDTO), PageRequest.of(page, limit, sort));
     }
-
 }

@@ -21,7 +21,7 @@ public class DiscussExternalResourceService {
     @Autowired
     private DiscussExternalResourceRepository DerRepo;
 
-    public DiscussExternalResource saveHER(UUID id, UUID DiscussId, String url,
+    public DiscussExternalResource saveDER(UUID id, UUID DiscussId, String url,
             String type, LocalDateTime createdAT) {
 
         DiscussExternalResource der = new DiscussExternalResource();
@@ -34,7 +34,7 @@ public class DiscussExternalResourceService {
         return DerRepo.save(der);
     }
 
-    public DiscussExternalResource findherById(UUID id) {
+    public DiscussExternalResource findderById(UUID id) {
         Optional<DiscussExternalResource> optional = DerRepo.findById(id);
         if (optional.isPresent()) {
             return optional.get();
@@ -47,7 +47,7 @@ public class DiscussExternalResourceService {
         DerRepo.deleteById(id);
     }
 
-    public DiscussExternalResource updatePS(DiscussExternalResource her) {
+    public DiscussExternalResource updateDER(DiscussExternalResource her) {
         return DerRepo.save(her);
     }
 
@@ -55,7 +55,7 @@ public class DiscussExternalResourceService {
     // return DerRepo.findAll();
     // }
 
-    public Page<DiscussExternalResource> findAlHer(int pageNumber, int pageSize) {
+    public Page<DiscussExternalResource> findAllDer(int pageNumber, int pageSize) {
         Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt"));
         Page<DiscussExternalResource> page = DerRepo.findAll(p);
         return page;

@@ -4,15 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-// import org.thymeleaf.expression.Messages;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,8 +41,17 @@ public class DiscussExternalResource {
     private String type;
 
     @Column(name = "created_at", columnDefinition = "DATETIME2")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd' 'HH:mm")
     private LocalDateTime createdAt;
 
-    // @OneToMany(mappedBy = "DiscussExternalResource", cascade = CascadeType.ALL)
-    // private List<Discuss> Discuss;
+    @ManyToOne
+    @JoinColumn(name = "Discuss_id", insertable = false, updatable = false)
+    private Discuss discuss;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
 }

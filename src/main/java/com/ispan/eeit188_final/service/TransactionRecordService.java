@@ -1,163 +1,111 @@
 package com.ispan.eeit188_final.service;
 
+import com.ispan.eeit188_final.dto.TranscationRecordDTO;
+import com.ispan.eeit188_final.model.Coupon;
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.TransactionRecord;
+import com.ispan.eeit188_final.model.User;
+import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.TransactionRecordRepository;
+import com.ispan.eeit188_final.repository.UserRepository;
+import com.ispan.eeit188_final.repository.specification.TranscationRecordSpecification;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class TransactionRecordService {
+    // 預設值
+    private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
+    private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
 
     @Autowired
-    private TransactionRecordRepository transactionRecordRepository;
+    private TransactionRecordRepository transactionRecordRepo;
 
-    public ResponseEntity<String> createTransactionRecord(String jsonRequest) {
-        if (jsonRequest != null && !jsonRequest.isEmpty()) {
-            try {
-                JSONObject obj = new JSONObject(jsonRequest);
+    @Autowired
+    private HouseRepository houseRepo;
 
-                UUID houseId = obj.isNull("houseId") ? null : UUID.fromString(obj.getString("houseId"));
-                UUID userId = obj.isNull("userId") ? null : UUID.fromString(obj.getString("userId"));
-                int cashFlow = obj.isNull("cashFlow") ? 0 : obj.getInt("cashFlow");
-                String deal = obj.isNull("deal") ? null : obj.getString("deal");
+    @Autowired
+    private UserRepository userRepo;
 
-                if (houseId == null) {
-                    return ResponseEntity.badRequest().body("{\"message\": \"House ID can't be null\"}");
-                }
-
-                if (userId == null) {
-                    return ResponseEntity.badRequest().body("{\"message\": \"User ID can't be null\"}");
-                }
-
-                if (deal == null || deal.isEmpty()) {
-                    return ResponseEntity.badRequest().body("{\"message\": \"Deal can't be null or empty string\"}");
-                }
-
-                TransactionRecord transactionRecord = new TransactionRecord();
-                transactionRecord.setHouseId(houseId);
-                transactionRecord.setUserId(userId);
-                transactionRecord.setCashFlow(cashFlow);
-                transactionRecord.setDeal(deal);
-                transactionRecord.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-
-                transactionRecordRepository.save(transactionRecord);
-
-                return ResponseEntity.ok("{\"message\": \"Successfully created transaction record\"}");
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
+    // Create a new transaction record
+    public TransactionRecord create(TranscationRecordDTO dto) {
+        if (dto.getUserId() != null && dto.getHouseId() != null) {
+            Optional<House> findHouse = houseRepo.findById(dto.getHouseId());
+            Optional<User> findUser = userRepo.findById(dto.getUserId());
+            if (findHouse.isPresent() && findUser.isPresent()) {
+                TransactionRecord create = TransactionRecord.builder()
+                        .house(findHouse.get())
+                        .user(findUser.get())
+                        .cashFlow(dto.getCashFlow())
+                        .deal(dto.getDeal())
+                        .platformIncome(dto.getPlatformIncome())
+                        .build();
+                return transactionRecordRepo.save(create);
             }
         }
-
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid JSON request\"}");
+        return null;
     }
 
-    public ResponseEntity<String> getTransactionRecord(UUID id) {
-        if (id != null && !id.toString().isEmpty()) {
-            Optional<TransactionRecord> optional = transactionRecordRepository.findById(id);
+    // public TransactionRecord modify(UUID id, TranscationRecordDTO dto) {
+    // if (id != null) {
+    // Optional<TransactionRecord> find = transactionRecordRepo.findById(id);
+    // if (find.isPresent()) {
+    // TransactionRecord modify = find.get();
+    // }
+    // }
+    // return null;
+    // }
 
-            if (optional.isPresent()) {
-                TransactionRecord transactionRecord = optional.get();
-
-                try {
-                    JSONObject obj = new JSONObject()
-                            .put("houseId", transactionRecord.getHouseId())
-                            .put("userId", transactionRecord.getUserId())
-                            .put("cashFlow", transactionRecord.getCashFlow())
-                            .put("deal", transactionRecord.getDeal())
-                            .put("createdAt", transactionRecord.getCreatedAt());
-
-                    return ResponseEntity.ok(obj.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("{\"message\": \"Error creating JSON: " + e.getMessage() + "\"}");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("{\"message\": \"Transaction record not found\"}");
+    public Boolean delete(UUID id) {
+        if (id != null) {
+            Optional<TransactionRecord> find = transactionRecordRepo.findById(id);
+            if (find.isPresent()) {
+                transactionRecordRepo.deleteById(id);
+                return true;
             }
         }
-
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
+        return false;
     }
 
-    public List<TransactionRecord> getAllTransactionRecords() {
-        return transactionRecordRepository.findAll();
-    }
-
-    public List<TransactionRecord> getTransactionRecordsByHouseId(UUID houseId) {
-        return transactionRecordRepository.findAll().stream()
-                .filter(record -> record.getHouseId().equals(houseId))
-                .toList();
-    }
-
-    public List<TransactionRecord> getTransactionRecordsByUserId(UUID userId) {
-        return transactionRecordRepository.findAll().stream()
-                .filter(record -> record.getUserId().equals(userId))
-                .toList();
-    }
-
-    public ResponseEntity<String> updateTransactionRecord(UUID id, String jsonRequest) {
-        if (id != null && !id.toString().isEmpty()) {
-            Optional<TransactionRecord> optional = transactionRecordRepository.findById(id);
-
-            if (optional.isPresent()) {
-                TransactionRecord transactionRecord = optional.get();
-
-                try {
-                    JSONObject obj = new JSONObject(jsonRequest);
-
-                    int cashFlow = obj.isNull("cashFlow") ? 0 : obj.getInt("cashFlow");
-                    String deal = obj.isNull("deal") ? null : obj.getString("deal");
-
-                    if (deal == null || deal.isEmpty()) {
-                        return ResponseEntity.badRequest().body("{\"message\": \"Deal can't be null or empty string\"}");
-                    }
-
-                    transactionRecord.setCashFlow(cashFlow);
-                    transactionRecord.setDeal(deal);
-
-                    transactionRecordRepository.save(transactionRecord);
-
-                    return ResponseEntity.ok("{\"message\": \"Successfully updated transaction record\"}");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("{\"message\": \"Transaction record not found\"}");
+    public TransactionRecord findById(UUID id) {
+        if (id != null) {
+            Optional<TransactionRecord> find = transactionRecordRepo.findById(id);
+            if (find.isPresent()) {
+                return find.get();
             }
         }
-
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
+        return null;
     }
 
-    public ResponseEntity<String> deleteTransactionRecord(UUID id) {
-        if (id != null && !id.toString().isEmpty()) {
-            Optional<TransactionRecord> optional = transactionRecordRepository.findById(id);
-
-            if (optional.isPresent()) {
-                transactionRecordRepository.deleteById(id);
-                return ResponseEntity.ok("{\"message\": \"Transaction record deleted successfully\"}");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("{\"message\": \"Transaction record not found\"}");
-            }
-        }
-
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
+    public Page<TransactionRecord> findAll(TranscationRecordDTO dto) {
+        // 頁數 限制 排序
+        Integer page = Optional.ofNullable(dto.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
+        Integer limit = Optional.ofNullable(dto.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
+        Boolean dir = Optional.ofNullable(dto.getDir()).orElse(false);
+        String order = Optional.ofNullable(dto.getOrder()).orElse(null);
+        // 是否排序
+        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+        return transactionRecordRepo.findAll(PageRequest.of(page, limit, sort));
     }
+
+    // 條件查詢
+    public Page<TransactionRecord> find(TranscationRecordDTO dto) {
+        // 頁數 限制 排序
+        Integer page = Optional.ofNullable(dto.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
+        Integer limit = Optional.ofNullable(dto.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
+        Boolean dir = Optional.ofNullable(dto.getDir()).orElse(false);
+        String order = Optional.ofNullable(dto.getOrder()).orElse(null);
+        // 是否排序
+        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
+        return transactionRecordRepo.findAll(TranscationRecordSpecification.filterTranscationRecords(dto), PageRequest.of(page, limit, sort));
+    }
+
 }

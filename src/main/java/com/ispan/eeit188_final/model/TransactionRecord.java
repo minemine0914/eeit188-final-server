@@ -3,6 +3,10 @@ package com.ispan.eeit188_final.model;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,16 +15,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "transaction_record")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class TransactionRecord {
 
     @Id
@@ -28,30 +38,33 @@ public class TransactionRecord {
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    // @Column(name = "house_id", columnDefinition = "uniqueidentifier")
-    // private UUID houseId;
-    
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
-    private House houseId;
-
-
-    //@Column(name = "user_id", columnDefinition = "uniqueidentifier")
-    //private UUID userId;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
-    private User userId;
-    
-
     @Column(name = "cash_flow", columnDefinition = "int")
-    private int cashFlow;
+    private Integer cashFlow;
 
     @Column(name = "deal", columnDefinition = "varchar(10)")
     private String deal;
 
+    @Column(name = "platform_income", columnDefinition = "int")
+    private Integer platformIncome;
+
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
+
+    // 與 House 的關聯
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
+    @JsonIgnore
+    private House house;
+
+    // 與 User 的關聯
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
+    @JsonIgnore
+    private User user;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
 
 }

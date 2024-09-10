@@ -1,52 +1,74 @@
 package com.ispan.eeit188_final.controller;
 
-import com.ispan.eeit188_final.model.Coupon;
-import com.ispan.eeit188_final.service.CouponService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.net.URI;
 import java.util.UUID;
 
-@RestController
-@RequestMapping("/coupons")
-public class CouponController {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ispan.eeit188_final.dto.CouponDTO;
+import com.ispan.eeit188_final.model.Coupon;
+import com.ispan.eeit188_final.service.CouponService;
+
+@RestController
+@RequestMapping("/coupon")
+public class CouponController {
     @Autowired
     private CouponService couponService;
 
-    @PostMapping
-    public ResponseEntity<String> createCoupon(@RequestBody String jsonRequest) {
-        return couponService.createCoupon(jsonRequest);
+    /** 新增一筆 */
+    @PostMapping("/")
+    public ResponseEntity<Coupon> create(@RequestBody CouponDTO dto) {
+        Coupon created = couponService.create(dto);
+        if (created != null) {
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(created.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(created); // Return 201 Created and redirect to created url
+        }
+        return ResponseEntity.badRequest().build(); // Return 400 BadRequest
     }
 
+    // 查詢一筆 id
     @GetMapping("/{id}")
-    public ResponseEntity<String> getCoupon(@PathVariable UUID id) {
-        return couponService.getCoupon(id);
+    public ResponseEntity<Coupon> findById(@PathVariable UUID id) {
+        Coupon find = couponService.findById(id);
+        if (find != null) {
+            return ResponseEntity.ok(find); // Return 200
+        }
+        return ResponseEntity.notFound().build(); // Return 404 NotFound
     }
 
-    @GetMapping
-    public ResponseEntity<List<Coupon>> getAllCoupons() {
-        return ResponseEntity.ok(couponService.getAllCoupons());
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Coupon>> getCouponsByUserId(@PathVariable UUID userId) {
-        return ResponseEntity.ok(couponService.getCouponsByUserId(userId));
-    }
-
-    @GetMapping("/house/{houseId}")
-    public ResponseEntity<List<Coupon>> getCouponsByHouseId(@PathVariable UUID houseId) {
-        return ResponseEntity.ok(couponService.getCouponsByHouseId(houseId));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateCoupon(@PathVariable UUID id, @RequestBody String jsonRequest) {
-        return couponService.updateCoupon(id, jsonRequest);
-    }
-
+    // 刪除一筆 id
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCoupon(@PathVariable UUID id) {
-        return couponService.deleteCoupon(id);
+    public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+        Boolean deleted = couponService.delete(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build(); // Return 204 NoContent
+        }
+        return ResponseEntity.notFound().build(); // Return 400 NotFound
+    }
+
+    /** 查詢所有 */
+    @GetMapping("/all")
+    public Page<Coupon> all(@ModelAttribute CouponDTO dto) {
+        return couponService.findAll(dto);
+    }
+
+    /** 條件查詢 */
+    @PostMapping("/search")
+    public Page<Coupon> search(@RequestBody CouponDTO dto) {
+        return couponService.find(dto);
     }
 }

@@ -31,9 +31,9 @@ public class UserCollectionId implements Serializable {
     public UserCollectionId() {
     }
 
-    public UserCollectionId(User userId, House houseId) {
-        this.userId = userId;
-        this.houseId = houseId;
+    public UserCollectionId(User user, House house) {
+        this.userId = user;
+        this.houseId = house;
     }
 
     @Override

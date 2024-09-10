@@ -47,7 +47,7 @@ public class HousedExternalResourceService {
         herRepo.deleteById(id);
     }
 
-    public HousedExternalResource updatePS(HousedExternalResource her) {
+    public HousedExternalResource updateHER(HousedExternalResource her) {
         return herRepo.save(her);
     }
 
@@ -55,7 +55,7 @@ public class HousedExternalResourceService {
     // return herRepo.findAll();
     // }
 
-    public Page<HousedExternalResource> findAlHer(int pageNumber, int pageSize) {
+    public Page<HousedExternalResource> findAllHer(int pageNumber, int pageSize) {
         Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt"));
         Page<HousedExternalResource> page = herRepo.findAll(p);
         return page;

@@ -21,12 +21,12 @@ public class ChatExternalResourceService {
     @Autowired
     private ChatExternalResourceRepository CerRepo;
 
-    public ChatExternalResource saveHER(UUID id, UUID ChatRecordId, String url,
+    public ChatExternalResource saveCER(UUID id, UUID ChatRecordId, String url,
             String type, LocalDateTime createdAT) {
 
         ChatExternalResource cer = new ChatExternalResource();
         cer.setId(id);
-        cer.setChatRecordId(ChatRecordId);
+        cer.setChatExternalResourceId(ChatRecordId);
         cer.setUrl(url);
         cer.setType(type);
         cer.setCreatedAt(createdAT);
@@ -47,7 +47,7 @@ public class ChatExternalResourceService {
         CerRepo.deleteById(id);
     }
 
-    public ChatExternalResource updatePS(ChatExternalResource her) {
+    public ChatExternalResource updateCER(ChatExternalResource her) {
         return CerRepo.save(her);
     }
 
@@ -55,7 +55,7 @@ public class ChatExternalResourceService {
     // return CerRepo.findAll();
     // }
 
-    public Page<ChatExternalResource> findAlHer(int pageNumber, int pageSize) {
+    public Page<ChatExternalResource> findAllCer(int pageNumber, int pageSize) {
         Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt"));
         Page<ChatExternalResource> page = CerRepo.findAll(p);
         return page;

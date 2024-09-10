@@ -1,16 +1,19 @@
 package com.ispan.eeit188_final.service;
 
+import com.ispan.eeit188_final.dto.DiscussDTO;
 import com.ispan.eeit188_final.model.Discuss;
+import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.DiscussRepository;
+import com.ispan.eeit188_final.repository.HouseRepository;
+import com.ispan.eeit188_final.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,143 +23,84 @@ public class DiscussService {
     @Autowired
     private DiscussRepository discussRepository;
 
-    public ResponseEntity<String> createDiscuss(String jsonRequest) {
-        if (jsonRequest != null && !jsonRequest.isEmpty()) {
-            try {
-                JSONObject obj = new JSONObject(jsonRequest);
+    @Autowired
+    private UserRepository userRepository;
 
-                String discussText = obj.isNull("discuss") ? null : obj.getString("discuss");
-                boolean show = obj.isNull("show") ? false : obj.getBoolean("show");
-                UUID userId = obj.isNull("userId") ? null : UUID.fromString(obj.getString("userId"));
-                UUID houseId = obj.isNull("houseId") ? null : UUID.fromString(obj.getString("houseId"));
-                UUID discussId = obj.isNull("discussId") ? null : UUID.fromString(obj.getString("discussId"));
+    @Autowired
+    private HouseRepository houseRepository;
 
-                if (discussText == null || discussText.isEmpty()) {
-                    return ResponseEntity.badRequest().body("{\"message\": \"Discuss text can't be null or empty string\"}");
-                }
-
-                if (userId == null) {
-                    return ResponseEntity.badRequest().body("{\"message\": \"User ID can't be null\"}");
-                }
-
-                if (houseId == null) {
-                    return ResponseEntity.badRequest().body("{\"message\": \"House ID can't be null\"}");
-                }
-
-                Discuss discuss = new Discuss();
-                discuss.setDiscuss(discussText);
-                discuss.setShow(show);
-                discuss.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                discuss.setUserId(userId);
-                discuss.setHouseId(houseId);
-                discuss.setDiscussId(discussId);
-
-                discussRepository.save(discuss);
-
-                return ResponseEntity.ok("{\"message\": \"Successfully created discussion\"}");
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
-            }
+    public ResponseEntity<?> createDiscuss(DiscussDTO discussDTO) {
+        if (discussDTO.getUserId() == null || discussDTO.getUserId().toString().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(discussDTO.getUserIdNullException());
         }
 
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid JSON request\"}");
-    }
+        if (discussDTO.getHouseId() == null || discussDTO.getHouseId().toString().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(discussDTO.getHouseIdNullException());
+        }
 
-    public ResponseEntity<String> getDiscuss(UUID id) {
-        if (id != null && !id.toString().isEmpty()) {
-            Optional<Discuss> optional = discussRepository.findById(id);
+        Optional<User> userOptional = userRepository.findById(discussDTO.getUserId());
+        Optional<House> houseOptional = houseRepository.findById(discussDTO.getHouseId());
 
-            if (optional.isPresent()) {
-                Discuss discuss = optional.get();
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.badRequest()
+                    .body(discussDTO.getUserNotFoundException());
+        }
 
-                try {
-                    JSONObject obj = new JSONObject()
-                            .put("discuss", discuss.getDiscuss())
-                            .put("show", discuss.isShow())
-                            .put("createdAt", discuss.getCreatedAt())
-                            .put("userId", discuss.getUserId())
-                            .put("houseId", discuss.getHouseId())
-                            .put("discussId", discuss.getDiscussId());
+        if (!houseOptional.isPresent()) {
+            return ResponseEntity.badRequest()
+                    .body(discussDTO.getHouseNotFoundException());
+        }
 
-                    return ResponseEntity.ok(obj.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("{\"message\": \"Error creating JSON: " + e.getMessage() + "\"}");
-                }
+        User user = userOptional.get();
+        House house = houseOptional.get();
+
+        Discuss newDiscuss = new Discuss();
+        newDiscuss.setDiscuss(discussDTO.getDiscuss());
+        newDiscuss.setShow(true);
+        newDiscuss.setUser(user);
+        newDiscuss.setHouse(house);
+
+        // 確認是否為討論板內回覆
+        if (discussDTO.getDiscussId() != null && !discussDTO.getDiscussId().toString().isEmpty()) {
+            Optional<Discuss> discussOptional = discussRepository.findById(discussDTO.getDiscussId());
+
+            if (discussOptional.isPresent()) {
+                Discuss discuss = discussOptional.get();
+                newDiscuss.setSubDiscuss(discuss);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("{\"message\": \"Discuss not found\"}");
+                return ResponseEntity.badRequest()
+                        .body(discussDTO.getDiscussNotFoundException());
             }
         }
 
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
+        discussRepository.save(newDiscuss);
+
+        return ResponseEntity.ok(newDiscuss);
     }
 
-    public List<Discuss> getDiscussionsByHouseId(UUID houseId) {
-        return discussRepository.findAll().stream()
-                .filter(discuss -> discuss.getHouseId().equals(houseId))
-                .toList();
+    public Optional<Discuss> getDiscuss(UUID id) {
+        return discussRepository.findById(id);
     }
 
-    public List<Discuss> getDiscussionsByUserId(UUID userId) {
-        return discussRepository.findAll().stream()
-                .filter(discuss -> discuss.getUserId().equals(userId))
-                .toList();
+    public Page<Discuss> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        return discussRepository.findByHouseId(houseId, pageRequest);
     }
 
-    public ResponseEntity<String> updateDiscuss(UUID id, String jsonRequest) {
-        if (id != null && !id.toString().isEmpty()) {
-            Optional<Discuss> optional = discussRepository.findById(id);
+    public Page<Discuss> getDiscussionsByUserId(UUID userId, int pageNo, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        return discussRepository.findByUserId(userId, pageRequest);
+    }
 
-            if (optional.isPresent()) {
-                Discuss discuss = optional.get();
-
-                try {
-                    JSONObject obj = new JSONObject(jsonRequest);
-
-                    String discussText = obj.isNull("discuss") ? null : obj.getString("discuss");
-                    boolean show = obj.isNull("show") ? false : obj.getBoolean("show");
-
-                    if (discussText == null || discussText.isEmpty()) {
-                        return ResponseEntity.badRequest().body("{\"message\": \"Discuss text can't be null or empty string\"}");
-                    }
-
-                    discuss.setDiscuss(discussText);
-                    discuss.setShow(show);
-
-                    discussRepository.save(discuss);
-
-                    return ResponseEntity.ok("{\"message\": \"Successfully updated discussion\"}");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("{\"message\": \"Discuss not found\"}");
-            }
+    public Optional<Discuss> retractDiscuss(UUID id) {
+        Optional<Discuss> optionalDiscuss = discussRepository.findById(id);
+        if (optionalDiscuss.isPresent()) {
+            Discuss discuss = optionalDiscuss.get();
+            discuss.setShow(false);
+            return Optional.of(discussRepository.save(discuss));
         }
-
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
-    }
-
-    public ResponseEntity<String> deleteDiscuss(UUID id) {
-        if (id != null && !id.toString().isEmpty()) {
-            Optional<Discuss> optional = discussRepository.findById(id);
-
-            if (optional.isPresent()) {
-                discussRepository.deleteById(id);
-                return ResponseEntity.ok("{\"message\": \"Discuss deleted successfully\"}");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("{\"message\": \"Discuss not found\"}");
-            }
-        }
-
-        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
+        return Optional.empty();
     }
 }

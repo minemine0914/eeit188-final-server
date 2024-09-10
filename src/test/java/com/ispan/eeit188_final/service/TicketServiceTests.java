@@ -2,7 +2,6 @@ package com.ispan.eeit188_final.service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ispan.eeit188_final.model.Ticket;
 
 @SpringBootTest
@@ -23,13 +21,13 @@ public class TicketServiceTests {
 	@Autowired
 	private TicketService ticketService;
 
-	// @Test
+	 @Test
 	public void testCreate() {
 		Ticket ticket = new Ticket();
 		ticket.setQrCode("TEST_QRCODE");
 		// ======to be modified after @ManyToOne========
-		ticket.setUserId(UUID.randomUUID());
-		ticket.setHouseId(UUID.randomUUID());
+//		ticket.setUserId(UUID.randomUUID());
+//		ticket.setHouseId(UUID.randomUUID());
 		// =============================================
 		ticket.setStartedAt(new Timestamp(86400000));
 		ticket.setEndedAt(new Timestamp(3600000));
@@ -38,7 +36,7 @@ public class TicketServiceTests {
 		System.out.println(ticketService.create(ticket));
 	}
 
-	// @Test
+	 @Test
 	public void testFindAll() {
 		List<Ticket> list = ticketService.findAll();
 		for (Ticket ticket : list) {
@@ -54,7 +52,7 @@ public class TicketServiceTests {
 		System.out.println(ticket);
 	}
 
-	// @Test
+	 @Test
 	public void testFindAllPage() {
 
 		Page<Ticket> page = null;
@@ -70,7 +68,7 @@ public class TicketServiceTests {
 		}
 	}
 
-	// @Test
+	 @Test
 	public void testFindAllPageJson() {
 		List<Integer> pageNums = Arrays.asList(0, 1, null);
 		List<Integer> pageSizes = Arrays.asList(0, 1, null);
