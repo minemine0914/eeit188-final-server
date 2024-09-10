@@ -40,7 +40,7 @@ public class Postulate {
 	@Column(name = "id", columnDefinition = "uniqueidentifier")
 	private UUID id;
 
-	@Column(name = "name", columnDefinition = "varchar(15)")
+	@Column(name = "name", columnDefinition = "nvarchar(15)")
 	private String name;
 
 	@Column(name = "icon", columnDefinition = "varchar(50)")

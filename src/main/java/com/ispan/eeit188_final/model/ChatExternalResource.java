@@ -42,7 +42,7 @@ public class ChatExternalResource {
 
     @ManyToOne
     @JoinColumn(name = "ChatRecord_id", insertable = false, updatable = false)
-    private ChatRecord chatRecordId;
+    private ChatRecord chatRecord;
 
     @PrePersist
     public void prePersist() {

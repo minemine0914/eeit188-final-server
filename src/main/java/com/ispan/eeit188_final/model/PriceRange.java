@@ -77,5 +77,4 @@ public class PriceRange {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
-    
 }

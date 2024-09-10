@@ -48,23 +48,23 @@ public class House {
     private UUID id;
 
     // 房源基本資訊
-    @Column(name = "name", columnDefinition = "VARCHAR(50)")
+    @Column(name = "name", columnDefinition = "NVARCHAR(50)")
     private String name; // 房源名稱
-    @Column(name = "category", columnDefinition = "VARCHAR(15)")
+    @Column(name = "category", columnDefinition = "NVARCHAR(15)")
     private String category; // 類型
-    @Column(name = "information", columnDefinition = "VARCHAR(MAX)")
+    @Column(name = "information", columnDefinition = "NVARCHAR(MAX)")
     private String information; // 詳細資訊
     @Column(name = "latitude_x", columnDefinition = "FLOAT")
     private Double latitudeX; // 經度
     @Column(name = "longitude_y", columnDefinition = "FLOAT")
     private Double longitudeY; // 緯度
-    @Column(name = "country", columnDefinition = "VARCHAR(50)")
+    @Column(name = "country", columnDefinition = "NVARCHAR(50)")
     private String country; // 國家
-    @Column(name = "city", columnDefinition = "VARCHAR(50)")
+    @Column(name = "city", columnDefinition = "NVARCHAR(50)")
     private String city; // 縣市
-    @Column(name = "region", columnDefinition = "VARCHAR(50)")
+    @Column(name = "region", columnDefinition = "NVARCHAR(50)")
     private String region; // 區域
-    @Column(name = "address", columnDefinition = "VARCHAR(50)")
+    @Column(name = "address", columnDefinition = "NVARCHAR(50)")
     private String address; // 地址
     @Column(name = "price", columnDefinition = "INT")
     private Integer price; // 初始價格

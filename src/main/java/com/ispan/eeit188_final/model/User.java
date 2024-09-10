@@ -46,13 +46,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", columnDefinition = "varchar(15)", nullable = false)
+    @Column(name = "name", columnDefinition = "nvarchar(15)", nullable = false)
     private String name;
 
     @Column(name = "role", columnDefinition = "varchar(15)")
     private String role;
 
-    @Column(name = "gender", columnDefinition = "varchar(10)")
+    @Column(name = "gender", columnDefinition = "nvarchar(10)")
     private String gender;
 
     @Column(name = "birthday", columnDefinition = "date", nullable = false)
@@ -64,7 +64,7 @@ public class User {
     @Column(name = "mobile_phone", columnDefinition = "varchar(15)")
     private String mobilePhone;
 
-    @Column(name = "address", columnDefinition = "varchar(50)")
+    @Column(name = "address", columnDefinition = "nvarchar(50)")
     private String address;
 
     @Column(name = "email", columnDefinition = "varchar(30)", unique = true, nullable = false)
@@ -74,7 +74,7 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @Column(name = "about", columnDefinition = "varchar(max)")
+    @Column(name = "about", columnDefinition = "nvarchar(max)")
     private String about;
 
     @Column(name = "created_at", columnDefinition = "datetime2")
