@@ -139,6 +139,11 @@ public class UserService {
                 String password = obj.isNull("password") ? null : obj.getString("password");
                 String about = obj.isNull("about") ? null : obj.getString("about");
 
+                if (userRepository.existsByEmail(email)) {
+                    return ResponseEntity.badRequest()
+                            .body("{\"message\": \"Email already in use\"}");
+                }
+
                 // Handle birthday parsing
                 Date birthday = null;
                 if (!obj.isNull("birthday") && !obj.getString("birthday").isEmpty()) {
@@ -239,6 +244,7 @@ public class UserService {
             // Generate JWT token
             String token = Jwts.builder()
                     .setSubject(user.getId().toString())
+                    .setSubject(user.getRole())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 864_000_00)) // 1 day
                     .signWith(SignatureAlgorithm.HS256, secretKey) // Use a secure key in production

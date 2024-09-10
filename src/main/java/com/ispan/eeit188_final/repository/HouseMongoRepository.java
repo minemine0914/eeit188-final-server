@@ -8,10 +8,8 @@
 //import com.ispan.eeit188_final.model.HouseMongo;
 //import java.util.List;
 //  
-//  
 //@Repository  
 //public interface HouseMongoRepository extends MongoRepository<HouseMongo, UUID> {  
-//	
 //	public List<HouseMongo> findByHouseId(UUID houseId);
 //	public List<HouseMongo> findByUserId(UUID userId);
 //	public HouseMongo findByUserIdAndHouseId(UUID userId, UUID houseId);
