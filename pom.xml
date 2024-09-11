@@ -147,6 +147,11 @@
 			<artifactId>gt-main</artifactId>
 			<version>23-RC</version>
 		</dependency>
+		<dependency>
+			<groupId>de.grundid.opendatalab</groupId>
+			<artifactId>geojson-jackson</artifactId>
+			<version>1.14</version>
+		</dependency>
 	</dependencies>
 
 	<build>

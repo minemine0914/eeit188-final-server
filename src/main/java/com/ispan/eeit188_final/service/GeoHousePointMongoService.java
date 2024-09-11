@@ -23,36 +23,5 @@ public class GeoHousePointMongoService {
     @Autowired
     private GeoHousePointMongoRepository geoHousePointMongoRepo;
 
-    // public void importGeoJsonToMongo(String filePath) throws IOException {
-    //     // 讀取 GeoJSON 文件
-    //     FeatureCollection featureCollection = readGeoJsonFile(filePath);
-
-    //     // 將 FeatureCollection 中的每個 Feature 儲存到 MongoDB
-    //     try (FeatureIterator<Feature> features = featureCollection.features()) {
-    //         while (features.hasNext()) {
-    //             Feature feature = features.next();
-
-    //             // 創建 GeoHousePointMongo 實例
-    //             GeoHousePointMongo geoHousePoint = new GeoHousePointMongo();
-    //             geoHousePoint.setHouseId(UUID.fromString(feature.getID())); // 根據 GeoJSON 的 ID 設置 houseId
-
-    //             // 轉換 Geometry 到 MongoDB GeoJson 格式
-    //             com.mongodb.client.model.geojson.Geometry geometry = geometryJSON.readGeometry(feature.getDefaultGeometry().toString());
-    //             geoHousePoint.setGeometry((GeoJsonPoint) geometry); // 假設 GeoJsonPoint 直接從 Geometry 轉換過來
-
-    //             // 儲存到 MongoDB
-    //             geoHousePointMongoRepo.save(geoHousePoint);
-    //         }
-    //     }
-    // }
-
-    // private FeatureCollection readGeoJsonFile(String filePath) throws IOException {
-    //     Ge
-    //     FileReader reader = new FileReader(filePath);
-    //     return fjson.readFeatureCollection(reader);
-    // }
-
-    // JTSFactoryFinder
-
 
 }
