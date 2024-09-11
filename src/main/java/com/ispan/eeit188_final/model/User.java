@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.List;
@@ -45,34 +46,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", columnDefinition = "varchar(15)", nullable = false)
+    @Column(name = "name", columnDefinition = "nvarchar(15)", nullable = false)
     private String name;
 
-    @Column(name = "role", columnDefinition = "varchar(15)")
+    @Column(name = "role", columnDefinition = "nvarchar(15)")
     private String role;
 
-    @Column(name = "gender", columnDefinition = "varchar(10)")
+    @Column(name = "gender", columnDefinition = "nvarchar(10)")
     private String gender;
 
     @Column(name = "birthday", columnDefinition = "date", nullable = false)
     private Date birthday;
 
-    @Column(name = "phone", columnDefinition = "varchar(15)")
+    @Column(name = "phone", columnDefinition = "nvarchar(15)")
     private String phone;
 
-    @Column(name = "mobile_phone", columnDefinition = "varchar(15)")
+    @Column(name = "mobile_phone", columnDefinition = "nvarchar(15)")
     private String mobilePhone;
 
-    @Column(name = "address", columnDefinition = "varchar(50)")
+    @Column(name = "address", columnDefinition = "nvarchar(50)")
     private String address;
 
-    @Column(name = "email", columnDefinition = "varchar(30)", unique = true, nullable = false)
+    @Column(name = "email", columnDefinition = "nvarchar(30)", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password", columnDefinition = "varchar(max)", nullable = false)
+    @Column(name = "password", columnDefinition = "nvarchar(max)", nullable = false)
+    @JsonIgnore
     private String password;
 
-    @Column(name = "about", columnDefinition = "varchar(max)")
+    @Column(name = "about", columnDefinition = "nvarchar(max)")
     private String about;
 
     @Column(name = "created_at", columnDefinition = "datetime2")
@@ -81,7 +83,7 @@ public class User {
     @Column(name = "updated_at", columnDefinition = "datetime2")
     private Timestamp updatedAt;
 
-    @Column(name = "avatar_base64", columnDefinition = "varchar(max)")
+    @Column(name = "avatar_base64", columnDefinition = "nvarchar(max)")
     private String avatarBase64;
 
     @Lob
@@ -89,13 +91,11 @@ public class User {
     private byte[] backgroundImageBlob;
 
     // Relationship
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @Builder.Default
-    // private List<Cart> carts = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Cart> carts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Ticket> tickets = new ArrayList<>();
 
@@ -104,10 +104,9 @@ public class User {
     @Builder.Default
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @Builder.Default
-    // private List<Coupon> coupons = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Coupon> coupons = new ArrayList<>();
 
     // 關聯 房源
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

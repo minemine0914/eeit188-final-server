@@ -2,19 +2,13 @@ package com.ispan.eeit188_final.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.HousePostulate;
-import com.ispan.eeit188_final.model.Postulate;
 import com.ispan.eeit188_final.model.composite.HousePostulateId;
 import com.ispan.eeit188_final.repository.HousePostulateRepository;
-import com.ispan.eeit188_final.repository.HouseRepository;
-import com.ispan.eeit188_final.repository.PostulateRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -24,12 +18,6 @@ public class HousePostulateService {
 
 	@Autowired
 	private HousePostulateRepository housePostulateRepository;
-
-	@Autowired
-	private HouseRepository houseRepository;
-
-	@Autowired
-	private PostulateRepository postulateRepository;
 
 	public HousePostulate findById(HousePostulateId id) {
 		if (id != null) {

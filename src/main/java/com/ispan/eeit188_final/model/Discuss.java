@@ -41,7 +41,7 @@ public class Discuss {
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    @Column(name = "discuss", columnDefinition = "varchar(max)")
+    @Column(name = "discuss", columnDefinition = "nvarchar(max)")
     private String discuss;
 
     @Column(name = "show", columnDefinition = "bit")
@@ -66,6 +66,10 @@ public class Discuss {
     @OneToMany(mappedBy = "subDiscuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Discuss> discusses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "discuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<DiscussExternalResource> discussExternalResources = new ArrayList<>();
 
     @PrePersist
     public void onCreate() {

@@ -1,14 +1,13 @@
 package com.ispan.eeit188_final.service;
 
-import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.dto.TranscationRecordDTO;
+import com.ispan.eeit188_final.model.Coupon;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.TransactionRecord;
 import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.TransactionRecordRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
-import com.ispan.eeit188_final.repository.specification.HouseSpecification;
 import com.ispan.eeit188_final.repository.specification.TranscationRecordSpecification;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -65,6 +63,17 @@ public class TransactionRecordService {
     // }
     // return null;
     // }
+
+    public Boolean delete(UUID id) {
+        if (id != null) {
+            Optional<TransactionRecord> find = transactionRecordRepo.findById(id);
+            if (find.isPresent()) {
+                transactionRecordRepo.deleteById(id);
+                return true;
+            }
+        }
+        return false;
+    }
 
     public TransactionRecord findById(UUID id) {
         if (id != null) {

@@ -34,22 +34,22 @@ public class Ticket {
 	@Column(name = "id", columnDefinition = "uniqueidentifier")
 	private UUID id;
 
-	@Column(name = "qr_code", columnDefinition = "varchar(max)")
+	@Column(name = "qr_code", columnDefinition = "nvarchar(max)")
 	private String qrCode;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-//  @JsonBackReference
+	// @JsonBackReference
 	private User user;
-//	@Column(name = "user_id", columnDefinition = "uniqueidentifier")
-//	private UUID userId;
+	// @Column(name = "user_id", columnDefinition = "uniqueidentifier")
+	// private UUID userId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-//  @JsonBackReference
+	// @JsonBackReference
 	private House house;
-//	@Column(name = "house_id", columnDefinition = "uniqueidentifier")
-//	private UUID houseId;
+	// @Column(name = "house_id", columnDefinition = "uniqueidentifier")
+	// private UUID houseId;
 
 	@Column(name = "started_at", columnDefinition = "datetime2")
 	private Timestamp startedAt;
@@ -99,8 +99,10 @@ public class Ticket {
 
 		return result.toString();
 
-//		return String.format("[id=%s, qrCode=%s, userId=%s, houseId=%s, startedAt=%s, endedAt=%s, createdAt=%s]", 
-//				id.toString(), qrCode, userId.toString(), houseId.toString(), startedAt.toString(), endedAt.toString(), createdAt.toString());
+		// return String.format("[id=%s, qrCode=%s, userId=%s, houseId=%s, startedAt=%s,
+		// endedAt=%s, createdAt=%s]",
+		// id.toString(), qrCode, userId.toString(), houseId.toString(),
+		// startedAt.toString(), endedAt.toString(), createdAt.toString());
 	}
 
 }

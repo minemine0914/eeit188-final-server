@@ -1,15 +1,15 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-// import java.util.List;
-// import java.util.ArrayList;
+import jakarta.persistence.CascadeType;
 
-// import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,7 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-// import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -43,7 +43,7 @@ public class ChatRecord {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "chat", columnDefinition = "varchar(max)")
+    @Column(name = "chat", columnDefinition = "nvarchar(max)")
     private String chat;
 
     @Column(name = "show", columnDefinition = "bit")
@@ -61,10 +61,9 @@ public class ChatRecord {
     private Timestamp createdAt;
 
     // Relationship
-    // @OneToMany(mappedBy = "chat_record", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL, orphanRemoval = true)
-    // @Builder.Default
-    // private List<ChatExternalResource> chatExternalResources = new ArrayList<>();
+    @OneToMany(mappedBy = "chatRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ChatExternalResource> chatExternalResources = new ArrayList<>();
 
     // Methods
     @PrePersist
