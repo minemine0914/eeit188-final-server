@@ -21,7 +21,7 @@ public class HouseMongoService {
 
 	private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
 	private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
-	
+
 	@Autowired
 	private HouseMongoRepository houseMongoRepository;
 
@@ -39,7 +39,7 @@ public class HouseMongoService {
 		Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
 		return houseMongoRepository.findAll(PageRequest.of(page, limit, sort));
 	}
-	
+
 	public HouseMongo findById(UUID id) {
 		return houseMongoRepository.findById(id).orElse(null);
 	}
@@ -97,7 +97,7 @@ public class HouseMongoService {
 					houseMongoDto.getHouseId());
 			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
 					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
-				//先判定更新前狀態，再更新(順序不可顛倒)
+				// 先判定更新前狀態，再更新(順序不可顛倒)
 				dbHouse.setLikeDate(dbHouse.getLiked() == false ? new Date() : null);
 				dbHouse.setLiked(!dbHouse.getLiked());
 				return houseMongoRepository.save(dbHouse);
@@ -107,22 +107,22 @@ public class HouseMongoService {
 	}
 
 	// 評分
-		public HouseMongo rateHouse(HouseMongoDTO houseMongoDto) {
-			if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
-				HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
-						houseMongoDto.getHouseId());
-				if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
-						&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
-					if(houseMongoDto.getScore()>=1&&houseMongoDto.getScore()<=5) {
-						dbHouse.setScoreDate(dbHouse.getScore() == 0 ? new Date() : null);
-						dbHouse.setScore(houseMongoDto.getScore());
-						return houseMongoRepository.save(dbHouse);
-					}
+	public HouseMongo rateHouse(HouseMongoDTO houseMongoDto) {
+		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+					houseMongoDto.getHouseId());
+			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+				if (houseMongoDto.getScore() >= 1 && houseMongoDto.getScore() <= 5) {
+					dbHouse.setScoreDate(dbHouse.getScore() == 0 ? new Date() : new Date(dbHouse.getScore()));
+					dbHouse.setScore(houseMongoDto.getScore());
+					return houseMongoRepository.save(dbHouse);
 				}
 			}
-			return null;
 		}
-	
+		return null;
+	}
+
 	// 判斷User是否對House點過查詢(???時間內(永遠)不重複計算)
 	public HouseMongo clickHouse(HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
@@ -173,20 +173,20 @@ public class HouseMongoService {
 	}
 
 	// 重置評分(=0)
-			public HouseMongo resetRateHouse(HouseMongoDTO houseMongoDto) {
-				if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
-					HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
-							houseMongoDto.getHouseId());
-					if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
-							&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
-							dbHouse.setScoreDate(null);
-							dbHouse.setScore(0);
-							return houseMongoRepository.save(dbHouse);
-					}
-				}
-				return null;
+	public HouseMongo resetRateHouse(HouseMongoDTO houseMongoDto) {
+		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
+					houseMongoDto.getHouseId());
+			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
+					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
+				dbHouse.setScoreDate(null);
+				dbHouse.setScore(0);
+				return houseMongoRepository.save(dbHouse);
 			}
-	
+		}
+		return null;
+	}
+
 	// 重置click(=false)
 	public HouseMongo resetClickHouse(HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
@@ -202,50 +202,51 @@ public class HouseMongoService {
 		return null;
 	}
 
-	//重置share
+	// 重置share
 	public HouseMongo resetShareHouse(HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
 			HouseMongo dbHouse = houseMongoRepository.findByUserIdAndHouseId(houseMongoDto.getUserId(),
 					houseMongoDto.getHouseId());
 			if (dbHouse != null && houseMongoDto.getUserId().equals(dbHouse.getUserId())
 					&& houseMongoDto.getHouseId().equals(dbHouse.getHouseId())) {
-					dbHouse.setShared(false);
-					dbHouse.setShareDate(null);
+				dbHouse.setShared(false);
+				dbHouse.setShareDate(null);
 				return houseMongoRepository.save(dbHouse);
 			}
 		}
 		return null;
 	}
-	
+
 	// 評分功能(1~5分別計算數量)
-//	@GetMapping("/{id}/{rating}")
-//	public HouseMongo getRating(@PathVariable(name = "id") UUID id, @PathVariable(name = "rating") Integer rating) {
-//		HouseMongo cc = houseMongoRepository.findById(id).orElse(new HouseMongo());
-//		switch (rating) {
-//		case 1:
-//			cc.getScore()[0]++;
-//			cc.setClick(cc.getClick() + 1);
-//			break;
-//		case 2:
-//			cc.getScore()[1]++;
-//			cc.setClick(cc.getClick() + 1);
-//			break;
-//		case 3:
-//			cc.getScore()[2]++;
-//			cc.setClick(cc.getClick() + 1);
-//
-//			break;
-//		case 4:
-//			cc.getScore()[3]++;
-//			cc.setClick(cc.getClick() + 1);
-//			break;
-//		case 5:
-//			cc.getScore()[4]++;
-//			cc.setClick(cc.getClick() + 1);
-//			break;
-//		}
-//		houseMongoRepository.save(cc);
-//
-//		return houseMongoRepository.findById(id).orElse(new HouseMongo());
-//	}
+	// @GetMapping("/{id}/{rating}")
+	// public HouseMongo getRating(@PathVariable(name = "id") UUID id,
+	// @PathVariable(name = "rating") Integer rating) {
+	// HouseMongo cc = houseMongoRepository.findById(id).orElse(new HouseMongo());
+	// switch (rating) {
+	// case 1:
+	// cc.getScore()[0]++;
+	// cc.setClick(cc.getClick() + 1);
+	// break;
+	// case 2:
+	// cc.getScore()[1]++;
+	// cc.setClick(cc.getClick() + 1);
+	// break;
+	// case 3:
+	// cc.getScore()[2]++;
+	// cc.setClick(cc.getClick() + 1);
+	//
+	// break;
+	// case 4:
+	// cc.getScore()[3]++;
+	// cc.setClick(cc.getClick() + 1);
+	// break;
+	// case 5:
+	// cc.getScore()[4]++;
+	// cc.setClick(cc.getClick() + 1);
+	// break;
+	// }
+	// houseMongoRepository.save(cc);
+	//
+	// return houseMongoRepository.findById(id).orElse(new HouseMongo());
+	// }
 }
