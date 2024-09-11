@@ -31,10 +31,17 @@ public class HouseDTO {
     private String region;
     private String address;
     private Integer price;
+    private Integer pricePerDay;
+    private Integer pricePerWeek;
+    private Integer pricePerMonth;
     private Short livingDiningRoom;
     private Short bedroom;
     private Short restroom;
     private Short bathroom;
+    private Short adult;
+    private Short child;
+    private Boolean pet;
+    private Boolean smoke;
     private Boolean kitchen;
     private Boolean balcony;
     private Boolean show;

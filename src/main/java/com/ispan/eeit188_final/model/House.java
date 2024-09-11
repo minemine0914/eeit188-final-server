@@ -68,6 +68,13 @@ public class House {
     private String address; // 地址
     @Column(name = "price", columnDefinition = "INT")
     private Integer price; // 初始價格
+    @Column(name = "price_per_day", columnDefinition = "INT")
+    private Integer pricePerDay; // 價格(天) (半天不算)
+    @Column(name = "price_per_Week", columnDefinition = "INT")
+    private Integer pricePerWeek; // 價格(週)
+    @Column(name = "price_per_month", columnDefinition = "INT")
+    private Integer pricePerMonth; // 價格(月)
+
 
     // 房源基本設施 幾廳 幾房 幾衛 幾浴 (TinyInt)
     @Column(name = "living_dining_room", columnDefinition = "TINYINT")
@@ -78,6 +85,18 @@ public class House {
     private Short restroom; // 衛生間 (馬桶)
     @Column(name = "bathroom", columnDefinition = "TINYINT")
     private Short bathroom; // 淋浴間
+
+    // 房原可住幾大幾小
+    @Column(name = "adult", columnDefinition = "TINYINT")
+    private Short adult;
+    @Column(name = "child", columnDefinition = "TINYINT")
+    private Short child;
+
+    // 禁止項目
+    @Column(name = "pet", columnDefinition = "BIT")
+    private Boolean pet;
+    @Column(name = "smoke", columnDefinition = "BIT")
+    private Boolean smoke;
 
     // 常態設施 (True/False)
     @Column(name = "kitchen", columnDefinition = "BIT")
@@ -90,9 +109,9 @@ public class House {
     private Boolean show; // 是否刊登顯示
 
     // 建立/修改 時間
-    @Column(name = "create_at", columnDefinition = "DATETIME2")
+    @Column(name = "created_at", columnDefinition = "DATETIME2")
     private Timestamp createdAt; // 建立時間
-    @Column(name = "update_at", columnDefinition = "DATETIME2")
+    @Column(name = "updated_at", columnDefinition = "DATETIME2")
     private Timestamp updatedAt; // 修改時間
 
     // 關聯 房源的價格範圍

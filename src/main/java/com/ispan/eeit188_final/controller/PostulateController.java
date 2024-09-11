@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +23,7 @@ import com.ispan.eeit188_final.model.Postulate;
 import com.ispan.eeit188_final.service.PostulateService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/postulate")
 public class PostulateController {
 
