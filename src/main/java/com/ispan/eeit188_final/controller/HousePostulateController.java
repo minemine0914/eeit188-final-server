@@ -28,8 +28,8 @@ public class HousePostulateController {
 	private HousePostulateService housePostulateService;
 
 	@GetMapping("/{houseId}/{postulateId}")
-	public ResponseEntity<HousePostulate> findById(@PathVariable("houseId") String houseId, @PathVariable("postulateId") String postulateId) {
 	public ResponseEntity<HousePostulate> findById(@PathVariable("houseId") String houseId,
+			@PathVariable("postulateId") String postulateId) {
 		if (houseId != null && houseId.length() != 0 && postulateId != null && postulateId.length() != 0) {
 			UUID houseUuid = UUID.fromString(houseId);
 			UUID postulateUuid = UUID.fromString(postulateId);
