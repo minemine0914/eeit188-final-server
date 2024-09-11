@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Postulate;
+import com.ispan.eeit188_final.model.User;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -157,8 +158,14 @@ public class HouseSpecification {
 
     // 擁有者ID
     public static Specification<House> hasUserId(UUID userId) {
-        return (root, query, cb) -> userId == null ? cb.conjunction()
-                : cb.equal(root.get("userId"), userId);
+        return (root, query, cb) -> {
+            if (userId == null) {
+                return cb.conjunction();
+            }
+            // 假設 House 實體中有一個與 User 實體的關聯
+            Join<House, User> userJoin = root.join("user");
+            return cb.equal(userJoin.get("id"), userId);
+        };
     }
 
     // 附加設施 (只對單個設施查詢)

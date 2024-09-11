@@ -82,10 +82,10 @@ public class CouponSpecification {
     public static Specification<Coupon> filterCoupon(CouponDTO dto) {
         Specification<Coupon> spec = Specification.where(null);
 
-        // 添加 houseId 查詢條件
-        if (dto.getHouseId() != null) {
-            spec = spec.and(filterByHouseId(dto.getHouseId()));
-        }
+        // // 添加 houseId 查詢條件
+        // if (dto.getHouseId() != null) {
+        //     spec = spec.and(filterByHouseId(dto.getHouseId()));
+        // }
 
         // 添加 userId 查詢條件
         if (dto.getUserId() != null) {
