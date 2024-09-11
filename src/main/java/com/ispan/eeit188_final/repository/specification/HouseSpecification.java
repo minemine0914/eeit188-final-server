@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Postulate;
+import com.ispan.eeit188_final.model.User;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -113,6 +114,30 @@ public class HouseSpecification {
                 : criteriaBuilder.equal(root.get("bathroom"), bathroom);
     }
 
+    // 成人
+    public static Specification<House> hasAdult(Short adult) {
+        return (root, query, criteriaBuilder) -> adult == null ? criteriaBuilder.conjunction()
+                : criteriaBuilder.equal(root.get("adult"), adult);
+    }
+
+    // 小孩
+    public static Specification<House> hasChild(Short child) {
+        return (root, query, criteriaBuilder) -> child == null ? criteriaBuilder.conjunction()
+                : criteriaBuilder.equal(root.get("child"), child);
+    }
+
+    // 禁止項目 (攜帶寵物)
+    public static Specification<House> isPet(Boolean pet) {
+        return (root, query, cb) -> pet == null ? cb.conjunction()
+                : cb.equal(root.get("pet"), pet);
+    }
+
+    // 禁止項目 (抽煙)
+    public static Specification<House> isSmoke(Boolean smoke) {
+        return (root, query, cb) -> smoke == null ? cb.conjunction()
+                : cb.equal(root.get("smoke"), smoke);
+    }
+
     // 廚房
     public static Specification<House> hasKitchen(Boolean kitchen) {
         return (root, query, criteriaBuilder) -> kitchen == null ? criteriaBuilder.conjunction()
@@ -133,8 +158,14 @@ public class HouseSpecification {
 
     // 擁有者ID
     public static Specification<House> hasUserId(UUID userId) {
-        return (root, query, cb) -> userId == null ? cb.conjunction()
-                : cb.equal(root.get("userId"), userId);
+        return (root, query, cb) -> {
+            if (userId == null) {
+                return cb.conjunction();
+            }
+            // 假設 House 實體中有一個與 User 實體的關聯
+            Join<House, User> userJoin = root.join("user");
+            return cb.equal(userJoin.get("id"), userId);
+        };
     }
 
     // 附加設施 (只對單個設施查詢)
@@ -182,23 +213,29 @@ public class HouseSpecification {
     public static Specification<House> filterHouses(HouseDTO dto) {
         // 條件查詢
         Specification<House> spec = Specification.where(null);
-        // // 房源基本資料
+        // 房源基本資料
         spec = addIfNotNull(spec, dto.getName(), HouseSpecification::hasName);
         spec = addIfNotNull(spec, dto.getCategory(), HouseSpecification::hasCategory);
         spec = addIfNotNull(spec, dto.getCountry(), HouseSpecification::hasCountry);
         spec = addIfNotNull(spec, dto.getCity(), HouseSpecification::hasCity);
         spec = addIfNotNull(spec, dto.getRegion(), HouseSpecification::hasRegion);
-        // // 房源基本設施
+        // 房源基本設施
         spec = addIfNotNull(spec, dto.getLivingDiningRoom(), HouseSpecification::hasLivingDiningRoom);
         spec = addIfNotNull(spec, dto.getBedroom(), HouseSpecification::hasBedroom);
         spec = addIfNotNull(spec, dto.getRestroom(), HouseSpecification::hasRestroom);
         spec = addIfNotNull(spec, dto.getBathroom(), HouseSpecification::hasBathroom);
-        // // 常態設施
+        // 可住成人小孩
+        spec = addIfNotNull(spec, dto.getAdult(), HouseSpecification::hasAdult);
+        spec = addIfNotNull(spec, dto.getChild(), HouseSpecification::hasChild);
+        // 禁止項目
+        spec = addIfNotNull(spec, dto.getPet(), HouseSpecification::isPet);
+        spec = addIfNotNull(spec, dto.getSmoke(), HouseSpecification::isSmoke);
+        // 常態設施
         spec = addIfNotNull(spec, dto.getKitchen(), HouseSpecification::hasKitchen);
         spec = addIfNotNull(spec, dto.getBalcony(), HouseSpecification::hasBalcony);
-        // // 刊登顯示
+        // 刊登顯示
         spec = addIfNotNull(spec, dto.getShow(), HouseSpecification::isShown);
-        // // 擁有者ID
+        // 擁有者ID
         spec = addIfNotNull(spec, dto.getUserId(), HouseSpecification::hasUserId);
         // 經緯度區間
         spec = spec.and(HouseSpecification.isWithinLocation(

@@ -39,35 +39,33 @@ public class HouseService {
 
     // 新增
     public House create(HouseDTO houseDTO) {
-        if (houseDTO.getId() != null) {
-            Optional<User> findUser = userRepo.findById(houseDTO.getUserId());
-            if (findUser.isPresent()) {
-                House house = House.builder()
-                        .user(findUser.get())
-                        .name(houseDTO.getName())
-                        .category(houseDTO.getCategory())
-                        .information(houseDTO.getInformation())
-                        .latitudeX(houseDTO.getLatitudeX())
-                        .longitudeY(houseDTO.getLongitudeY())
-                        .country(houseDTO.getCountry())
-                        .city(houseDTO.getCity())
-                        .region(houseDTO.getRegion())
-                        .address(houseDTO.getAddress())
-                        .price(houseDTO.getPrice())
-                        .livingDiningRoom(houseDTO.getLivingDiningRoom())
-                        .bedroom(houseDTO.getBedroom())
-                        .restroom(houseDTO.getRestroom())
-                        .bathroom(houseDTO.getBathroom())
-                        .adult(houseDTO.getAdult())
-                        .child(houseDTO.getChild())
-                        .pet(houseDTO.getPet())
-                        .smoke(houseDTO.getSmoke())
-                        .kitchen(houseDTO.getKitchen())
-                        .balcony(houseDTO.getBalcony())
-                        .show(houseDTO.getShow())
-                        .build();
-                return houseRepo.save(house);
-            }
+        Optional<User> findUser = userRepo.findById(houseDTO.getUserId());
+        if (findUser.isPresent()) {
+            House house = House.builder()
+                    .user(findUser.get())
+                    .name(houseDTO.getName())
+                    .category(houseDTO.getCategory())
+                    .information(houseDTO.getInformation())
+                    .latitudeX(houseDTO.getLatitudeX())
+                    .longitudeY(houseDTO.getLongitudeY())
+                    .country(houseDTO.getCountry())
+                    .city(houseDTO.getCity())
+                    .region(houseDTO.getRegion())
+                    .address(houseDTO.getAddress())
+                    .price(houseDTO.getPrice())
+                    .livingDiningRoom(houseDTO.getLivingDiningRoom())
+                    .bedroom(houseDTO.getBedroom())
+                    .restroom(houseDTO.getRestroom())
+                    .bathroom(houseDTO.getBathroom())
+                    .adult(houseDTO.getAdult())
+                    .child(houseDTO.getChild())
+                    .pet(houseDTO.getPet())
+                    .smoke(houseDTO.getSmoke())
+                    .kitchen(houseDTO.getKitchen())
+                    .balcony(houseDTO.getBalcony())
+                    .show(houseDTO.getShow())
+                    .build();
+            return houseRepo.save(house);
         }
         return null;
     }

@@ -21,7 +21,7 @@ import lombok.Setter;
 public class CouponDTO {
     // 基本資訊
     private UUID id;
-    private UUID houseId;
+    // private UUID houseId;
     private UUID userId;
     private Double discountRate;
     private Integer discount;
