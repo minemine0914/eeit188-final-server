@@ -58,6 +58,10 @@ public class HouseService {
                         .bedroom(houseDTO.getBedroom())
                         .restroom(houseDTO.getRestroom())
                         .bathroom(houseDTO.getBathroom())
+                        .adult(houseDTO.getAdult())
+                        .child(houseDTO.getChild())
+                        .pet(houseDTO.getPet())
+                        .smoke(houseDTO.getSmoke())
                         .kitchen(houseDTO.getKitchen())
                         .balcony(houseDTO.getBalcony())
                         .show(houseDTO.getShow())
@@ -86,11 +90,19 @@ public class HouseService {
                 Optional.ofNullable(houseDTO.getRegion()).ifPresent(modify::setRegion);
                 Optional.ofNullable(houseDTO.getAddress()).ifPresent(modify::setAddress);
                 Optional.ofNullable(houseDTO.getPrice()).ifPresent(modify::setPrice);
+                Optional.ofNullable(houseDTO.getPricePerDay()).ifPresent(modify::setPricePerDay);
+                Optional.ofNullable(houseDTO.getPricePerWeek()).ifPresent(modify::setPricePerWeek);
+                Optional.ofNullable(houseDTO.getPricePerMonth()).ifPresent(modify::setPricePerMonth);
                 // 房源基本設施 幾廳 幾房 幾衛 幾浴
                 Optional.ofNullable(houseDTO.getLivingDiningRoom()).ifPresent(modify::setLivingDiningRoom);
                 Optional.ofNullable(houseDTO.getBedroom()).ifPresent(modify::setBedroom);
                 Optional.ofNullable(houseDTO.getRestroom()).ifPresent(modify::setRestroom);
                 Optional.ofNullable(houseDTO.getBathroom()).ifPresent(modify::setBathroom);
+                Optional.ofNullable(houseDTO.getAdult()).ifPresent(modify::setAdult);
+                Optional.ofNullable(houseDTO.getChild()).ifPresent(modify::setChild);
+                // 禁止項目
+                Optional.ofNullable(houseDTO.getPet()).ifPresent(modify::setPet);
+                Optional.ofNullable(houseDTO.getSmoke()).ifPresent(modify::setSmoke);
                 // 常態設施
                 Optional.ofNullable(houseDTO.getKitchen()).ifPresent(modify::setKitchen);
                 Optional.ofNullable(houseDTO.getBalcony()).ifPresent(modify::setBalcony);
