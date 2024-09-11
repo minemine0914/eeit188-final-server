@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ispan.eeit188_final.dto.HouseMongoDTO;
 import com.ispan.eeit188_final.model.HouseMongo;
+import com.ispan.eeit188_final.model.Ticket;
 import com.ispan.eeit188_final.service.HouseMongoService;
 
 @RestController
@@ -58,23 +60,43 @@ public class HouseMongoController {
 	}
 
 	@PostMapping("/like")
-	public HouseMongo likeHouse(@RequestBody HouseMongoDTO houseMongoDto) {
-		return houseMongoService.likeHouse(houseMongoDto);
+	public ResponseEntity<HouseMongo> likeHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+    		HouseMongo like = houseMongoService.likeHouse(houseMongoDto);
+    			return ResponseEntity.ok(like);
+    		}
+    	
+    	return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/rate")
-	public HouseMongo rateHouse(@RequestBody HouseMongoDTO houseMongoDto) {
-		return houseMongoService.rateHouse(houseMongoDto);
+	public ResponseEntity<HouseMongo> rateHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+    		HouseMongo rate = houseMongoService.rateHouse(houseMongoDto);
+    			return ResponseEntity.ok(rate);
+    		}
+    	
+    	return ResponseEntity.noContent().build();
 	}
 	
 	@PostMapping("/click")
-	public HouseMongo clickHouse(@RequestBody HouseMongoDTO houseMongoDto) {
-		return houseMongoService.clickHouse(houseMongoDto);
+	public ResponseEntity<HouseMongo> clickHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+    		HouseMongo click = houseMongoService.clickHouse(houseMongoDto);
+    			return ResponseEntity.ok(click);
+    		}
+    	
+    	return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/share")
-	public HouseMongo shareHouse(@RequestBody HouseMongoDTO houseMongoDto) {
-		return houseMongoService.shareHouse(houseMongoDto);
+	public ResponseEntity<HouseMongo> shareHouse(@RequestBody HouseMongoDTO houseMongoDto) {
+		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
+    		HouseMongo share = houseMongoService.shareHouse(houseMongoDto);
+    			return ResponseEntity.ok(share);
+    		}
+    	
+    	return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/reset/like")
