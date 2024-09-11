@@ -244,7 +244,7 @@ public class UserService {
             // Generate JWT token
             String token = Jwts.builder()
                     .setSubject(user.getId().toString())
-                    .setSubject(user.getRole())
+                    .claim("role", user.getRole())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 864_000_00)) // 1 day
                     .signWith(SignatureAlgorithm.HS256, secretKey) // Use a secure key in production
