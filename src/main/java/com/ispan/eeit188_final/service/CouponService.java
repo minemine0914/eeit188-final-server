@@ -39,12 +39,14 @@ public class CouponService {
 
     // Create a new transaction record
     public Coupon create(CouponDTO dto) {
-        if (dto.getUserId() != null && dto.getHouseId() != null) {
-            Optional<House> findHouse = houseRepo.findById(dto.getHouseId());
+        // if (dto.getUserId() != null && dto.getHouseId() != null) {
+        if (dto.getUserId() != null ) {
+            // Optional<House> findHouse = houseRepo.findById(dto.getHouseId());
             Optional<User> findUser = userRepo.findById(dto.getUserId());
-            if (findHouse.isPresent() && findUser.isPresent()) {
+            // if (findHouse.isPresent() && findUser.isPresent()) {
+            if ( findUser.isPresent()) {
                 Coupon create = Coupon.builder()
-                        .house(findHouse.get())
+                        // .house(findHouse.get())
                         .user(findUser.get())
                         .discountRate(dto.getDiscountRate())
                         .discount(dto.getDiscount())
