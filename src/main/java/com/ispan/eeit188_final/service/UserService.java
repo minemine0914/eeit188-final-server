@@ -507,7 +507,7 @@ public class UserService {
                 .body("{\"message\": \"Invalid ID\"}");
     }
 
-    public ResponseEntity<String> uploadBackgroundImage(UUID id, MultipartFile backgroundImageBlobFile) {
+    public ResponseEntity<String> uploadBackgroundImage(UUID id, MultipartFile file) {
         if (id == null || id.toString().isEmpty()) {
             return ResponseEntity.badRequest()
                     .body("{\"message\": \"Invalid ID\"}");
@@ -518,12 +518,12 @@ public class UserService {
         if (optional.isPresent()) {
             User user = optional.get();
 
-            if (backgroundImageBlobFile != null && !backgroundImageBlobFile.isEmpty()) {
+            if (file != null && !file.isEmpty()) {
 
                 // Get the byte[] from the uploaded file
                 byte[] backgroundImageBlobFileBytes;
                 try {
-                    backgroundImageBlobFileBytes = backgroundImageBlobFile.getBytes();
+                    backgroundImageBlobFileBytes = file.getBytes();
                     user.setBackgroundImageBlob(backgroundImageBlobFileBytes);
                     userRepository.save(user);
 
