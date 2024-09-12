@@ -45,7 +45,20 @@ public class UserCollectionService {
 
                     for (UserCollection userCollection : userCollections.getContent()) {
                         JSONObject obj = new JSONObject()
-                                .put("id", userCollection.getUserCollectionId().getHouseId().getId());
+                                .put("name", userCollection.getUserCollectionId().getHouseId().getName())
+                                .put("category", userCollection.getUserCollectionId().getHouseId().getCategory())
+                                .put("information", userCollection.getUserCollectionId().getHouseId().getInformation())
+                                .put("latitudeX", userCollection.getUserCollectionId().getHouseId().getLatitudeX())
+                                .put("longitudeY", userCollection.getUserCollectionId().getHouseId().getLongitudeY())
+                                .put("country", userCollection.getUserCollectionId().getHouseId().getCountry())
+                                .put("city", userCollection.getUserCollectionId().getHouseId().getCity())
+                                .put("region", userCollection.getUserCollectionId().getHouseId().getRegion())
+                                .put("address", userCollection.getUserCollectionId().getHouseId().getAddress())
+                                .put("pricePerDay", userCollection.getUserCollectionId().getHouseId().getPricePerDay())
+                                .put("pricePerWeek",
+                                        userCollection.getUserCollectionId().getHouseId().getPricePerWeek())
+                                .put("pricePerMonth",
+                                        userCollection.getUserCollectionId().getHouseId().getPricePerMonth());
 
                         userCollectionsArray.put(obj);
                     }
