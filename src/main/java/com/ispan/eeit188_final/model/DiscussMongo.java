@@ -19,17 +19,17 @@ import lombok.Setter;
 public class DiscussMongo {
 	// 某一個User對某一個Discuss的點擊、愛心、分享
 	@Id
-	public UUID id;
-	public UUID userId;
-	public UUID discussId;
-	public Boolean clicked;
-	public Boolean liked;
-	public Boolean shared;
-	public Integer score;
-	public Date clickDate;
-	public Date likeDate;
-	public Date shareDate;
-	public Date scoreDate;
+	private UUID id;
+	private UUID userId;
+	private UUID discussId;
+	private Boolean clicked;
+	private Boolean liked;
+	private Boolean shared;
+	private Integer score;
+	private Date clickDate;
+	private Date likeDate;
+	private Date shareDate;
+	private Date scoreDate;
 
 	public DiscussMongo() {
 		this.id = UUID.randomUUID();

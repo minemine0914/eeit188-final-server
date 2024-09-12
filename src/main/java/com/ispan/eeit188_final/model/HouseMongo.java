@@ -19,17 +19,17 @@ import lombok.Setter;
 public class HouseMongo {
 	// 某一個User對某一個House的點擊、愛心、分享
 	@Id
-	public UUID id;
-	public UUID userId;
-	public UUID houseId;
-	public Boolean clicked;
-	public Boolean liked;
-	public Boolean shared;
-	public Integer score;
-	public Date clickDate;
-	public Date likeDate;
-	public Date shareDate;
-	public Date scoreDate;
+	private UUID id;
+	private UUID userId;
+	private UUID houseId;
+	private Boolean clicked;
+	private Boolean liked;
+	private Boolean shared;
+	private Integer score;
+	private Date clickDate;
+	private Date likeDate;
+	private Date shareDate;
+	private Date scoreDate;
 
 	public HouseMongo() {
 		this.id = UUID.randomUUID();
