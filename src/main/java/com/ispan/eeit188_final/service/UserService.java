@@ -246,7 +246,6 @@ public class UserService {
                     .setSubject("userToken")
                     .claim("id", user.getId().toString())
                     .claim("role", user.getRole())
-                    .claim("avatar", user.getAvatarBase64())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 864_000_00)) // 1 day
                     .signWith(SignatureAlgorithm.HS256, secretKey) // Use a secure key in production
