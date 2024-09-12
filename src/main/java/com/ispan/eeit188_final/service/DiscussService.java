@@ -8,11 +8,15 @@ import com.ispan.eeit188_final.repository.DiscussRepository;
 import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -84,14 +88,56 @@ public class DiscussService {
         return discussRepository.findById(id);
     }
 
-    public Page<Discuss> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) {
+    public ResponseEntity<String> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
-        return discussRepository.findByHouseId(houseId, pageRequest);
+        Page<Discuss> discusses = discussRepository.findByHouseId(houseId, pageRequest);
+
+        JSONArray jsonArray = new JSONArray();
+
+        for (Discuss discuss : discusses) {
+            System.out.println(discuss);
+            try {
+                JSONObject obj = new JSONObject()
+                        .put("discuss", discuss.getDiscuss())
+                        .put("user", discuss.getUser().getName());
+
+                jsonArray.put(obj);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        JSONObject response = new JSONObject()
+                .put("discusses", jsonArray);
+
+        return ResponseEntity.ok(response.toString());
     }
 
-    public Page<Discuss> getDiscussionsByUserId(UUID userId, int pageNo, int pageSize) {
+    public ResponseEntity<String> getDiscussionsByUserId(UUID userId, int pageNo, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
-        return discussRepository.findByUserId(userId, pageRequest);
+        Page<Discuss> discusses = discussRepository.findByUserId(userId, pageRequest);
+
+        JSONArray jsonArray = new JSONArray();
+
+        for (Discuss discuss : discusses) {
+            System.out.println(discuss);
+            try {
+                JSONObject obj = new JSONObject()
+                        .put("discuss", discuss.getDiscuss())
+                        .put("house", discuss.getHouse().getName());
+
+                jsonArray.put(obj);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        JSONObject response = new JSONObject()
+                .put("discusses", jsonArray);
+
+        return ResponseEntity.ok(response.toString());
     }
 
     public Optional<Discuss> retractDiscuss(UUID id) {
