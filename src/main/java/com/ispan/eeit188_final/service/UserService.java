@@ -243,7 +243,8 @@ public class UserService {
 
             // Generate JWT token
             String token = Jwts.builder()
-                    .setSubject(user.getId().toString())
+                    .setSubject("userToken")
+                    .claim("id", user.getId().toString())
                     .claim("role", user.getRole())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 864_000_00)) // 1 day
@@ -284,7 +285,6 @@ public class UserService {
                     JSONObject obj = new JSONObject(jsonRequest);
 
                     String name = obj.isNull("name") ? null : obj.getString("name");
-                    String role = obj.isNull("role") ? null : obj.getString("role");
                     String gender = obj.isNull("gender") ? null : obj.getString("gender");
                     String phone = obj.isNull("phone") ? null : obj.getString("phone");
                     String mobilePhone = obj.isNull("mobilePhone") ? null : obj.getString("mobilePhone");
@@ -324,7 +324,6 @@ public class UserService {
                     }
 
                     user.setName(name);
-                    user.setRole(role);
                     user.setGender(gender);
                     user.setBirthday(birthday);
                     user.setPhone(phone);
