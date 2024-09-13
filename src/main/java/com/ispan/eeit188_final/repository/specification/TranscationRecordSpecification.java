@@ -1,10 +1,12 @@
 package com.ispan.eeit188_final.repository.specification;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.ispan.eeit188_final.dto.TranscationRecordDTO;
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.TransactionRecord;
 
 public class TranscationRecordSpecification {
@@ -59,6 +61,20 @@ public class TranscationRecordSpecification {
         };
     }
 
+    public static Specification<TransactionRecord> hasCreatedAtBetween(Timestamp minCreatedAt, Timestamp maxCreatedAt) {
+        return (root, query, cb) -> {
+            if (minCreatedAt == null && maxCreatedAt == null) {
+                return cb.conjunction();
+            } else if (minCreatedAt == null) {
+                return cb.lessThanOrEqualTo(root.get("createdAt"), maxCreatedAt);
+            } else if (maxCreatedAt == null) {
+                return cb.greaterThanOrEqualTo(root.get("createdAt"), minCreatedAt);
+            } else {
+                return cb.between(root.get("createdAt"), minCreatedAt, maxCreatedAt);
+            }
+        };
+    }
+    
     // 組合多條件查詢
     public static Specification<TransactionRecord> filterTranscationRecords(TranscationRecordDTO dto) {
         Specification<TransactionRecord> spec = Specification.where(null);
@@ -88,6 +104,10 @@ public class TranscationRecordSpecification {
             spec = spec.and(filterByPlatformIncome(dto.getPlatformIncome()));
         }
 
+        if (dto.getMinCreatedAt() != null||dto.getMaxCreatedAt() != null) {
+            spec = spec.and(hasCreatedAtBetween(dto.getMinCreatedAt(),dto.getMaxCreatedAt()));
+        }
+        
         return spec;
     }
 
