@@ -16,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -124,6 +122,7 @@ public class DiscussService {
             System.out.println(discuss);
             try {
                 JSONObject obj = new JSONObject()
+                        .put("id", discuss.getId())
                         .put("discuss", discuss.getDiscuss())
                         .put("house", discuss.getHouse().getName());
 
