@@ -17,7 +17,8 @@ import lombok.Setter;
 @Builder
 @Document(collection = "house_click_like_share")
 public class HouseMongo {
-	// 某一個User對某一個House的點擊、愛心、分享
+	// 紀錄某User是否對某House按過: 愛心, 點擊, 分享, 評分
+	// 以及紀錄操作時間
 	@Id
 	private UUID id;
 	private UUID userId;

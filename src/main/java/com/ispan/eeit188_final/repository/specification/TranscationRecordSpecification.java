@@ -61,6 +61,7 @@ public class TranscationRecordSpecification {
         };
     }
 
+    // 根據 CreatedAt 範圍查詢
     public static Specification<TransactionRecord> hasCreatedAtBetween(Timestamp minCreatedAt, Timestamp maxCreatedAt) {
         return (root, query, cb) -> {
             if (minCreatedAt == null && maxCreatedAt == null) {
@@ -104,6 +105,7 @@ public class TranscationRecordSpecification {
             spec = spec.and(filterByPlatformIncome(dto.getPlatformIncome()));
         }
 
+        // 添加 CreatedAt 範圍查詢條件
         if (dto.getMinCreatedAt() != null||dto.getMaxCreatedAt() != null) {
             spec = spec.and(hasCreatedAtBetween(dto.getMinCreatedAt(),dto.getMaxCreatedAt()));
         }

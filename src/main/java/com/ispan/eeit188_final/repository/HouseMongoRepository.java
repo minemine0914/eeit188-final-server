@@ -14,5 +14,8 @@ public interface HouseMongoRepository extends MongoRepository<HouseMongo, UUID>,
 	public List<HouseMongo> findByHouseId(UUID houseId);
 	public List<HouseMongo> findByUserId(UUID userId);
 	public HouseMongo findByUserIdAndHouseId(UUID userId, UUID houseId);
+	long countByHouseIdAndLikedTrue(UUID houseId);
+	long countByHouseIdAndClickedTrue(UUID houseId);
+	long countByHouseIdAndSharedTrue(UUID houseId);
   
 }

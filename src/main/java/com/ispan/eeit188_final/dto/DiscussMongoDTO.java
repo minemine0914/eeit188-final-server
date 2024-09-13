@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class DiscussMongoDTO {
+	// 紀錄某User是否對某House按過: 愛心, 點擊, 分享, 評分
 	public UUID id;
 	public UUID userId;
 	public UUID discussId;

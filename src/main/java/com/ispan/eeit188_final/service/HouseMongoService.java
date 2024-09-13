@@ -21,6 +21,8 @@ import com.ispan.eeit188_final.repository.UserRepository;
 @Service
 public class HouseMongoService {
 
+	// 紀錄某User是否對某House按過: 愛心, 點擊, 分享, 評分
+	
 	private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
 	private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
 
@@ -96,6 +98,21 @@ public class HouseMongoService {
 
 	public void deleteById(UUID id) {
 		houseMongoRepository.deleteById(id);
+	}
+
+	//回傳該House的愛心總數
+	public long countLikesForHouse(UUID houseId) {
+		return houseMongoRepository.countByHouseIdAndLikedTrue(houseId);
+	}
+
+	// 回傳該House的被點擊總數
+	public long countClicksForHouse(UUID houseId) {
+		return houseMongoRepository.countByHouseIdAndLikedTrue(houseId);
+	}
+
+	// 回傳該House的被分享總數
+	public long countSharesForHouse(UUID houseId) {
+		return houseMongoRepository.countByHouseIdAndLikedTrue(houseId);
 	}
 
 	// 設為愛心 & 取消愛心
