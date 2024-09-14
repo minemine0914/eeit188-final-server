@@ -51,8 +51,10 @@ public class ChatRecordService {
                         .put("chat", chatRecord.getChat())
                         .put("senderId", chatRecord.getSender().getId())
                         .put("sender", chatRecord.getSender().getName())
+                        .put("senderAvatar", chatRecord.getSender().getAvatarBase64())
                         .put("receiverId", chatRecord.getReceiver().getId())
                         .put("receiver", chatRecord.getReceiver().getName())
+                        .put("receiverAvatar", chatRecord.getReceiver().getAvatarBase64())
                         .put("createdAt", chatRecord.getCreatedAt());
 
                 chatRecordsArray.put(obj);
