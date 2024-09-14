@@ -16,7 +16,7 @@ public interface ChatRecordRepository extends JpaRepository<ChatRecord, UUID> {
                 FROM ChatRecord cr
                 WHERE cr.show = true
                 AND (cr.sender.id = :id OR cr.receiver.id = :id)
-                ORDER BY cr.createdAt DESC
+                ORDER BY cr.createdAt
             """)
     Page<ChatRecord> findAllById(@Param("id") UUID id, Pageable pageable);
 }

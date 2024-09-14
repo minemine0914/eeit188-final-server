@@ -102,11 +102,11 @@ public class UserController {
     }
 
     // 上傳個人主頁背景圖片（byte[]）
-    @PutMapping("/upload-background-image/{id}")
+    @PostMapping("/upload-background-image/{id}")
     public ResponseEntity<String> uploadBackgroundImageBlob(@PathVariable UUID id,
-            @RequestParam("backgroundImage") MultipartFile backgroundImage) throws IOException {
+            @RequestParam("file") MultipartFile file) throws IOException {
 
-        return userService.uploadBackgroundImage(id, backgroundImage);
+        return userService.uploadBackgroundImage(id, file);
     }
 
     // 下載個人主頁背景圖片（byte[]）

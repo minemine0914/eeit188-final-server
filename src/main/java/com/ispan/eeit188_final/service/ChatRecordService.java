@@ -49,6 +49,10 @@ public class ChatRecordService {
                 JSONObject obj = new JSONObject()
                         .put("id", chatRecord.getId())
                         .put("chat", chatRecord.getChat())
+                        .put("senderId", chatRecord.getSender().getId())
+                        .put("sender", chatRecord.getSender().getName())
+                        .put("receiverId", chatRecord.getReceiver().getId())
+                        .put("receiver", chatRecord.getReceiver().getName())
                         .put("createdAt", chatRecord.getCreatedAt());
 
                 chatRecordsArray.put(obj);

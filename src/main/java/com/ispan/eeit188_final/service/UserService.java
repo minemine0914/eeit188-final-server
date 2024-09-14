@@ -243,7 +243,8 @@ public class UserService {
 
             // Generate JWT token
             String token = Jwts.builder()
-                    .setSubject(user.getId().toString())
+                    .setSubject("userToken")
+                    .claim("id", user.getId().toString())
                     .claim("role", user.getRole())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 864_000_00)) // 1 day
@@ -284,7 +285,6 @@ public class UserService {
                     JSONObject obj = new JSONObject(jsonRequest);
 
                     String name = obj.isNull("name") ? null : obj.getString("name");
-                    String role = obj.isNull("role") ? null : obj.getString("role");
                     String gender = obj.isNull("gender") ? null : obj.getString("gender");
                     String phone = obj.isNull("phone") ? null : obj.getString("phone");
                     String mobilePhone = obj.isNull("mobilePhone") ? null : obj.getString("mobilePhone");
@@ -324,7 +324,6 @@ public class UserService {
                     }
 
                     user.setName(name);
-                    user.setRole(role);
                     user.setGender(gender);
                     user.setBirthday(birthday);
                     user.setPhone(phone);
@@ -508,7 +507,7 @@ public class UserService {
                 .body("{\"message\": \"Invalid ID\"}");
     }
 
-    public ResponseEntity<String> uploadBackgroundImage(UUID id, MultipartFile backgroundImageBlobFile) {
+    public ResponseEntity<String> uploadBackgroundImage(UUID id, MultipartFile file) {
         if (id == null || id.toString().isEmpty()) {
             return ResponseEntity.badRequest()
                     .body("{\"message\": \"Invalid ID\"}");
@@ -519,12 +518,12 @@ public class UserService {
         if (optional.isPresent()) {
             User user = optional.get();
 
-            if (backgroundImageBlobFile != null && !backgroundImageBlobFile.isEmpty()) {
+            if (file != null && !file.isEmpty()) {
 
                 // Get the byte[] from the uploaded file
                 byte[] backgroundImageBlobFileBytes;
                 try {
-                    backgroundImageBlobFileBytes = backgroundImageBlobFile.getBytes();
+                    backgroundImageBlobFileBytes = file.getBytes();
                     user.setBackgroundImageBlob(backgroundImageBlobFileBytes);
                     userRepository.save(user);
 
