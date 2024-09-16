@@ -149,15 +149,20 @@ public class House {
     @JsonIgnore
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
+    // 與 HouseExternalResource 的關聯
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<HouseExternalResource> houseExternalResourceRecords = new HashSet<>();
+
     // // 與 Coupon 的關聯
     // @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     // @Builder.Default
     // @JsonIgnore
-    // private Set<Coupon> Coupons = new HashSet<>();
+    // private Set<Coupon> coupons = new HashSet<>();
 
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<Ticket> tickets = new ArrayList<>();
+    private Set<Ticket> tickets = new HashSet<>();
 
     // 自訂序列化 userId
     @JsonProperty("userId")
