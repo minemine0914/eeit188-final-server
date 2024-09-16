@@ -34,15 +34,13 @@ public class JwtInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // Extract the claims (user ID and role)
-        // String userId = jwtUtil.extractUserId(token);
-        // String userRole = jwtUtil.extractUserRole(token);
+        String userRole = jwtUtil.extractUserRole(token);
 
-        // Optionally, you can add role-based access control here
-        // if (!userRole.equals("Admin")) {
-        // response.setStatus(HttpServletResponse.SC_FORBIDDEN); return false; }
+        if (!userRole.equals("normal")) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
 
-        // Token is valid, proceed with the request
         return true;
     }
 }
