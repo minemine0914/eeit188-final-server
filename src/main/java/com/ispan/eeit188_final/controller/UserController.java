@@ -22,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     // 用ID查尋特定用戶
-    @GetMapping("/{id}")
+    @GetMapping("/find/{id}")
     public ResponseEntity<String> getUserById(@PathVariable UUID id) {
 
         return userService.findById(id);
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     // 創建新用戶
-    @PostMapping("/")
+    @PostMapping("/createUser")
     public ResponseEntity<String> createUser(
             @RequestBody String jsonRequest) {
 
