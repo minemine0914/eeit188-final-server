@@ -23,6 +23,9 @@ public class TranscationRecordDTO {
     private String deal;
     private Integer platformIncome;
     private Timestamp createdAt;
+    // 範圍查詢的上下界
+    private Timestamp minCreatedAt;
+    private Timestamp maxCreatedAt;
     // 用於 分頁、排序
     private Integer page;
     private Integer limit;
