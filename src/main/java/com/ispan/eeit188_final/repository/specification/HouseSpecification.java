@@ -43,8 +43,8 @@ public class HouseSpecification {
 
     // 縣市
     public static Specification<House> hasCity(String city) {
-        return (root, query, cb) -> city == null ? cb.conjunction()
-                : cb.equal(root.get("city"), city);
+        return (root, query, cb) -> city == null || city.length() < 1 ? cb.conjunction()
+                : cb.like(root.get("city"), "%" + city + "%");
     }
 
     // 區域
@@ -117,24 +117,24 @@ public class HouseSpecification {
     // 成人
     public static Specification<House> hasAdult(Short adult) {
         return (root, query, criteriaBuilder) -> adult == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("adult"), adult);
+                : criteriaBuilder.greaterThanOrEqualTo(root.get("adult"), adult);
     }
 
     // 小孩
     public static Specification<House> hasChild(Short child) {
         return (root, query, criteriaBuilder) -> child == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("child"), child);
+                : criteriaBuilder.greaterThanOrEqualTo(root.get("child"), child);
     }
 
     // 禁止項目 (攜帶寵物)
     public static Specification<House> isPet(Boolean pet) {
-        return (root, query, cb) -> pet == null ? cb.conjunction()
+        return (root, query, cb) -> pet == null || pet == false ? cb.conjunction()
                 : cb.equal(root.get("pet"), pet);
     }
 
     // 禁止項目 (抽煙)
     public static Specification<House> isSmoke(Boolean smoke) {
-        return (root, query, cb) -> smoke == null ? cb.conjunction()
+        return (root, query, cb) -> smoke == null || smoke == false ? cb.conjunction()
                 : cb.equal(root.get("smoke"), smoke);
     }
 

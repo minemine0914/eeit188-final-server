@@ -48,8 +48,8 @@ public class HouseController {
 
     /** 查詢一筆 */
     @GetMapping("/{id}")
-    public ResponseEntity<House> findById(@PathVariable String id) {
-        House finded = houseService.findById(UUID.fromString(id));
+    public ResponseEntity<House> findById(@PathVariable UUID id) {
+        House finded = houseService.findById(id);
         if (finded != null) {
             return ResponseEntity.ok(finded); // Return 200
         }
@@ -58,11 +58,11 @@ public class HouseController {
 
     /** 修改一筆 */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody HouseDTO houseDTO) {
-        House finded = houseService.findById(UUID.fromString(id));
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HouseDTO houseDTO) {
+        House finded = houseService.findById(id);
         if (finded != null) {
             try {
-                House updated = houseService.modify(UUID.fromString(id), houseDTO);
+                House updated = houseService.modify(id, houseDTO);
                 if (updated != null) {
                     return ResponseEntity.ok(updated); // Return 200 and print updated entity
                 }
