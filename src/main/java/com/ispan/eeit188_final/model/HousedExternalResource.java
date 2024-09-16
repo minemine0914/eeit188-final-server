@@ -37,6 +37,9 @@ public class HousedExternalResource {
     @Column(name = "url", columnDefinition = "NVARCHAR(MAX)")
     private String url;
 
+    @Column(name = "image", columnDefinition = "varbinary(max)")
+    private byte[] image;
+
     @Column(name = "type", columnDefinition = "NVARCHAR(10)") // 類型
     private String type;
 
