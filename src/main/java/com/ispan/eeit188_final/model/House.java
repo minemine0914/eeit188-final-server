@@ -149,10 +149,10 @@ public class House {
     @JsonIgnore
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
-    // 與 HouseExternalResource 的關聯
+    // 與 HouseExternalResource 的關聯 (這裡需要使用排序支援)
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<HouseExternalResource> houseExternalResourceRecords = new HashSet<>();
+    private List<HouseExternalResource> houseExternalResourceRecords = new ArrayList<>();
 
     // // 與 Coupon 的關聯
     // @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

@@ -93,25 +93,25 @@ public class HouseSpecification {
     // 客廳
     public static Specification<House> hasLivingDiningRoom(Short livingDiningRoom) {
         return (root, query, cb) -> livingDiningRoom == null ? cb.conjunction()
-                : cb.equal(root.get("livingDiningRoom"), livingDiningRoom);
+                : cb.greaterThanOrEqualTo(root.get("livingDiningRoom"), livingDiningRoom);
     }
 
     // 房間
     public static Specification<House> hasBedroom(Short bedroom) {
         return (root, query, cb) -> bedroom == null ? cb.conjunction()
-                : cb.equal(root.get("bedroom"), bedroom);
+                : cb.greaterThanOrEqualTo(root.get("bedroom"), bedroom);
     }
 
     // 衛生間 (馬桶)
     public static Specification<House> hasRestroom(Short restroom) {
         return (root, query, criteriaBuilder) -> restroom == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("restroom"), restroom);
+                : criteriaBuilder.greaterThanOrEqualTo(root.get("restroom"), restroom);
     }
 
     // 淋浴間
     public static Specification<House> hasBathroom(Short bathroom) {
         return (root, query, criteriaBuilder) -> bathroom == null ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("bathroom"), bathroom);
+                : criteriaBuilder.greaterThanOrEqualTo(root.get("bathroom"), bathroom);
     }
 
     // 成人
