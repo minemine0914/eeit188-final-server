@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,20 +44,20 @@ public class DiscussController {
 
     // 查詢特定房源所有討論
     @GetMapping("/house/{houseId}")
-    public ResponseEntity<Page<Discuss>> getDiscussionsByHouseId(@PathVariable UUID houseId,
+    public ResponseEntity<String> getDiscussionsByHouseId(@PathVariable UUID houseId,
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
-        Page<Discuss> discussions = discussService.getDiscussionsByHouseId(houseId, pageNo, pageSize);
-        return ResponseEntity.ok(discussions);
+
+        return discussService.getDiscussionsByHouseId(houseId, pageNo, pageSize);
     }
 
     // 查詢特定使用者所有討論
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<Discuss>> getDiscussionsByUserId(@PathVariable UUID userId,
+    public ResponseEntity<String> getDiscussionsByUserId(@PathVariable UUID userId,
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
-        Page<Discuss> discussions = discussService.getDiscussionsByUserId(userId, pageNo, pageSize);
-        return ResponseEntity.ok(discussions);
+
+        return discussService.getDiscussionsByUserId(userId, pageNo, pageSize);
     }
 
     // 收回討論

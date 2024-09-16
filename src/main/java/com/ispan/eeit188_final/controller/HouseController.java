@@ -14,6 +14,7 @@ import com.ispan.eeit188_final.dto.HouseDTO;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.service.HouseService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/house")
 public class HouseController {
@@ -31,19 +33,23 @@ public class HouseController {
 
     /** 新增一筆 */
     @PostMapping("/")
-    public ResponseEntity<House> create(@RequestBody HouseDTO houseDTO) {
+    public ResponseEntity<?> create(@RequestBody HouseDTO houseDTO) {
         House created = houseService.create(houseDTO);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(created.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(created); // Return 201 Created and redirect to created url
+        if (created != null) {
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(created.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(created); // Return 201 Created and redirect to created url
+        }
+        HouseDTO error = HouseDTO.builder().message("新增失敗").build();
+        return ResponseEntity.badRequest().body(error); // Return 400 BadRequest
     }
 
     /** 查詢一筆 */
     @GetMapping("/{id}")
-    public ResponseEntity<House> findById(@PathVariable String id) {
-        House finded = houseService.findById(UUID.fromString(id));
+    public ResponseEntity<House> findById(@PathVariable UUID id) {
+        House finded = houseService.findById(id);
         if (finded != null) {
             return ResponseEntity.ok(finded); // Return 200
         }
@@ -52,11 +58,11 @@ public class HouseController {
 
     /** 修改一筆 */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody HouseDTO houseDTO) {
-        House finded = houseService.findById(UUID.fromString(id));
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HouseDTO houseDTO) {
+        House finded = houseService.findById(id);
         if (finded != null) {
             try {
-                House updated = houseService.modify(UUID.fromString(id), houseDTO);
+                House updated = houseService.modify(id, houseDTO);
                 if (updated != null) {
                     return ResponseEntity.ok(updated); // Return 200 and print updated entity
                 }

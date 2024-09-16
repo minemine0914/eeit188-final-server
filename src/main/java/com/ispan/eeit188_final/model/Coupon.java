@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
@@ -38,7 +39,7 @@ public class Coupon {
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     private UUID id;
 
-    @Column(name = "discount_rate", columnDefinition = "float(10)")
+    @Column(name = "discount_rate", columnDefinition = "real")
     private Double discountRate;
 
     @Column(name = "discount", columnDefinition = "int")
@@ -51,16 +52,22 @@ public class Coupon {
     private Timestamp createdAt;
 
     // 與 House 的關聯
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-    @JsonIgnore
-    private House house;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
+    // @JsonIgnore
+    // private House house;
 
     // 與 User 的關聯
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
     @JsonIgnore
     private User user;
+
+    // 自訂序列化 userName
+    @JsonProperty("userName")
+    public String userName() {
+        return user != null ? user.getName() : null;
+    }
 
     @PrePersist
     public void onCreate() {

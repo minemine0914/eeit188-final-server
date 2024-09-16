@@ -34,10 +34,10 @@ public class HousedExternalResource {
     @Column(name = "house_id", columnDefinition = "UNIQUEIDENTIFIER")
     private UUID HouseId;
 
-    @Column(name = "url", columnDefinition = "VARCHAR(MAX)")
+    @Column(name = "url", columnDefinition = "NVARCHAR(MAX)")
     private String url;
 
-    @Column(name = "type", columnDefinition = "VARCHAR(10)") // 類型
+    @Column(name = "type", columnDefinition = "NVARCHAR(10)") // 類型
     private String type;
 
     @Column(name = "created_at", columnDefinition = "DATETIME2")
