@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -129,14 +131,23 @@ public class HouseExternalResourceController {
         return ResponseEntity.notFound().build(); // Return 404 NotFound
     }
 
+    // 刪除資源 By Id
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable UUID id) {
-        houseExternalResourceService.deleteById(id);
+    public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+        if (id!= null) {
+            Boolean result = houseExternalResourceService.deleteById(id);
+            if ( result ) {
+                return ResponseEntity.noContent().build(); // Return 201 No Content
+            }
+            return ResponseEntity.notFound().build(); // Return 404 NotFound
+        }
+        HouseExternalResourceDTO error = HouseExternalResourceDTO.builder().message("刪除失敗，缺少Id").build();
+        return ResponseEntity.badRequest().body(error); // Return 400 BadRequest
     }
 
     // @PutMapping("/{id}")
     // public HouseExternalResource updateById(
-    //         @RequestBody HouseExternalResource her) {
+    //         @RequestBody HouseExternalResourceDTO dto) {
     //     return houseExternalResourceService.modify(her);
     // }
 

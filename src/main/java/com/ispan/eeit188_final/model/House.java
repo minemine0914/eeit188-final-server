@@ -160,6 +160,7 @@ public class House {
     // @JsonIgnore
     // private Set<Coupon> coupons = new HashSet<>();
 
+    // 與 Ticket 的關聯
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<Ticket> tickets = new HashSet<>();
