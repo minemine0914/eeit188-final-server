@@ -21,6 +21,10 @@ public class JwtInterceptor implements HandlerInterceptor {
             throws Exception {
         String authHeader = request.getHeader("Authorization");
 
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
