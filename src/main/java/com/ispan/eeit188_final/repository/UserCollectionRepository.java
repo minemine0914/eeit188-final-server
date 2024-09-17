@@ -13,9 +13,11 @@ import java.util.UUID;
 
 public interface UserCollectionRepository extends JpaRepository<UserCollection, UserCollectionId> {
 
-    @Query("SELECT uc FROM UserCollection uc WHERE uc.id.userId.id = :userId ORDER BY createdAt DESC")
+    @Query("SELECT uc FROM UserCollection uc WHERE uc.id.user.id = :userId ORDER BY createdAt DESC")
     Page<UserCollection> findAllByUserId(@Param("userId") UUID userId, Pageable pageable);
 
-    @Query("SELECT COUNT(uc) FROM UserCollection uc WHERE uc.userCollectionId.houseId.id = :houseId")
+    Boolean existsByUserCollectionId(UserCollectionId userCollectionId);
+
+    @Query("SELECT COUNT(uc) FROM UserCollection uc WHERE uc.userCollectionId.house.id = :houseId")
     long countByHouseId(@Param("houseId") UUID houseId);
 }

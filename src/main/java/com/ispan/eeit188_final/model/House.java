@@ -132,7 +132,7 @@ public class House {
     private User user;
 
     // 與 UserCollection 的關聯
-    @OneToMany(mappedBy = "userCollectionId.houseId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userCollectionId.house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @JsonIgnore
     private Set<UserCollection> userCollections = new HashSet<>();
