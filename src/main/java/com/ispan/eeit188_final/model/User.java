@@ -113,7 +113,7 @@ public class User {
     @Builder.Default
     private Set<House> houses = new HashSet<>();
 
-    @OneToMany(mappedBy = "userCollectionId.userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userCollectionId.user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<UserCollection> userCollections = new ArrayList<>();
 
