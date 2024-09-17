@@ -84,23 +84,11 @@ public class UserCollectionService {
         return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
     }
 
-    public ResponseEntity<String> existsByUserCollectionId(String jsonRequest) {
-        // Parse Json
-        UUID userId = null;
-        UUID houseId = null;
-        try {
-            JSONObject obj = new JSONObject(jsonRequest);
-            userId = obj.isNull("userId") ? null : UUID.fromString(obj.getString("userId"));
-            houseId = obj.isNull("houseId") ? null : UUID.fromString(obj.getString("houseId"));
-        } catch (JSONException e) {
-            JSONObject errorJsonObj = new JSONObject();
-            errorJsonObj.put("message", "Request Body must be json format!!!");
-            return ResponseEntity.badRequest().body(errorJsonObj.toString());
-        }
+    public ResponseEntity<String> existsByUserCollectionId(UUID userId, UUID houseId) {
         // Convert string IDs to UUIDs
         if (userId != null && houseId != null) {
-            Optional<House> findHouse = houseRepository.findById(houseId);
             Optional<User> findUser = userRepository.findById(userId);
+            Optional<House> findHouse = houseRepository.findById(houseId);
             if (findHouse.isPresent() && findUser.isPresent()) {
                 UserCollectionId userCollectionId = UserCollectionId.builder()
                         .user(findUser.get())

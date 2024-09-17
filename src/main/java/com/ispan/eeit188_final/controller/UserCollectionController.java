@@ -35,8 +35,8 @@ public class UserCollectionController {
 
     // 查詢是否收藏 (返回 JSON KEY: isCollect<Boolean>)
     @GetMapping("/")
-    public ResponseEntity<String> existsByUserCollectionId(@RequestBody String jsonRequeest) {
-        return userCollectionService.existsByUserCollectionId(jsonRequeest);
+    public ResponseEntity<String> existsByUserCollectionId(@RequestParam UUID userId, @RequestParam UUID houseId) {
+        return userCollectionService.existsByUserCollectionId(userId, houseId);
     }
 
     // 創建用戶收藏
