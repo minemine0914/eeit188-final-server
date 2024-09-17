@@ -373,8 +373,7 @@ public class UserService {
                                 .body("{\"message\": \"Invalid password\"}");
                     }
 
-                    String resetPasswordUrl = "http://localhost:5173/user/reset-password";
-                    return ResponseEntity.ok("{\"message\": \"" + resetPasswordUrl + "\"}");
+                    return ResponseEntity.ok("true");
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
