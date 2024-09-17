@@ -38,12 +38,12 @@ public class JwtInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        String userRole = jwtUtil.extractUserRole(token);
+        // String userRole = jwtUtil.extractUserRole(token);
 
-        if (!userRole.equals("normal")) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return false;
-        }
+        // if (!userRole.equals("normal")) {
+        // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        // return false;
+        // }
 
         return true;
     }
