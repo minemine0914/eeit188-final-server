@@ -46,9 +46,20 @@ public class UserCollectionService {
                     JSONArray userCollectionsArray = new JSONArray();
 
                     for (UserCollection userCollection : userCollections.getContent()) {
+
+                        JSONArray externalResourciesId = new JSONArray();
+
+                        if (userCollection.getUserCollectionId().getHouse()
+                                .getHouseExternalResourceRecords().size() != 0) {
+                            externalResourciesId.put(userCollection.getUserCollectionId().getHouse()
+                                    .getHouseExternalResourceRecords().get(0).getId());
+                        }
+
                         JSONObject obj = new JSONObject()
-                                .put("id", userCollection.getUserCollectionId().getHouse().getId())
+                                .put("houseId", userCollection.getUserCollectionId().getHouse().getId())
                                 .put("name", userCollection.getUserCollectionId().getHouse().getName())
+                                .put("externalResourciesId", externalResourciesId)
+                                .put("images", new JSONArray())
                                 .put("category", userCollection.getUserCollectionId().getHouse().getCategory())
                                 .put("information", userCollection.getUserCollectionId().getHouse().getInformation())
                                 .put("latitudeX", userCollection.getUserCollectionId().getHouse().getLatitudeX())
@@ -61,7 +72,9 @@ public class UserCollectionService {
                                 .put("pricePerWeek",
                                         userCollection.getUserCollectionId().getHouse().getPricePerWeek())
                                 .put("pricePerMonth",
-                                        userCollection.getUserCollectionId().getHouse().getPricePerMonth());
+                                        userCollection.getUserCollectionId().getHouse().getPricePerMonth())
+                                .put("createdAt",
+                                        userCollection.getCreatedAt());
 
                         userCollectionsArray.put(obj);
                     }
@@ -161,6 +174,26 @@ public class UserCollectionService {
         if (houseId != null && !houseId.toString().isEmpty()) {
 
             long total = userCollectionRepository.countByHouseId(houseId);
+
+            try {
+                JSONObject response = new JSONObject()
+                        .put("totalCollectionsCount", total);
+
+                return ResponseEntity.ok(response.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("{\"message\": \"Error creating JSON response: " + e.getMessage() + "\"}");
+            }
+        }
+
+        return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
+    }
+
+    public ResponseEntity<String> countTotalCollectionsFromUser(UUID userId) {
+        if (userId != null && !userId.toString().isEmpty()) {
+
+            long total = userCollectionRepository.countByUserId(userId);
 
             try {
                 JSONObject response = new JSONObject()

@@ -46,7 +46,7 @@ public class UserCollectionController {
     }
 
     // 取消用戶收藏
-    @DeleteMapping("/")
+    @PostMapping("/delete")
     public ResponseEntity<String> removeUserCollection(@RequestBody String jsonRequeest) {
         return userCollectionService.removeUserCollection(jsonRequeest);
     }
@@ -56,5 +56,12 @@ public class UserCollectionController {
     public ResponseEntity<String> countAllCollectionsFromHouse(@PathVariable UUID houseId) {
 
         return userCollectionService.countTotalCollectionsFromHouse(houseId);
+    }
+
+    // 查詢特定使用者的總收藏數
+    @GetMapping("/from-user/total-count/{userId}")
+    public ResponseEntity<String> countAllCollectionsFromUser(@PathVariable UUID userId) {
+
+        return userCollectionService.countTotalCollectionsFromUser(userId);
     }
 }
