@@ -406,7 +406,7 @@ public class UserService {
                         .body("{\"message\": \"User not found\"}");
             }
 
-            String resetLink = "http://localhost:5173/user/reset-password/";
+            String resetLink = "http://localhost:5173/reset-password";
 
             String htmlContent = "<p>Click the following link to reset your password:</p>" +
                     "<a href=\"" + resetLink + "\">Reset Password</a>";
