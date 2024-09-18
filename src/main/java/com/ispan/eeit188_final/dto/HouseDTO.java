@@ -45,6 +45,7 @@ public class HouseDTO {
     private Boolean kitchen;
     private Boolean balcony;
     private Boolean show;
+    private Boolean review;
     private UUID userId;
     // 用於 查詢過濾
     private Double minLatitudeX;
