@@ -75,7 +75,6 @@ public class House {
     @Column(name = "price_per_month", columnDefinition = "INT")
     private Integer pricePerMonth; // 價格(月)
 
-
     // 房源基本設施 幾廳 幾房 幾衛 幾浴 (TinyInt)
     @Column(name = "living_dining_room", columnDefinition = "TINYINT")
     private Short livingDiningRoom; // 客廳
@@ -107,6 +106,10 @@ public class House {
     // 狀態
     @Column(name = "show", columnDefinition = "BIT")
     private Boolean show; // 是否刊登顯示
+
+    // 狀態
+    @Column(name = "review", columnDefinition = "BIT")
+    private Boolean review; // 是否通過審核
 
     // 建立/修改 時間
     @Column(name = "created_at", columnDefinition = "DATETIME2")
@@ -155,7 +158,8 @@ public class House {
     private List<HouseExternalResource> houseExternalResourceRecords = new ArrayList<>();
 
     // // 與 Coupon 的關聯
-    // @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    // @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
     // @Builder.Default
     // @JsonIgnore
     // private Set<Coupon> coupons = new HashSet<>();

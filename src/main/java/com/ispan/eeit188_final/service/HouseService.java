@@ -64,6 +64,7 @@ public class HouseService {
                     .kitchen(houseDTO.getKitchen())
                     .balcony(houseDTO.getBalcony())
                     .show(houseDTO.getShow())
+                    .review(houseDTO.getReview())
                     .build();
             return houseRepo.save(house);
         }
@@ -106,6 +107,8 @@ public class HouseService {
                 Optional.ofNullable(houseDTO.getBalcony()).ifPresent(modify::setBalcony);
                 // 狀態 (擁有者不更動)
                 Optional.ofNullable(houseDTO.getShow()).ifPresent(modify::setShow);
+                // 狀態 (擁有者不更動)
+                Optional.ofNullable(houseDTO.getReview()).ifPresent(modify::setReview);
                 // 附加設施
                 Optional.ofNullable(houseDTO.getPostulateIds()).ifPresent(postulateIds -> {
                     // 現有的附加設施
