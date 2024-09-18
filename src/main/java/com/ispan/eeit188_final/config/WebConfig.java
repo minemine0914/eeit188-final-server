@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/user/**", "/chat-record/**")
                 .excludePathPatterns(
                         "/user/find/**",
-                        "/user/find-users/",
+                        "/user/find-users",
                         "/user/login",
                         "/user/forgot-password",
                         "/user/check-password/**",
