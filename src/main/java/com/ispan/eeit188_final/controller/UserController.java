@@ -29,7 +29,7 @@ public class UserController {
     }
 
     // 批量查尋用戶
-    @GetMapping("/")
+    @GetMapping("/find-users/")
     public ResponseEntity<String> getUsers(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
