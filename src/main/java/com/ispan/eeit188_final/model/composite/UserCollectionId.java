@@ -10,31 +10,37 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserCollectionId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
-    private User userId;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
-    private House houseId;
+    private House house;
 
-    public UserCollectionId() {
-    }
+    // public UserCollectionId() {
+    // }
 
-    public UserCollectionId(User user, House house) {
-        this.userId = user;
-        this.houseId = house;
-    }
+    // public UserCollectionId(User user, House house) {
+    //     this.userId = user;
+    //     this.houseId = house;
+    // }
 
     @Override
     public boolean equals(Object o) {
@@ -43,12 +49,12 @@ public class UserCollectionId implements Serializable {
         if (o == null || getClass() != o.getClass())
             return false;
         UserCollectionId that = (UserCollectionId) o;
-        return Objects.equals(userId, that.userId) &&
-                Objects.equals(houseId, that.houseId);
+        return Objects.equals(user, that.user) &&
+                Objects.equals(house, that.house);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, houseId);
+        return Objects.hash(user, house);
     }
 }

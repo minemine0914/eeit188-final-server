@@ -22,14 +22,14 @@ public class UserController {
     private UserService userService;
 
     // 用ID查尋特定用戶
-    @GetMapping("/{id}")
+    @GetMapping("/find/{id}")
     public ResponseEntity<String> getUserById(@PathVariable UUID id) {
 
         return userService.findById(id);
     }
 
     // 批量查尋用戶
-    @GetMapping("/")
+    @GetMapping("/find-users")
     public ResponseEntity<String> getUsers(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     // 創建新用戶
-    @PostMapping("/")
+    @PostMapping("/createUser")
     public ResponseEntity<String> createUser(
             @RequestBody String jsonRequest) {
 

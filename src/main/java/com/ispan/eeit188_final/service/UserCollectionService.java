@@ -1,9 +1,10 @@
 package com.ispan.eeit188_final.service;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.UserCollectionRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -45,20 +47,21 @@ public class UserCollectionService {
 
                     for (UserCollection userCollection : userCollections.getContent()) {
                         JSONObject obj = new JSONObject()
-                                .put("name", userCollection.getUserCollectionId().getHouseId().getName())
-                                .put("category", userCollection.getUserCollectionId().getHouseId().getCategory())
-                                .put("information", userCollection.getUserCollectionId().getHouseId().getInformation())
-                                .put("latitudeX", userCollection.getUserCollectionId().getHouseId().getLatitudeX())
-                                .put("longitudeY", userCollection.getUserCollectionId().getHouseId().getLongitudeY())
-                                .put("country", userCollection.getUserCollectionId().getHouseId().getCountry())
-                                .put("city", userCollection.getUserCollectionId().getHouseId().getCity())
-                                .put("region", userCollection.getUserCollectionId().getHouseId().getRegion())
-                                .put("address", userCollection.getUserCollectionId().getHouseId().getAddress())
-                                .put("pricePerDay", userCollection.getUserCollectionId().getHouseId().getPricePerDay())
+                                .put("id", userCollection.getUserCollectionId().getHouse().getId())
+                                .put("name", userCollection.getUserCollectionId().getHouse().getName())
+                                .put("category", userCollection.getUserCollectionId().getHouse().getCategory())
+                                .put("information", userCollection.getUserCollectionId().getHouse().getInformation())
+                                .put("latitudeX", userCollection.getUserCollectionId().getHouse().getLatitudeX())
+                                .put("longitudeY", userCollection.getUserCollectionId().getHouse().getLongitudeY())
+                                .put("country", userCollection.getUserCollectionId().getHouse().getCountry())
+                                .put("city", userCollection.getUserCollectionId().getHouse().getCity())
+                                .put("region", userCollection.getUserCollectionId().getHouse().getRegion())
+                                .put("address", userCollection.getUserCollectionId().getHouse().getAddress())
+                                .put("pricePerDay", userCollection.getUserCollectionId().getHouse().getPricePerDay())
                                 .put("pricePerWeek",
-                                        userCollection.getUserCollectionId().getHouseId().getPricePerWeek())
+                                        userCollection.getUserCollectionId().getHouse().getPricePerWeek())
                                 .put("pricePerMonth",
-                                        userCollection.getUserCollectionId().getHouseId().getPricePerMonth());
+                                        userCollection.getUserCollectionId().getHouse().getPricePerMonth());
 
                         userCollectionsArray.put(obj);
                     }
@@ -79,6 +82,27 @@ public class UserCollectionService {
         }
 
         return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
+    }
+
+    public ResponseEntity<String> existsByUserCollectionId(UUID userId, UUID houseId) {
+        // Convert string IDs to UUIDs
+        if (userId != null && houseId != null) {
+            Optional<User> findUser = userRepository.findById(userId);
+            Optional<House> findHouse = houseRepository.findById(houseId);
+            if (findHouse.isPresent() && findUser.isPresent()) {
+                UserCollectionId userCollectionId = UserCollectionId.builder()
+                        .user(findUser.get())
+                        .house(findHouse.get())
+                        .build();
+                Boolean exists = userCollectionRepository.existsByUserCollectionId(userCollectionId);
+                JSONObject successJsonObj = new JSONObject();
+                successJsonObj.put("isCollected", exists);
+                return ResponseEntity.ok(successJsonObj.toString());
+            }
+        }
+        JSONObject errorJsonObj = new JSONObject();
+        errorJsonObj.put("message", "userId and houseId can not be empty!");
+        return ResponseEntity.badRequest().body(errorJsonObj.toString());
     }
 
     public ResponseEntity<String> createUserCollection(String jsonRequest) {
@@ -152,4 +176,35 @@ public class UserCollectionService {
 
         return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
     }
+
+    public ResponseEntity<String> removeUserCollection(String jsonRequest) {
+        // Parse Json
+        UUID userId = null;
+        UUID houseId = null;
+        try {
+            JSONObject obj = new JSONObject(jsonRequest);
+            userId = obj.isNull("userId") ? null : UUID.fromString(obj.getString("userId"));
+            houseId = obj.isNull("houseId") ? null : UUID.fromString(obj.getString("houseId"));
+        } catch (JSONException e) {
+            JSONObject errorJsonObj = new JSONObject();
+            errorJsonObj.put("message", "Request Body must be json format!!!");
+            return ResponseEntity.badRequest().body(errorJsonObj.toString());
+        }
+        if (userId != null && houseId != null) {
+            Optional<House> findHouse = houseRepository.findById(houseId);
+            Optional<User> findUser = userRepository.findById(userId);
+            if (findHouse.isPresent() && findUser.isPresent()) {
+                UserCollectionId userCollectionId = UserCollectionId.builder()
+                        .user(findUser.get())
+                        .house(findHouse.get())
+                        .build();
+                userCollectionRepository.deleteById(userCollectionId);
+                return ResponseEntity.noContent().build(); // Return 204 no content
+            }
+        }
+        JSONObject errorJsonObj = new JSONObject();
+        errorJsonObj.put("message", "userId and houseId can not be empty!");
+        return ResponseEntity.badRequest().body(errorJsonObj.toString()); // Return 403
+    }
+
 }

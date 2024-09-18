@@ -132,7 +132,7 @@ public class House {
     private User user;
 
     // 與 UserCollection 的關聯
-    @OneToMany(mappedBy = "userCollectionId.houseId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userCollectionId.house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @JsonIgnore
     private Set<UserCollection> userCollections = new HashSet<>();
@@ -149,10 +149,10 @@ public class House {
     @JsonIgnore
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
-    // 與 HouseExternalResource 的關聯
+    // 與 HouseExternalResource 的關聯 (這裡需要使用排序支援)
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<HouseExternalResource> houseExternalResourceRecords = new HashSet<>();
+    private List<HouseExternalResource> houseExternalResourceRecords = new ArrayList<>();
 
     // // 與 Coupon 的關聯
     // @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -160,6 +160,7 @@ public class House {
     // @JsonIgnore
     // private Set<Coupon> coupons = new HashSet<>();
 
+    // 與 Ticket 的關聯
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<Ticket> tickets = new HashSet<>();

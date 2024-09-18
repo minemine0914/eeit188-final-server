@@ -4,7 +4,7 @@ package com.ispan.eeit188_final.model;
 import java.util.UUID;
 import java.sql.Timestamp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+// import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -50,7 +50,6 @@ public class HouseExternalResource {
     private String type;
 
     @Column(name = "created_at", columnDefinition = "DATETIME2")
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd' 'HH:mm")
     private Timestamp createdAt;
 
     @ManyToOne

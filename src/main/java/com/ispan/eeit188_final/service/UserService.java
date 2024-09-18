@@ -373,8 +373,7 @@ public class UserService {
                                 .body("{\"message\": \"Invalid password\"}");
                     }
 
-                    String resetPasswordUrl = "http://localhost:5173/user/reset-password";
-                    return ResponseEntity.ok("{\"message\": \"" + resetPasswordUrl + "\"}");
+                    return ResponseEntity.ok("true");
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -423,10 +422,16 @@ public class UserService {
                 messageHelper.setText(htmlContent, true);
                 mailSender.send(mimeMessage);
 
-                JSONObject response = new JSONObject()
-                        .put("id", user.getId());
+                // Generate JWT token
+                String token = Jwts.builder()
+                        .setSubject("userResetToken")
+                        .claim("id", user.getId().toString())
+                        .setIssuedAt(new Date())
+                        .setExpiration(new Date(System.currentTimeMillis() + 3 * 60 * 1000)) // 3 minute
+                        .signWith(SignatureAlgorithm.HS256, secretKey) // Use a secure key in production
+                        .compact();
 
-                return ResponseEntity.ok(response.toString());
+                return ResponseEntity.ok("{\"token\": \"" + token + "\"}");
             } catch (MessagingException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

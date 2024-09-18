@@ -78,8 +78,12 @@ public class HouseExternalResourceService {
 
     }
 
-    public void deleteById(UUID id) {
-        houseExternalResourceRepo.deleteById(id);
+    public Boolean deleteById(UUID id) {
+        if ( houseExternalResourceRepo.existsById(id) ) {
+            houseExternalResourceRepo.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public HouseExternalResource modify(HouseExternalResource her) {
