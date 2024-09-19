@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ispan.eeit188_final.dto.HouseMongoDTO;
 import com.ispan.eeit188_final.model.HouseMongo;
-import com.ispan.eeit188_final.model.Ticket;
 import com.ispan.eeit188_final.service.HouseMongoService;
 
 @RestController

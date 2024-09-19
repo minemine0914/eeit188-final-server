@@ -21,6 +21,8 @@ import com.ispan.eeit188_final.repository.UserRepository;
 @Service
 public class DiscussMongoService {
 
+	// 紀錄某User是否對某Discuss按過: 愛心, 點擊, 分享, 評分
+	
 	private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
 	private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
 
@@ -53,17 +55,17 @@ public class DiscussMongoService {
 	}
 
 	public List<DiscussMongo> findByUserId(UUID id) {
-		List<DiscussMongo> discussions = discussMongoRepository.findByUserId(id);
-		if (discussions != null && discussions.size() != 0) {
-			return discussions;
+		List<DiscussMongo> discusss = discussMongoRepository.findByUserId(id);
+		if (discusss != null && discusss.size() != 0) {
+			return discusss;
 		}
 		return null;
 	}
 
 	public List<DiscussMongo> findByDiscussId(UUID id) {
-		List<DiscussMongo> discussions = discussMongoRepository.findByDiscussId(id);
-		if (discussions != null && discussions.size() != 0) {
-			return discussions;
+		List<DiscussMongo> discusss = discussMongoRepository.findByDiscussId(id);
+		if (discusss != null && discusss.size() != 0) {
+			return discusss;
 		}
 		return null;
 	}
@@ -96,6 +98,21 @@ public class DiscussMongoService {
 
 	public void deleteById(UUID id) {
 		discussMongoRepository.deleteById(id);
+	}
+
+	//回傳該Discuss的愛心總數
+	public long countLikesForDiscuss(UUID discussId) {
+		return discussMongoRepository.countByDiscussIdAndLikedTrue(discussId);
+	}
+
+	// 回傳該Discuss的被點擊總數
+	public long countClicksForDiscuss(UUID discussId) {
+		return discussMongoRepository.countByDiscussIdAndLikedTrue(discussId);
+	}
+
+	// 回傳該Discuss的被分享總數
+	public long countSharesForDiscuss(UUID discussId) {
+		return discussMongoRepository.countByDiscussIdAndLikedTrue(discussId);
 	}
 
 	// 設為愛心 & 取消愛心

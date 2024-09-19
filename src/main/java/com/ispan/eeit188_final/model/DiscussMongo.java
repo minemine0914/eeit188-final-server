@@ -17,7 +17,8 @@ import lombok.Setter;
 @Builder
 @Document(collection = "discuss_click_like_share")
 public class DiscussMongo {
-	// 某一個User對某一個Discuss的點擊、愛心、分享
+	// 紀錄某User是否對某Discuss按過: 愛心, 點擊, 分享, 評分
+	// 以及紀錄操作時間
 	@Id
 	private UUID id;
 	private UUID userId;
