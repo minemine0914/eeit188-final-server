@@ -20,4 +20,7 @@ public interface UserCollectionRepository extends JpaRepository<UserCollection, 
 
     @Query("SELECT COUNT(uc) FROM UserCollection uc WHERE uc.userCollectionId.house.id = :houseId")
     long countByHouseId(@Param("houseId") UUID houseId);
+
+    @Query("SELECT COUNT(uc) FROM UserCollection uc WHERE uc.userCollectionId.user.id = :userId")
+    long countByUserId(@Param("userId") UUID userId);
 }

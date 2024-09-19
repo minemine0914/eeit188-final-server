@@ -105,6 +105,9 @@ public class HouseController {
      * 附加設施: postulateId, postulateIds, matchAllPostulates
      * 分頁限制: page, limit
      * 欄位排序: dir, order
+     * 
+     * 
+     * 9/18新增 審核驗證:review
      */
     @PostMapping("/search")
     public Page<House> search(@RequestBody HouseDTO houseDTO) {
