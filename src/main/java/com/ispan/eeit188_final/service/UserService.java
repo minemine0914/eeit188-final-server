@@ -444,6 +444,61 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<String> adminForgotPassword(String jsonRequest) {
+        try {
+            JSONObject obj = new JSONObject(jsonRequest);
+            String email = obj.isNull("email") ? null : obj.getString("email");
+
+            if (email == null || email.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"Email can't be null or empty\"}");
+            }
+
+            User user = userRepository.findByEmail(email);
+
+            if (user == null) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"User not found\"}");
+            }
+
+            String resetLink = "http://localhost:5173/system/reset-password";
+
+            String htmlContent = "<p>Click the following link to reset your password:</p>" +
+                    "<a href=\"" + resetLink + "\">Reset Password</a>";
+
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper messageHelper;
+
+            try {
+                messageHelper = new MimeMessageHelper(mimeMessage, true);
+                messageHelper.setFrom("Nomad@example.com");
+                messageHelper.setTo(email);
+                messageHelper.setSubject("Password Reset Request");
+                messageHelper.setText(htmlContent, true);
+                mailSender.send(mimeMessage);
+
+                // Generate JWT token
+                String token = Jwts.builder()
+                        .setSubject("adminResetToken")
+                        .claim("id", user.getId().toString())
+                        .setIssuedAt(new Date())
+                        .setExpiration(new Date(System.currentTimeMillis() + 3 * 60 * 1000)) // 3 minute
+                        .signWith(SignatureAlgorithm.HS256, secretKey) // Use a secure key in production
+                        .compact();
+
+                return ResponseEntity.ok("{\"token\": \"" + token + "\"}");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("{\"message\": \"Error seding email: " + e.getMessage() + "\"}");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
+        }
+    }
+
     public ResponseEntity<String> setNewPassword(UUID id, String jsonRequest) {
         if (id != null && !id.toString().isEmpty()) {
             Optional<User> optional = userRepository.findById(id);

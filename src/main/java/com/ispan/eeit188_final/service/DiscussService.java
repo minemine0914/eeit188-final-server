@@ -97,7 +97,8 @@ public class DiscussService {
             try {
                 JSONObject obj = new JSONObject()
                         .put("discuss", discuss.getDiscuss())
-                        .put("user", discuss.getUser().getName());
+                        .put("user", discuss.getUser().getName())
+                        .put("avatar", discuss.getUser().getAvatarBase64());
 
                 jsonArray.put(obj);
 
@@ -124,7 +125,9 @@ public class DiscussService {
                 JSONObject obj = new JSONObject()
                         .put("id", discuss.getId())
                         .put("discuss", discuss.getDiscuss())
-                        .put("house", discuss.getHouse().getName());
+                        .put("house", discuss.getHouse().getName())
+                        .put("houseId", discuss.getHouse().getId())
+                        .put("externalResourceId", discuss.getHouse().getHouseExternalResourceRecords().get(0).getId());
 
                 jsonArray.put(obj);
 
@@ -137,6 +140,24 @@ public class DiscussService {
                 .put("discusses", jsonArray);
 
         return ResponseEntity.ok(response.toString());
+    }
+
+    public long countDiscussionsByUserId(UUID userId) {
+        return discussRepository.countDiscussionsByUserId(userId);
+    }
+
+    public long countDiscussionsByUserIdAndHouseId(UUID userId, UUID houseId) {
+        return discussRepository.countDiscussionsByUserIdAndHouseId(userId, houseId);
+    }
+
+    public Optional<Discuss> updateDiscuss(UUID id, DiscussDTO discussDTO) {
+        Optional<Discuss> optionalDiscuss = discussRepository.findById(id);
+        if (optionalDiscuss.isPresent()) {
+            Discuss discuss = optionalDiscuss.get();
+            discuss.setDiscuss(discussDTO.getDiscuss());
+            return Optional.of(discussRepository.save(discuss));
+        }
+        return Optional.empty();
     }
 
     public Optional<Discuss> retractDiscuss(UUID id) {
