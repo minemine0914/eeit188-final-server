@@ -25,6 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/user/forgot-password",
                         "/user/check-password/**",
                         "/user/set-new-password/**",
-                        "/user/createUser");
+                        "/user/createUser",
+                        "/user/system/forgot-password");
     }
 }
