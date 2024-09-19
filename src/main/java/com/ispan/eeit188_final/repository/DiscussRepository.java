@@ -28,4 +28,19 @@ public interface DiscussRepository extends JpaRepository<Discuss, UUID> {
                         ORDER BY d.createdAt
                         """)
         Page<Discuss> findByUserId(UUID userId, Pageable pageable);
+
+        @Query("""
+                        SELECT COUNT(d)
+                        FROM Discuss d
+                        WHERE d.user.id = :userId
+                        """)
+        long countDiscussionsByUserId(UUID userId);
+
+        @Query("""
+                        SELECT COUNT(d)
+                        FROM Discuss d
+                        WHERE d.user.id = :userId
+                        AND d.house.id = :houseId
+                        """)
+        long countDiscussionsByUserIdAndHouseId(UUID userId, UUID houseId);
 }
