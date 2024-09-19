@@ -18,56 +18,74 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ispan.eeit188_final.dto.HouseMongoDTO;
 import com.ispan.eeit188_final.model.HouseMongo;
-import com.ispan.eeit188_final.model.Ticket;
 import com.ispan.eeit188_final.service.HouseMongoService;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/house/mongo")
 public class HouseMongoController {
-	
+
 	@Autowired
 	private HouseMongoService houseMongoService;
 
-	//紀錄某User是否對某House按過: 愛心, 點擊, 分享, 評分
-	
-	//一般查詢全部
+	// 紀錄某User是否對某House按過: 愛心, 點擊, 分享, 評分
+
+	// 一般查詢全部
 	@GetMapping("/")
 	public List<HouseMongo> findAll() {
 		return houseMongoService.findAll();
 	}
 
-	//複雜條件查詢
+	// 複雜條件查詢(目前只有排序用的4個變數)
 	@PostMapping("/page")
-	public Page<HouseMongo> findAll(HouseMongoDTO houseMongoDTO) {
+	public Page<HouseMongo> findAll(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.findAll(houseMongoDTO);
 	}
-	
-	//依資料ID查詢
+
+	// 依資料ID查詢
 	@GetMapping("/{id}")
 	public HouseMongo findById(@PathVariable UUID id) {
 		return houseMongoService.findById(id);
 	}
 
-	//新增
+	// 使用userId和houseId查詢
+	@PostMapping("/find")
+	public HouseMongo findByUserIdAndHouseId(@RequestBody HouseMongoDTO houseMongoDTO) {
+		System.out.println(houseMongoDTO.getUserId());
+		if (houseMongoDTO != null && houseMongoDTO.getUserId() != null && houseMongoDTO.getHouseId() != null) {
+			UUID userId = houseMongoDTO.getUserId();
+			UUID houseId = houseMongoDTO.getHouseId();
+
+			return houseMongoService.findByUserIdAndHouseId(userId, houseId);
+		}
+		return null;
+	}
+	
+	// 使用userId和houseId查詢
+	@GetMapping("/find/{userId}/{houseId}")
+	public HouseMongo findByUserIdAndHouseId(@PathVariable UUID userId,@PathVariable UUID houseId) {
+			return houseMongoService.findByUserIdAndHouseId(userId, houseId);
+	}
+
+	// 新增
 	@PostMapping("/")
 	public HouseMongo create(@RequestBody HouseMongo houseMongo) {
 		return houseMongoService.create(houseMongo);
 	}
-	
-	//修改
+
+	// 修改
 	@PutMapping("/")
 	public HouseMongo Update(@RequestBody HouseMongo houseMongo) {
 		return houseMongoService.update(houseMongo);
 	}
 
-	//刪除
+	// 刪除
 	@DeleteMapping("/{id}")
 	public void deleteById(@PathVariable UUID id) {
 		houseMongoService.deleteById(id);
 	}
 
-	//計算愛心數
+	// 計算愛心數
 	@PostMapping("/count/like")
 	public long countLikesForHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getHouseId() != null) {
@@ -76,8 +94,8 @@ public class HouseMongoController {
 		}
 		return 0;
 	}
-	
-	//計算點擊數
+
+	// 計算點擊數
 	@PostMapping("/count/click")
 	public long countClicksForHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getHouseId() != null) {
@@ -86,8 +104,8 @@ public class HouseMongoController {
 		}
 		return 0;
 	}
-	
-	//計算分享次數
+
+	// 計算分享次數
 	@PostMapping("/count/share")
 	public long countSharesForHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getHouseId() != null) {
@@ -96,73 +114,73 @@ public class HouseMongoController {
 		}
 		return 0;
 	}
-	
-	//設為愛心
+
+	// 設為愛心
 	@PostMapping("/like")
 	public ResponseEntity<HouseMongo> likeHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
-    		HouseMongo like = houseMongoService.likeHouse(houseMongoDto);
-    			return ResponseEntity.ok(like);
-    		}
-    	return ResponseEntity.noContent().build();
+			HouseMongo like = houseMongoService.likeHouse(houseMongoDto);
+			return ResponseEntity.ok(like);
+		}
+		return ResponseEntity.noContent().build();
 	}
 
-	//評分
+	// 評分
 	@PostMapping("/rate")
 	public ResponseEntity<HouseMongo> rateHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
-    		HouseMongo rate = houseMongoService.rateHouse(houseMongoDto);
-    			return ResponseEntity.ok(rate);
-    		}
-    	return ResponseEntity.noContent().build();
+			HouseMongo rate = houseMongoService.rateHouse(houseMongoDto);
+			return ResponseEntity.ok(rate);
+		}
+		return ResponseEntity.noContent().build();
 	}
-	
-	//點擊+1
+
+	// 點擊+1
 	@PostMapping("/click")
 	public ResponseEntity<HouseMongo> clickHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
-    		HouseMongo click = houseMongoService.clickHouse(houseMongoDto);
-    			return ResponseEntity.ok(click);
-    		}
-    	
-    	return ResponseEntity.noContent().build();
+			HouseMongo click = houseMongoService.clickHouse(houseMongoDto);
+			return ResponseEntity.ok(click);
+		}
+
+		return ResponseEntity.noContent().build();
 	}
 
-	//分享+1
+	// 分享+1
 	@PostMapping("/share")
 	public ResponseEntity<HouseMongo> shareHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		if (houseMongoDto != null && houseMongoDto.getUserId() != null && houseMongoDto.getHouseId() != null) {
-    		HouseMongo share = houseMongoService.shareHouse(houseMongoDto);
-    			return ResponseEntity.ok(share);
-    		}
-    	
-    	return ResponseEntity.noContent().build();
+			HouseMongo share = houseMongoService.shareHouse(houseMongoDto);
+			return ResponseEntity.ok(share);
+		}
+
+		return ResponseEntity.noContent().build();
 	}
 
-	//重置愛心(設為沒按愛心)
+	// 重置愛心(設為沒按愛心)
 	@PostMapping("/reset/like")
 	public HouseMongo resetLikeHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		return houseMongoService.resetLikeHouse(houseMongoDto);
 	}
 
-	//重置評分(設為未評分)
+	// 重置評分(設為未評分)
 	@PostMapping("/reset/rate")
 	public HouseMongo resetRateHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		return houseMongoService.resetRateHouse(houseMongoDto);
 	}
-	
-	//重置點擊(設為未點擊)
+
+	// 重置點擊(設為未點擊)
 	@PostMapping("/reset/click")
 	public HouseMongo resetClickHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		return houseMongoService.resetClickHouse(houseMongoDto);
 	}
 
-	//重置分享(設為未分享)
+	// 重置分享(設為未分享)
 	@PostMapping("/reset/share")
 	public HouseMongo resetShareHouse(@RequestBody HouseMongoDTO houseMongoDto) {
 		return houseMongoService.resetShareHouse(houseMongoDto);
 	}
-	
+
 //	@GetMapping("/{id}/{rating}")
 //	public HouseMongo getRating(@PathVariable(name = "id") UUID id, @PathVariable(name = "rating") Integer rating) {
 //		HouseMongo cc = houseMongoRepository.findById(id).orElse(new HouseMongo());
