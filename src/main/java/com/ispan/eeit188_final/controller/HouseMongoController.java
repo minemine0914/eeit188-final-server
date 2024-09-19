@@ -37,9 +37,9 @@ public class HouseMongoController {
 		return houseMongoService.findAll();
 	}
 
-	// 複雜條件查詢
+	// 複雜條件查詢(目前只有排序用的4個變數)
 	@PostMapping("/page")
-	public Page<HouseMongo> findAll(HouseMongoDTO houseMongoDTO) {
+	public Page<HouseMongo> findAll(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.findAll(houseMongoDTO);
 	}
 
@@ -49,18 +49,18 @@ public class HouseMongoController {
 		return houseMongoService.findById(id);
 	}
 
-//	// 複雜條件查詢
-//	@PostMapping("/find")
-//	public HouseMongo findByUserIdAndHouseId(HouseMongoDTO houseMongoDTO) {
-//		System.out.println(houseMongoDTO.getUserId());
-//		if (houseMongoDTO != null && houseMongoDTO.getUserId() != null && houseMongoDTO.getHouseId() != null) {
-//			UUID userId = houseMongoDTO.getUserId();
-//			UUID houseId = houseMongoDTO.getHouseId();
-//
-//			return houseMongoService.findByUserIdAndHouseId(userId, houseId);
-//		}
-//		return null;
-//	}
+	// 使用userId和houseId查詢
+	@PostMapping("/find")
+	public HouseMongo findByUserIdAndHouseId(@RequestBody HouseMongoDTO houseMongoDTO) {
+		System.out.println(houseMongoDTO.getUserId());
+		if (houseMongoDTO != null && houseMongoDTO.getUserId() != null && houseMongoDTO.getHouseId() != null) {
+			UUID userId = houseMongoDTO.getUserId();
+			UUID houseId = houseMongoDTO.getHouseId();
+
+			return houseMongoService.findByUserIdAndHouseId(userId, houseId);
+		}
+		return null;
+	}
 	
 	// 使用userId和houseId查詢
 	@GetMapping("/find/{userId}/{houseId}")
