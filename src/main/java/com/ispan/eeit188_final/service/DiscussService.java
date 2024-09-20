@@ -127,6 +127,8 @@ public class DiscussService {
                         .put("discuss", discuss.getDiscuss())
                         .put("house", discuss.getHouse().getName())
                         .put("houseId", discuss.getHouse().getId())
+                        .put("createdAt", discuss.getCreatedAt())
+                        .put("updatedAt", discuss.getUpdatedAt())
                         .put("externalResourceId", discuss.getHouse().getHouseExternalResourceRecords().get(0).getId());
 
                 jsonArray.put(obj);
