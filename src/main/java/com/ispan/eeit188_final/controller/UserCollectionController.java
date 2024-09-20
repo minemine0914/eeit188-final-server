@@ -29,7 +29,17 @@ public class UserCollectionController {
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
 
-        return userCollectionService.findByUserId(userId, pageNo, pageSize);
+        return userCollectionService.findByUserId(userId, null, pageNo, pageSize);
+    }
+
+    // 查詢特定用戶所有收藏（模糊查詢）
+    @GetMapping("/from-user/{userId}/{houseName}")
+    public ResponseEntity<String> getUserByIdFuse(@PathVariable UUID userId,
+            @PathVariable String houseName,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        return userCollectionService.findByUserId(userId, houseName, pageNo, pageSize);
     }
 
     // 查詢是否收藏 (返回 JSON KEY: isCollect<Boolean>)
@@ -61,6 +71,14 @@ public class UserCollectionController {
     @GetMapping("/from-user/total-count/{userId}")
     public ResponseEntity<String> countAllCollectionsFromUser(@PathVariable UUID userId) {
 
-        return userCollectionService.countTotalCollectionsFromUser(userId);
+        return userCollectionService.countTotalCollectionsFromUser(userId, null);
+    }
+
+    // 查詢特定使用者的總收藏數（模糊查詢）
+    @GetMapping("/from-user/total-count/{userId}/{houseName}")
+    public ResponseEntity<String> countAllCollectionsFromUser(@PathVariable UUID userId,
+            @PathVariable String houseName) {
+
+        return userCollectionService.countTotalCollectionsFromUser(userId, houseName);
     }
 }
