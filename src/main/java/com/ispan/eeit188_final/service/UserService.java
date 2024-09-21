@@ -369,7 +369,7 @@ public class UserService {
                     // Verify the password
                     boolean passwordMatches = passwordEncoder.matches(oldPassword, user.getPassword());
                     if (!passwordMatches) {
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        return ResponseEntity.badRequest()
                                 .body("{\"message\": \"Invalid password\"}");
                     }
 
