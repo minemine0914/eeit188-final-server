@@ -118,25 +118,20 @@ public class HouseExternalResourceController {
         if (finded != null) {
             byte[] imageData = finded.getImage();
             if (imageData != null && imageData.length > 0) {
+                // 設定 Headers
                 HttpHeaders headers = new HttpHeaders();
-
-                // 設置 MIME 類型為 JPEG，根據需要可以動態調整
-                // String mimeType = finded.getType().equalsIgnoreCase("png") ?
-                // MediaType.IMAGE_PNG_VALUE : MediaType.IMAGE_JPEG_VALUE;
-                // headers.setContentType(MediaType.parseMediaType(mimeType));
+                // 設置 MIME-TYPE (根據當時存入資料庫的TYPE)
                 headers.setContentType(MediaType.parseMediaType(finded.getType()));
-
                 // 設置 Cache-Control，允許快取 30 天
                 CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate();
                 headers.setCacheControl(cacheControl);
-
                 // 可選：設置 ETag 或 Last-Modified 來提高快取效率
                 headers.setETag("\"" + finded.getId() + "\"");
-
+                // 成功返回200
                 return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
             } else {
                 // 若圖片數據不存在，返回 404
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                return ResponseEntity.notFound().build();
             }
         }
         return ResponseEntity.notFound().build(); // Return 404 NotFound
