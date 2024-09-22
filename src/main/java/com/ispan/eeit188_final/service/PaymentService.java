@@ -75,11 +75,18 @@ public class PaymentService {
 
                 // 自動 Submit HTML
                 String autoSubmitForm = "<html>" +
-                    "<body onload='document.forms[\"ecpayForm\"].submit()'>" +
-                    ecpayPostForm +
-                    "</body>" +
-                    "</html>";
-                
+                        "<head>" +
+                        "<meta charset=\"UTF-8\">" +
+                        "<title>NOMAD支付</title>" +
+                        "</head>" +
+                        "<body onload='document.forms[\"ecpayForm\"].submit()'>" +
+                        "<div style=\"text-align: center; width: 100%;\">"+
+                        "<p>即將跳轉至綠界支付，請稍候...</p>"+
+                        "</div>" +
+                        ecpayPostForm +
+                        "</body>" +
+                        "</html>";
+
                 return autoSubmitForm;
             }
         }
