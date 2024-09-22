@@ -74,6 +74,10 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @Column(name = "salt", columnDefinition = "nvarchar(max)")
+    @JsonIgnore
+    private String salt;
+
     @Column(name = "about", columnDefinition = "nvarchar(max)")
     private String about;
 
