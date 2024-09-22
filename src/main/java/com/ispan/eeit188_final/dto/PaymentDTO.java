@@ -1,5 +1,7 @@
 package com.ispan.eeit188_final.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -26,4 +28,11 @@ public class PaymentDTO {
     private String totalAmount;
     private String tradeDesc;
     private String itemName;
+
+
+    //
+    private UUID houseId;
+    private UUID userId;
+
+
 }
