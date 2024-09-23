@@ -239,10 +239,74 @@ public class UserService {
                         .body("{\"message\": \"Email not found\"}");
             }
 
+            if (!user.getRole().equals("normal")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("{\"message\": \"You are not normal user\"}");
+            }
+
             // 取得鹽值
             String salt = user.getSalt();
 
-            // 驗證密碼，將使用者輸入的密碼加上存儲的鹽值，然後與資料庫中的哈希密碼比較
+            // 驗證密碼，將使用者輸入的密碼加上存儲的鹽值，然後與資料庫中的雜湊密碼比較
+            String saltedPassword = password + salt;
+
+            // Verify the password
+            boolean passwordMatches = passwordEncoder.matches(saltedPassword, user.getPassword());
+            if (!passwordMatches) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("{\"message\": \"Invalid password\"}");
+            }
+
+            // Generate JWT token
+            String token = Jwts.builder()
+                    .setSubject("userToken")
+                    .claim("id", user.getId().toString())
+                    .claim("role", user.getRole())
+                    .setIssuedAt(new Date())
+                    .setExpiration(new Date(System.currentTimeMillis() + 864_000_00)) // 1 day
+                    .signWith(SignatureAlgorithm.HS256, secretKey) // Use a secure key in production
+                    .compact();
+
+            return ResponseEntity.ok("{\"token\": \"" + token + "\"}");
+        }
+
+        return ResponseEntity.badRequest()
+                .body("{\"message\": \"Invalid JSON request\"}");
+    }
+
+    public ResponseEntity<String> adminLogin(String jsonRequest) throws JSONException {
+        if (jsonRequest != null && !jsonRequest.isEmpty()) {
+            JSONObject obj = new JSONObject(jsonRequest);
+
+            String email = obj.isNull("email") ? null : obj.getString("email");
+            String password = obj.isNull("password") ? null : obj.getString("password");
+
+            if (email == null || email.length() == 0) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"Email can not be null or empty string\"}");
+            }
+
+            if (password == null || password.length() == 0) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"Password can not be null or empty string\"}");
+            }
+
+            // Fetch the user by email
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("{\"message\": \"Email not found\"}");
+            }
+
+            if (!user.getRole().equals("admin")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("{\"message\": \"You are not admin\"}");
+            }
+
+            // 取得鹽值
+            String salt = user.getSalt();
+
+            // 驗證密碼，將使用者輸入的密碼加上存儲的鹽值，然後與資料庫中的雜湊密碼比較
             String saltedPassword = password + salt;
 
             // Verify the password

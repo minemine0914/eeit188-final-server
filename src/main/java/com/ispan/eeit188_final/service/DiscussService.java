@@ -3,6 +3,7 @@ package com.ispan.eeit188_final.service;
 import com.ispan.eeit188_final.dto.DiscussDTO;
 import com.ispan.eeit188_final.model.Discuss;
 import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.HouseMongo;
 import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.DiscussRepository;
 import com.ispan.eeit188_final.repository.HouseRepository;
@@ -30,6 +31,9 @@ public class DiscussService {
 
     @Autowired
     private HouseRepository houseRepository;
+
+    @Autowired
+    private HouseMongoService houseMongoService;
 
     public ResponseEntity<?> createDiscuss(DiscussDTO discussDTO) {
         if (discussDTO.getUserId() == null || discussDTO.getUserId().toString().isEmpty()) {
@@ -93,12 +97,15 @@ public class DiscussService {
         JSONArray jsonArray = new JSONArray();
 
         for (Discuss discuss : discusses) {
+            HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(discuss.getUser().getId(), houseId);
             System.out.println(discuss);
             try {
                 JSONObject obj = new JSONObject()
                         .put("discuss", discuss.getDiscuss())
+                        .put("userId", discuss.getUser().getId())
                         .put("user", discuss.getUser().getName())
-                        .put("avatar", discuss.getUser().getAvatarBase64());
+                        .put("avatar", discuss.getUser().getAvatarBase64())
+                        .put("score", findHouseMongo.getScore());
 
                 jsonArray.put(obj);
 
@@ -108,7 +115,15 @@ public class DiscussService {
         }
 
         JSONObject response = new JSONObject()
-                .put("discusses", jsonArray);
+                .put("discusses", jsonArray)
+                .put("totalElements", discusses.getTotalElements())
+                .put("totalPages", discusses.getTotalPages())
+                .put("numberOfElements", discusses.getNumberOfElements())
+                .put("size", discusses.getSize())
+                .put("number", discusses.getNumber())
+                .put("empty", discusses.getTotalPages() == 0)
+                .put("first", discusses.getNumber() == 0)
+                .put("last", discusses.getTotalPages() == discusses.getNumber() + 1);
 
         return ResponseEntity.ok(response.toString());
     }
