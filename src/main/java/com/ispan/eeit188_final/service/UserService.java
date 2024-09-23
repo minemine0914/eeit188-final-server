@@ -294,12 +294,12 @@ public class UserService {
             // Fetch the user by email
             User user = userRepository.findByEmail(email);
             if (user == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                return ResponseEntity.badRequest()
                         .body("{\"message\": \"Email not found\"}");
             }
 
             if (!user.getRole().equals("admin")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                return ResponseEntity.badRequest()
                         .body("{\"message\": \"You are not admin\"}");
             }
 
@@ -312,7 +312,7 @@ public class UserService {
             // Verify the password
             boolean passwordMatches = passwordEncoder.matches(saltedPassword, user.getPassword());
             if (!passwordMatches) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                return ResponseEntity.badRequest()
                         .body("{\"message\": \"Invalid password\"}");
             }
 
