@@ -20,26 +20,31 @@ public class HouseMongo {
 	// 紀錄某User是否對某House按過: 愛心, 點擊, 分享, 評分
 	// 以及紀錄操作時間
 	@Id
-	private UUID id;
+	@Builder.Default
+	private UUID id = UUID.randomUUID();
 	private UUID userId;
 	private UUID houseId;
-	private Boolean clicked;
-	private Boolean liked;
-	private Boolean shared;
-	private Integer score;
+	@Builder.Default
+	private Boolean clicked = false;
+	@Builder.Default
+	private Boolean liked = false;
+	@Builder.Default
+	private Boolean shared = false;
+	@Builder.Default
+	private Integer score = 0;
 	private Date clickDate;
 	private Date likeDate;
 	private Date shareDate;
 	private Date scoreDate;
 
-	public HouseMongo() {
-		this.id = UUID.randomUUID();
-		this.userId = null;
-		this.houseId = null;
-		this.clicked = false;
-		this.liked = false;
-		this.shared = false;
-		this.score = 0;
-	}
+	// public HouseMongo() {
+	// 	this.id = UUID.randomUUID();
+	// 	this.userId = null;
+	// 	this.houseId = null;
+	// 	this.clicked = false;
+	// 	this.liked = false;
+	// 	this.shared = false;
+	// 	this.score = 0;
+	// }
 
 }
