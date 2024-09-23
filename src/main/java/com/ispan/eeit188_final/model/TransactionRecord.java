@@ -14,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -30,7 +31,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "transaction_record")
+@Table(name = "transaction_record", indexes = {
+        @Index(name = "transaction_record_house_id_index", columnList = "house_id", unique = false),
+        @Index(name = "transaction_record_user_id_index", columnList = "user_id", unique = false),
+        @Index(name = "transaction_record_created_at_index", columnList = "created_at", unique = false) })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class TransactionRecord {
 

@@ -19,6 +19,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -39,7 +40,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "house")
+@Table(name = "house", indexes = {
+        @Index(name = "house_name_index", columnList = "name", unique = false),
+        @Index(name = "house_category_index", columnList = "category", unique = false),
+        @Index(name = "house_latitude_x_index", columnList = "latitude_x", unique = false),
+        @Index(name = "house_longitude_y_index", columnList = "longitude_y", unique = false),
+        @Index(name = "house_country_index", columnList = "country", unique = false),
+        @Index(name = "house_city_index", columnList = "city", unique = false),
+        @Index(name = "house_region_index", columnList = "region", unique = false),
+        @Index(name = "house_adult_index", columnList = "adult", unique = false),
+        @Index(name = "house_child_index", columnList = "child", unique = false),
+        @Index(name = "house_pet_index", columnList = "pet", unique = false),
+        @Index(name = "house_smoke_index", columnList = "smoke", unique = false),
+        @Index(name = "house_living_dining_room_index", columnList = "living_dining_room", unique = false),
+        @Index(name = "house_bathroom_index", columnList = "bathroom", unique = false),
+        @Index(name = "house_restroom_index", columnList = "restroom", unique = false),
+        @Index(name = "house_bedroom_index", columnList = "bedroom", unique = false),
+        @Index(name = "house_show_index", columnList = "show", unique = false),
+        @Index(name = "house_review_index", columnList = "review", unique = false),
+        @Index(name = "house_user_id_index", columnList = "user_id", unique = false),
+})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class House {
     @Id
