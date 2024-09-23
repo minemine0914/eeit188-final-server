@@ -63,7 +63,8 @@ public class DiscussService {
         House house = houseOptional.get();
 
         Optional<Discuss> findDiscuss = discussRepository.findByUserIdAndHouseId(user.getId(), house.getId());
-        Discuss saveDiscuss = null;
+
+        Discuss saveDiscuss;
         if (findDiscuss.isPresent()) {
             saveDiscuss = findDiscuss.get();
             saveDiscuss.setDiscuss(discussDTO.getDiscuss());
@@ -104,6 +105,7 @@ public class DiscussService {
                         .body(discussDTO.getDiscussNotFoundException());
             }
         }
+
         // 儲存並返回新增的Discuss
         return ResponseEntity.ok(discussRepository.save(saveDiscuss));
     }
