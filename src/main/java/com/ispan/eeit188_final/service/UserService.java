@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -179,8 +180,11 @@ public class UserService {
                             .body("{\"message\": \"Password can't be null or empty string\"}");
                 }
 
-                // Password hashed
-                String hashedPassword = passwordEncoder.encode(password);
+                // 生成鹽值
+                String salt = BCrypt.gensalt();
+
+                // 使用加鹽的密碼進行hash
+                String saltedHashedPassword = passwordEncoder.encode(password + salt);
 
                 User newUser = new User();
                 newUser.setName(name);
@@ -191,7 +195,8 @@ public class UserService {
                 newUser.setMobilePhone(mobilePhone);
                 newUser.setAddress(address);
                 newUser.setEmail(email);
-                newUser.setPassword(hashedPassword);
+                newUser.setPassword(saltedHashedPassword);
+                newUser.setSalt(salt);
                 newUser.setAbout(about);
                 newUser.setAvatarBase64(null);
                 newUser.setBackgroundImageBlob(null);
@@ -234,8 +239,14 @@ public class UserService {
                         .body("{\"message\": \"Email not found\"}");
             }
 
+            // 取得鹽值
+            String salt = user.getSalt();
+
+            // 驗證密碼，將使用者輸入的密碼加上存儲的鹽值，然後與資料庫中的哈希密碼比較
+            String saltedPassword = password + salt;
+
             // Verify the password
-            boolean passwordMatches = passwordEncoder.matches(password, user.getPassword());
+            boolean passwordMatches = passwordEncoder.matches(saltedPassword, user.getPassword());
             if (!passwordMatches) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("{\"message\": \"Invalid password\"}");
@@ -366,10 +377,16 @@ public class UserService {
                                 .body("{\"message\": \"password can't be null or empty string\"}");
                     }
 
+                    // 取得鹽值
+                    String salt = user.getSalt();
+
+                    // 驗證密碼，將使用者輸入的密碼加上存儲的鹽值，然後與資料庫中的哈希密碼比較
+                    String saltedPassword = oldPassword + salt;
+
                     // Verify the password
-                    boolean passwordMatches = passwordEncoder.matches(oldPassword, user.getPassword());
+                    boolean passwordMatches = passwordEncoder.matches(saltedPassword, user.getPassword());
                     if (!passwordMatches) {
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        return ResponseEntity.badRequest()
                                 .body("{\"message\": \"Invalid password\"}");
                     }
 
@@ -444,6 +461,61 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<String> adminForgotPassword(String jsonRequest) {
+        try {
+            JSONObject obj = new JSONObject(jsonRequest);
+            String email = obj.isNull("email") ? null : obj.getString("email");
+
+            if (email == null || email.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"Email can't be null or empty\"}");
+            }
+
+            User user = userRepository.findByEmail(email);
+
+            if (user == null) {
+                return ResponseEntity.badRequest()
+                        .body("{\"message\": \"User not found\"}");
+            }
+
+            String resetLink = "http://localhost:5173/system/reset-password";
+
+            String htmlContent = "<p>Click the following link to reset your password:</p>" +
+                    "<a href=\"" + resetLink + "\">Reset Password</a>";
+
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper messageHelper;
+
+            try {
+                messageHelper = new MimeMessageHelper(mimeMessage, true);
+                messageHelper.setFrom("Nomad@example.com");
+                messageHelper.setTo(email);
+                messageHelper.setSubject("Password Reset Request");
+                messageHelper.setText(htmlContent, true);
+                mailSender.send(mimeMessage);
+
+                // Generate JWT token
+                String token = Jwts.builder()
+                        .setSubject("adminResetToken")
+                        .claim("id", user.getId().toString())
+                        .setIssuedAt(new Date())
+                        .setExpiration(new Date(System.currentTimeMillis() + 3 * 60 * 1000)) // 3 minute
+                        .signWith(SignatureAlgorithm.HS256, secretKey) // Use a secure key in production
+                        .compact();
+
+                return ResponseEntity.ok("{\"token\": \"" + token + "\"}");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("{\"message\": \"Error seding email: " + e.getMessage() + "\"}");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"message\": \"Error parsing JSON: " + e.getMessage() + "\"}");
+        }
+    }
+
     public ResponseEntity<String> setNewPassword(UUID id, String jsonRequest) {
         if (id != null && !id.toString().isEmpty()) {
             Optional<User> optional = userRepository.findById(id);
@@ -460,10 +532,14 @@ public class UserService {
                                 .body("{\"message\": \"password can't be null or empty string\"}");
                     }
 
-                    // Password hashed
-                    String hashedPassword = passwordEncoder.encode(newPassword);
+                    // 生成鹽值
+                    String salt = BCrypt.gensalt();
 
-                    user.setPassword(hashedPassword);
+                    // 使用加鹽的密碼進行hash
+                    String saltedHashedPassword = passwordEncoder.encode(newPassword + salt);
+
+                    user.setPassword(saltedHashedPassword);
+                    user.setSalt(salt);
                     userRepository.save(user);
 
                     return ResponseEntity.ok("{\"message\": \"Successfully updated password\"}");

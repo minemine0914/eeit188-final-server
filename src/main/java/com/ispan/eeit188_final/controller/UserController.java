@@ -84,6 +84,13 @@ public class UserController {
         return userService.forgotPassword(jsonRequest);
     }
 
+    // 管理者忘記密碼（發送密碼更新連結到指定email）
+    @PostMapping("/system/forgot-password")
+    public ResponseEntity<String> adminForgotPassword(@RequestBody String jsonRequest) {
+
+        return userService.adminForgotPassword(jsonRequest);
+    }
+
     // 設定新密碼
     @PutMapping("/set-new-password/{id}")
     public ResponseEntity<String> setNewPassword(

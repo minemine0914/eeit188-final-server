@@ -19,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +51,9 @@ public class Discuss {
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
+    @Column(name = "updated_at", columnDefinition = "datetime2")
+    private Timestamp updatedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
     private User user;
@@ -74,5 +78,10 @@ public class Discuss {
     @PrePersist
     public void onCreate() {
         this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }

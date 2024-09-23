@@ -60,6 +60,28 @@ public class DiscussController {
         return discussService.getDiscussionsByUserId(userId, pageNo, pageSize);
     }
 
+    // 計算特定使用者討論總數
+    @GetMapping("/count-from-user/{userId}")
+    public long countDiscussionsByUserId(@PathVariable UUID userId) {
+
+        return discussService.countDiscussionsByUserId(userId);
+    }
+
+    // 計算特定使用者針對定房源討論總數
+    @GetMapping("/count-from-user-and-house/{userId}/{houseId}")
+    public long countDiscussionsByUserId(@PathVariable UUID userId, @PathVariable UUID houseId) {
+
+        return discussService.countDiscussionsByUserIdAndHouseId(userId, houseId);
+    }
+
+    // 修改討論
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Discuss> updateDiscuss(@PathVariable UUID id, @RequestBody DiscussDTO discussDTO) {
+        Optional<Discuss> updatedDiscuss = discussService.updateDiscuss(id, discussDTO);
+        return updatedDiscuss.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     // 收回討論
     @PutMapping("/retract/{id}")
     public ResponseEntity<Discuss> retractDiscuss(@PathVariable UUID id) {

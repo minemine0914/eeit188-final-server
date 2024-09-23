@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -42,6 +43,7 @@ public class HouseExternalResource {
     @Column(name = "url", columnDefinition = "NVARCHAR(MAX)")
     private String url;
 
+    @Lob
     @Column(name = "image", columnDefinition = "varbinary(max)")
     @JsonIgnore
     private byte[] image;

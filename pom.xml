@@ -135,7 +135,7 @@
 		<dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-referencing</artifactId>
-			<version>23-RC</version> 
+			<version>23-RC</version>
 		</dependency>
 		<dependency>
 			<groupId>org.geotools</groupId>
@@ -152,8 +152,23 @@
 			<artifactId>geojson-jackson</artifactId>
 			<version>1.14</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.23.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.23.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+			<version>2.23.1</version>
+			<scope>test</scope>
+		</dependency>		
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
