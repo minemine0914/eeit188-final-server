@@ -121,20 +121,17 @@ public class DiscussService {
         for (Discuss discuss : discusses) {
             HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(discuss.getUser().getId(), houseId);
             System.out.println("Discuss: " + discuss);
-            try {
-                JSONObject obj = new JSONObject()
-                        .put("id", discuss.getId())
-                        .put("discuss", discuss.getDiscuss())
-                        .put("userId", discuss.getUser().getId())
-                        .put("user", discuss.getUser().getName())
-                        .put("avatar", discuss.getUser().getAvatarBase64())
-                        .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null);
+            JSONObject obj = new JSONObject()
+                    .put("id", discuss.getId())
+                    .put("discuss", discuss.getDiscuss())
+                    .put("userId", discuss.getUser().getId())
+                    .put("user", discuss.getUser().getName())
+                    .put("house", discuss.getHouse().getName())
+                    .put("houseId", discuss.getHouse().getId())
+                    .put("avatar", discuss.getUser().getAvatarBase64())
+                    .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null);
 
-                jsonArray.put(obj);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            jsonArray.put(obj);
         }
 
         JSONObject response = new JSONObject()
@@ -161,30 +158,45 @@ public class DiscussService {
             System.out.println(discuss);
             HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(discuss.getUser().getId(),
                     discuss.getHouse().getId());
-            try {
-                JSONObject obj = new JSONObject()
-                        .put("id", discuss.getId())
-                        .put("discuss", discuss.getDiscuss())
-                        .put("house", discuss.getHouse().getName())
-                        .put("houseId", discuss.getHouse().getId())
-                        .put("user", discuss.getUser().getName())
-                        .put("userId", discuss.getUser().getId())
-                        .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null)
-                        .put("createdAt", discuss.getCreatedAt())
-                        .put("updatedAt", discuss.getUpdatedAt())
-                        .put("externalResourceId", discuss.getHouse().getHouseExternalResourceRecords().get(0).getId());
+            JSONObject obj = new JSONObject()
+                    .put("id", discuss.getId())
+                    .put("discuss", discuss.getDiscuss())
+                    .put("house", discuss.getHouse().getName())
+                    .put("houseId", discuss.getHouse().getId())
+                    .put("user", discuss.getUser().getName())
+                    .put("userId", discuss.getUser().getId())
+                    .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null)
+                    .put("createdAt", discuss.getCreatedAt())
+                    .put("updatedAt", discuss.getUpdatedAt())
+                    .put("externalResourceId", discuss.getHouse().getHouseExternalResourceRecords().get(0).getId());
 
-                jsonArray.put(obj);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            jsonArray.put(obj);
         }
 
         JSONObject response = new JSONObject()
                 .put("discusses", jsonArray);
 
         return ResponseEntity.ok(response.toString());
+    }
+
+    public ResponseEntity<?> getDiscussionsByUserIdAndHouseId(UUID userId, UUID houseId) {
+        Optional<Discuss> find = discussRepository.findByUserIdAndHouseId(userId, houseId);
+        if (find.isPresent()) {
+            Discuss discuss = find.get();
+            HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(discuss.getUser().getId(),
+                    discuss.getHouse().getId());
+            JSONObject obj = new JSONObject()
+                    .put("id", discuss.getId())
+                    .put("discuss", discuss.getDiscuss())
+                    .put("userId", discuss.getUser().getId())
+                    .put("user", discuss.getUser().getName())
+                    .put("houseId", discuss.getHouse().getId())
+                    .put("house", discuss.getHouse().getName())
+                    .put("avatar", discuss.getUser().getAvatarBase64())
+                    .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null);
+            return ResponseEntity.ok(obj.toString());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public long countDiscussionsByUserId(UUID userId) {
