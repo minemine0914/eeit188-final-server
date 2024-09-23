@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -37,14 +38,14 @@ public class HouseMongo {
 	private Date shareDate;
 	private Date scoreDate;
 
-	// public HouseMongo() {
-	// 	this.id = UUID.randomUUID();
-	// 	this.userId = null;
-	// 	this.houseId = null;
-	// 	this.clicked = false;
-	// 	this.liked = false;
-	// 	this.shared = false;
-	// 	this.score = 0;
-	// }
+	public HouseMongo() {
+		this.id = UUID.randomUUID();
+		this.userId = null;
+		this.houseId = null;
+		this.clicked = false;
+		this.liked = false;
+		this.shared = false;
+		this.score = 0;
+	}
 
 }
