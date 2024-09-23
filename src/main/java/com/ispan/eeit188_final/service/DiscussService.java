@@ -62,11 +62,35 @@ public class DiscussService {
         User user = userOptional.get();
         House house = houseOptional.get();
 
-        Discuss newDiscuss = new Discuss();
-        newDiscuss.setDiscuss(discussDTO.getDiscuss());
-        newDiscuss.setShow(true);
-        newDiscuss.setUser(user);
-        newDiscuss.setHouse(house);
+        Optional<Discuss> findDiscuss = discussRepository.findByUserIdAndHouseId(user.getId(), house.getId());
+        Discuss saveDiscuss = null;
+        if (findDiscuss.isPresent()) {
+            saveDiscuss = findDiscuss.get();
+            saveDiscuss.setDiscuss(discussDTO.getDiscuss());
+            saveDiscuss.setShow(discussDTO.getShow() != null ? true : false);
+        } else {
+            saveDiscuss = Discuss.builder()
+                    .user(user)
+                    .house(house)
+                    .discuss(discussDTO.getDiscuss())
+                    .show(discussDTO.getShow() != null ? true : false)
+                    .build();
+        }
+
+        // 如果DTO有夾帶分數儲存分數
+        if (discussDTO.getScore() != null) {
+            HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(user.getId(), house.getId());
+            if (findHouseMongo != null) {
+                findHouseMongo.setScore(discussDTO.getScore());
+                houseMongoService.update(findHouseMongo);
+            } else {
+                houseMongoService.create(HouseMongo.builder()
+                        .houseId(house.getId())
+                        .userId(user.getId())
+                        .score(discussDTO.getScore())
+                        .build());
+            }
+        }
 
         // 確認是否為討論板內回覆
         if (discussDTO.getDiscussId() != null && !discussDTO.getDiscussId().toString().isEmpty()) {
@@ -74,16 +98,14 @@ public class DiscussService {
 
             if (discussOptional.isPresent()) {
                 Discuss discuss = discussOptional.get();
-                newDiscuss.setSubDiscuss(discuss);
+                saveDiscuss.setSubDiscuss(discuss);
             } else {
                 return ResponseEntity.badRequest()
                         .body(discussDTO.getDiscussNotFoundException());
             }
         }
-
-        discussRepository.save(newDiscuss);
-
-        return ResponseEntity.ok(newDiscuss);
+        // 儲存並返回新增的Discuss
+        return ResponseEntity.ok(discussRepository.save(saveDiscuss));
     }
 
     public Optional<Discuss> getDiscuss(UUID id) {
@@ -93,14 +115,15 @@ public class DiscussService {
     public ResponseEntity<String> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
         Page<Discuss> discusses = discussRepository.findByHouseId(houseId, pageRequest);
-
+        System.out.println("Discuss count: " + discusses.getNumberOfElements());
         JSONArray jsonArray = new JSONArray();
 
         for (Discuss discuss : discusses) {
             HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(discuss.getUser().getId(), houseId);
-            System.out.println(discuss);
+            System.out.println("Discuss: " + discuss);
             try {
                 JSONObject obj = new JSONObject()
+                        .put("id", discuss.getId())
                         .put("discuss", discuss.getDiscuss())
                         .put("userId", discuss.getUser().getId())
                         .put("user", discuss.getUser().getName())
@@ -136,12 +159,17 @@ public class DiscussService {
 
         for (Discuss discuss : discusses) {
             System.out.println(discuss);
+            HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(discuss.getUser().getId(),
+                    discuss.getHouse().getId());
             try {
                 JSONObject obj = new JSONObject()
                         .put("id", discuss.getId())
                         .put("discuss", discuss.getDiscuss())
                         .put("house", discuss.getHouse().getName())
                         .put("houseId", discuss.getHouse().getId())
+                        .put("user", discuss.getUser().getName())
+                        .put("userId", discuss.getUser().getId())
+                        .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null)
                         .put("createdAt", discuss.getCreatedAt())
                         .put("updatedAt", discuss.getUpdatedAt())
                         .put("externalResourceId", discuss.getHouse().getHouseExternalResourceRecords().get(0).getId());
@@ -171,7 +199,23 @@ public class DiscussService {
         Optional<Discuss> optionalDiscuss = discussRepository.findById(id);
         if (optionalDiscuss.isPresent()) {
             Discuss discuss = optionalDiscuss.get();
+            User user = discuss.getUser();
+            House house = discuss.getHouse();
             discuss.setDiscuss(discussDTO.getDiscuss());
+            // 如果DTO有夾帶分數儲存分數
+            if (discussDTO.getScore() != null) {
+                HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(user.getId(), house.getId());
+                if (findHouseMongo != null) {
+                    findHouseMongo.setScore(discussDTO.getScore());
+                    houseMongoService.update(findHouseMongo);
+                } else {
+                    houseMongoService.create(HouseMongo.builder()
+                            .houseId(discuss.getId())
+                            .userId(user.getId())
+                            .score(discussDTO.getScore())
+                            .build());
+                }
+            }
             return Optional.of(discussRepository.save(discuss));
         }
         return Optional.empty();
