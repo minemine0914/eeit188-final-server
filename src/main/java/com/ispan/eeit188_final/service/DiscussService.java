@@ -105,7 +105,7 @@ public class DiscussService {
                         .put("userId", discuss.getUser().getId())
                         .put("user", discuss.getUser().getName())
                         .put("avatar", discuss.getUser().getAvatarBase64())
-                        .put("score", findHouseMongo.getScore());
+                        .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null);
 
                 jsonArray.put(obj);
 
