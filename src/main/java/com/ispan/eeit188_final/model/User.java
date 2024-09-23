@@ -39,7 +39,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @Table(name = "[user]", indexes = {
-        @Index(name = "user_email_index", columnList = "email", unique = false),
+        @Index(name = "user_email_index", columnList = "email", unique = true),
         @Index(name = "user_password_index", columnList = "password", unique = false),
         @Index(name = "user_salt_index", columnList = "salt", unique = false) })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
