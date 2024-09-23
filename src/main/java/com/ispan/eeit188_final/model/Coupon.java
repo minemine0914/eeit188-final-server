@@ -14,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -30,7 +31,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "coupon")
+@Table(name = "coupon", indexes = {
+        @Index(name = "coupon_user_id_index", columnList = "user_id", unique = false),
+        @Index(name = "coupon_created_at_index", columnList = "created_at", unique = false) })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Coupon {
 
@@ -53,7 +56,8 @@ public class Coupon {
 
     // 與 House 的關聯
     // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
+    // @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false,
+    // columnDefinition = "UNIQUEIDENTIFIER")
     // @JsonIgnore
     // private House house;
 

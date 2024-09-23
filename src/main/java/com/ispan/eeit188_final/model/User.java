@@ -20,6 +20,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -37,7 +38,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@Table(name = "[user]")
+@Table(name = "[user]", indexes = {
+        @Index(name = "user_email_index", columnList = "email", unique = true),
+        @Index(name = "user_password_index", columnList = "password", unique = false),
+        @Index(name = "user_salt_index", columnList = "salt", unique = false) })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
 
@@ -73,6 +77,10 @@ public class User {
     @Column(name = "password", columnDefinition = "nvarchar(max)", nullable = false)
     @JsonIgnore
     private String password;
+
+    @Column(name = "salt", columnDefinition = "nvarchar(max)")
+    @JsonIgnore
+    private String salt;
 
     @Column(name = "about", columnDefinition = "nvarchar(max)")
     private String about;

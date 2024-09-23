@@ -15,10 +15,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +34,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "discuss")
+@Table(name = "discuss", indexes = {
+        @Index(name = "discuss_show_index", columnList = "show", unique = false),
+        @Index(name = "discuss_created_at_index", columnList = "created_at", unique = false),
+        @Index(name = "discuss_user_id_index", columnList = "user_id", unique = false),
+        @Index(name = "discuss_house_id_index", columnList = "house_id", unique = false) })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Discuss {
 
@@ -49,6 +55,9 @@ public class Discuss {
 
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
+
+    @Column(name = "updated_at", columnDefinition = "datetime2")
+    private Timestamp updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
@@ -74,5 +83,10 @@ public class Discuss {
     @PrePersist
     public void onCreate() {
         this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }

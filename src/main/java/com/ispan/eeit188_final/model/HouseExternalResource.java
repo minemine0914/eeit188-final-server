@@ -12,7 +12,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -28,7 +30,11 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "HouseExternalResource") // 地點外部資源
+@Table(name = "HouseExternalResource", indexes = {
+        @Index(name = "HouseExternalResource_house_id_index", columnList = "house_id", unique = false),
+        @Index(name = "HouseExternalResource_type_index", columnList = "type", unique = false),
+        @Index(name = "HouseExternalResource_created_at_index", columnList = "created_at", unique = false)
+}) // 地點外部資源
 public class HouseExternalResource {
 
     @Id
@@ -42,6 +48,7 @@ public class HouseExternalResource {
     @Column(name = "url", columnDefinition = "NVARCHAR(MAX)")
     private String url;
 
+    @Lob
     @Column(name = "image", columnDefinition = "varbinary(max)")
     @JsonIgnore
     private byte[] image;

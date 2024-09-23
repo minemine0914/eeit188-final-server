@@ -35,10 +35,18 @@ public class UserCollectionService {
     @Autowired
     private HouseRepository houseRepository;
 
-    public ResponseEntity<String> findByUserId(UUID userId, int pageNo, int pageSize) {
+    public ResponseEntity<String> findByUserId(UUID userId, String houseName, int pageNo, int pageSize) {
         if (userId != null && !userId.toString().isEmpty()) {
             Pageable pageable = PageRequest.of(pageNo, pageSize);
-            Page<UserCollection> userCollections = userCollectionRepository.findAllByUserId(userId, pageable);
+            String houseNameString = "%" + houseName + "%";
+
+            Page<UserCollection> userCollections;
+
+            if (houseName == null) {
+                userCollections = userCollectionRepository.findAllByUserId(userId, pageable);
+            } else {
+                userCollections = userCollectionRepository.findAllByUserIdFuse(userId, houseNameString, pageable);
+            }
 
             if (userCollections != null && !userCollections.isEmpty()) {
 
@@ -190,10 +198,17 @@ public class UserCollectionService {
         return ResponseEntity.badRequest().body("{\"message\": \"Invalid ID\"}");
     }
 
-    public ResponseEntity<String> countTotalCollectionsFromUser(UUID userId) {
+    public ResponseEntity<String> countTotalCollectionsFromUser(UUID userId, String houseName) {
         if (userId != null && !userId.toString().isEmpty()) {
 
-            long total = userCollectionRepository.countByUserId(userId);
+            String houseNameString = "%" + houseName + "%";
+            long total;
+
+            if (houseName == null) {
+                total = userCollectionRepository.countByUserId(userId);
+            } else {
+                total = userCollectionRepository.countByUserIdFuse(userId, houseNameString);
+            }
 
             try {
                 JSONObject response = new JSONObject()
