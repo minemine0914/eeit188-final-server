@@ -26,7 +26,7 @@ public class CouponService {
 
     // 預設值
     private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
-    private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
+    private static final Integer PAGEABLE_DEFAULT_LIMIT = 100;
 
     @Autowired
     private CouponRepository couponRepo;
@@ -40,11 +40,11 @@ public class CouponService {
     // Create a new transaction record
     public Coupon create(CouponDTO dto) {
         // if (dto.getUserId() != null && dto.getHouseId() != null) {
-        if (dto.getUserId() != null ) {
+        if (dto.getUserId() != null) {
             // Optional<House> findHouse = houseRepo.findById(dto.getHouseId());
             Optional<User> findUser = userRepo.findById(dto.getUserId());
             // if (findHouse.isPresent() && findUser.isPresent()) {
-            if ( findUser.isPresent()) {
+            if (findUser.isPresent()) {
                 Coupon create = Coupon.builder()
                         // .house(findHouse.get())
                         .user(findUser.get())
