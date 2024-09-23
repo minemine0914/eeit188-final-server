@@ -52,6 +52,13 @@ public class UserController {
         return userService.login(jsonRequest);
     }
 
+    // 管理者登入功能
+    @PostMapping("/system/login")
+    public ResponseEntity<String> adminLogin(@RequestBody String jsonRequest) throws JSONException {
+
+        return userService.adminLogin(jsonRequest);
+    }
+
     // 刪除用戶
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
