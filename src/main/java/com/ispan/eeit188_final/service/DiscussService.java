@@ -127,12 +127,15 @@ public class DiscussService {
             System.out.println("Discuss: " + discuss);
             JSONObject obj = new JSONObject()
                     .put("id", discuss.getId())
-                    .put("discuss", discuss.getDiscuss())
+                    .put("discuss", discuss.getDiscuss() != null ? discuss.getDiscuss() : "")
                     .put("userId", discuss.getUser().getId())
                     .put("user", discuss.getUser().getName())
+                    .put("totalDiscussCount", countDiscussionsByUserId(discuss.getUser().getId()))
                     .put("house", discuss.getHouse().getName())
                     .put("houseId", discuss.getHouse().getId())
                     .put("avatar", discuss.getUser().getAvatarBase64())
+                    .put("createdAt", discuss.getCreatedAt())
+                    .put("updatedAt", discuss.getUpdatedAt())
                     .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null);
 
             jsonArray.put(obj);
@@ -166,7 +169,7 @@ public class DiscussService {
                     .getHouseExternalResourceRecords();
             JSONObject obj = new JSONObject()
                     .put("id", discuss.getId())
-                    .put("discuss", discuss.getDiscuss())
+                    .put("discuss", discuss.getDiscuss() != null ? discuss.getDiscuss() : "")
                     .put("house", discuss.getHouse().getName())
                     .put("houseId", discuss.getHouse().getId())
                     .put("user", discuss.getUser().getName())
