@@ -16,6 +16,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -33,7 +34,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@Table(name = "chat_record")
+@Table(name = "chat_record", indexes = {
+        @Index(name = "chat_record_show_index", columnList = "show", unique = false),
+        @Index(name = "chat_record_sender_id_index", columnList = "sender_id", unique = false),
+        @Index(name = "chat_record_receiver_id_index", columnList = "receiver_id", unique = false),
+        @Index(name = "chat_record_created_at_index", columnList = "created_at", unique = false)
+})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ChatRecord {
 

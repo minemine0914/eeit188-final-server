@@ -7,6 +7,7 @@ import com.ispan.eeit188_final.model.composite.UserCollectionId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@Table(name = "user_collection")
+@Table(name = "user_collection", indexes = {
+        @Index(name = "user_collection_created_at_index", columnList = "created_at", unique = false) })
 public class UserCollection {
 
     @EmbeddedId

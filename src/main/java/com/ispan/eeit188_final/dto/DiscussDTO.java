@@ -27,6 +27,8 @@ public class DiscussDTO {
     private UUID houseId;
     private UUID discussId;
 
+    private Integer score;
+
     // Relationship
     private User user;
     private House house;

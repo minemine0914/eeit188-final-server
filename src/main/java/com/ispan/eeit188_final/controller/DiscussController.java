@@ -59,6 +59,12 @@ public class DiscussController {
 
         return discussService.getDiscussionsByUserId(userId, pageNo, pageSize);
     }
+    // 查詢特定使用者的特定房源討論
+    @GetMapping("/user/{userId}/{houseId}")
+    public ResponseEntity<?> getDiscussionsByUserIdAndHouseId(@PathVariable UUID userId, @PathVariable UUID houseId) {
+
+        return discussService.getDiscussionsByUserIdAndHouseId(userId, houseId);
+    }
 
     // 計算特定使用者討論總數
     @GetMapping("/count-from-user/{userId}")

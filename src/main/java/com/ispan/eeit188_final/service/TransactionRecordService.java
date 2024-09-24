@@ -104,7 +104,30 @@ public class TransactionRecordService {
         String order = Optional.ofNullable(dto.getOrder()).orElse(null);
         // 是否排序
         Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
-        return transactionRecordRepo.findAll(TranscationRecordSpecification.filterTranscationRecords(dto), PageRequest.of(page, limit, sort));
+        return transactionRecordRepo.findAll(TranscationRecordSpecification.filterTranscationRecords(dto),
+                PageRequest.of(page, limit, sort));
+    }
+
+    public TransactionRecord modify(UUID id, TranscationRecordDTO dto) {
+        if (id != null) {
+            Optional<TransactionRecord> existingRecord = transactionRecordRepo.findById(id);
+            if (existingRecord.isPresent()) {
+                TransactionRecord recordToUpdate = existingRecord.get();
+                // 更新屬性
+                if (dto.getCashFlow() != null) {
+                    recordToUpdate.setCashFlow(dto.getCashFlow());
+                }
+                if (dto.getDeal() != null) {
+                    recordToUpdate.setDeal(dto.getDeal());
+                }
+                if (dto.getPlatformIncome() != null) {
+                    recordToUpdate.setPlatformIncome(dto.getPlatformIncome());
+                }
+
+                return transactionRecordRepo.save(recordToUpdate); // 保存更新後的記錄
+            }
+        }
+        return null; // 若未找到記錄，返回 null
     }
 
 }
