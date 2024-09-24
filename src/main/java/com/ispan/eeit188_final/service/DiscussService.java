@@ -158,7 +158,7 @@ public class DiscussService {
     }
 
     public ResponseEntity<String> getDiscussionsByUserId(UUID userId, int pageNo, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNo, pageSize, Sort.by(Direction.ASC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize, Sort.by(Direction.DESC, "createdAt"));
         Page<Discuss> discusses = discussRepository.findByUserId(userId, pageRequest);
 
         JSONArray jsonArray = new JSONArray();
