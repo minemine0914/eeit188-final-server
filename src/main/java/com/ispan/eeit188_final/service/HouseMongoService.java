@@ -107,12 +107,12 @@ public class HouseMongoService {
 
 	// 回傳該House的被點擊總數
 	public long countClicksForHouse(UUID houseId) {
-		return houseMongoRepository.countByHouseIdAndLikedTrue(houseId);
+		return houseMongoRepository.countByHouseIdAndClickedTrue(houseId);
 	}
 
 	// 回傳該House的被分享總數
 	public long countSharesForHouse(UUID houseId) {
-		return houseMongoRepository.countByHouseIdAndLikedTrue(houseId);
+		return houseMongoRepository.countByHouseIdAndSharedTrue(houseId);
 	}
 
 	// 設為愛心 & 取消愛心
