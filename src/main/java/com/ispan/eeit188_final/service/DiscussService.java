@@ -3,6 +3,7 @@ package com.ispan.eeit188_final.service;
 import com.ispan.eeit188_final.dto.DiscussDTO;
 import com.ispan.eeit188_final.model.Discuss;
 import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.HouseExternalResource;
 import com.ispan.eeit188_final.model.HouseMongo;
 import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.DiscussRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -160,6 +162,8 @@ public class DiscussService {
             System.out.println(discuss);
             HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(discuss.getUser().getId(),
                     discuss.getHouse().getId());
+            List<HouseExternalResource> externalResourceId = discuss.getHouse()
+                    .getHouseExternalResourceRecords();
             JSONObject obj = new JSONObject()
                     .put("id", discuss.getId())
                     .put("discuss", discuss.getDiscuss())
@@ -170,7 +174,8 @@ public class DiscussService {
                     .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null)
                     .put("createdAt", discuss.getCreatedAt())
                     .put("updatedAt", discuss.getUpdatedAt())
-                    .put("externalResourceId", discuss.getHouse().getHouseExternalResourceRecords().get(0).getId());
+                    .put("externalResourceId",
+                            externalResourceId.size() > 0 ? externalResourceId.get(0).getId() : "");
 
             jsonArray.put(obj);
         }
