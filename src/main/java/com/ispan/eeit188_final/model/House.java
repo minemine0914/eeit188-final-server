@@ -201,6 +201,12 @@ public class House {
         return user != null ? user.getName() : null;
     }
 
+    // 自訂序列化 userName
+    @JsonProperty("userHouseCount")
+    public Integer userHouseCount() {
+        return user != null ? user.getHouses().size() : null;
+    }
+
     @PrePersist
     public void onCreate() {
         this.createdAt = new Timestamp(System.currentTimeMillis());
