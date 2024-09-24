@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 
@@ -44,6 +45,8 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             return !isTokenExpired(token);
+        } catch (ExpiredJwtException e) {
+            return false; // Token 過期
         } catch (SignatureException e) {
             return false; // Invalid signature, token tampered
         }
