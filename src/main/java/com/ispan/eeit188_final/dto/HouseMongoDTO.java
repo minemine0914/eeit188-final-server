@@ -16,17 +16,17 @@ import lombok.Setter;
 @Builder
 public class HouseMongoDTO {
 	// 紀錄某User是否對某House按過: 愛心, 點擊, 分享, 評分
-	public UUID id;
-	public UUID userId;
-	public UUID houseId;
-	public Boolean clicked;
-	public Boolean liked;
-	public Boolean shared;
-	public Integer score;
-	public Date clickDate;
-	public Date likeDate;
-	public Date shareDate;
-	public Date scoreDate;
+	private UUID id;
+	private UUID userId;
+	private UUID houseId;
+	private Boolean clicked;
+	private Boolean liked;
+	private Boolean shared;
+	private Integer score;
+	private Date clickDate;
+	private Date likeDate;
+	private Date shareDate;
+	private Date scoreDate;
 	
     // 用於分頁、排序
     private Integer page;
@@ -34,6 +34,8 @@ public class HouseMongoDTO {
     private Boolean dir;
     private String order;
 
-    public Integer randomFactor;
+    private Integer randomFactor;
+//    private Boolean getHouseObject;
+//    private String getHouseId;
     
 }

@@ -1,6 +1,8 @@
 package com.ispan.eeit188_final.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,6 +23,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.ispan.eeit188_final.dto.HouseMongoDTO;
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.HouseMongo;
 import com.ispan.eeit188_final.repository.HouseMongoRepository;
 import com.ispan.eeit188_final.repository.HouseRepository;
@@ -46,10 +49,12 @@ public class HouseMongoService {
 	@Autowired
 	private HouseRepository houseRepository;
 
+	// 一般查詢全部
 	public List<HouseMongo> findAll() {
 		return houseMongoRepository.findAll();
 	}
 
+	// 分頁查詢全部(傳排序用的4個變數)
 	public Page<HouseMongo> findAll(HouseMongoDTO houseMongoDTO) {
 		if (houseMongoDTO != null) {
 			Query query = new Query();
@@ -77,67 +82,66 @@ public class HouseMongoService {
 		return null;
 	}
 	
+	// 所有house的ID和平均分數
 	public Page<Map<String, Object>> getAverageScoreGroupedByHouse(HouseMongoDTO houseMongoDTO) {
-        if (houseMongoDTO != null) {
-            // Create the aggregation pipeline
-            GroupOperation groupByHouse = Aggregation.group("houseId").avg("score").as("averageScore");
+	    if (houseMongoDTO != null) {
+	        // Create the aggregation pipeline
+	        GroupOperation groupByHouse = Aggregation.group("houseId").avg("score").as("averageScore");
 
-            Integer randonFactor;
-            if(houseMongoDTO.getRandomFactor()!=null) {
-	            randonFactor=houseMongoDTO.getRandomFactor();
-	            if (randonFactor < 0) { randonFactor = 0; }
-	            if (randonFactor > 100) { randonFactor = 100; }
-            }else {
-            	randonFactor = 0;
-            }
-            
-            // Projection to rename _id to houseId
-            ProjectionOperation project = Aggregation.project()
-                    .and("_id").as("houseId")
-                    .and("averageScore").as("averageScore")
-                    .andExpression("averageScore + (rand() * " + randonFactor + ")").as("averageScoreModified") // Randomness in range [-5, 5]
-                    .andExclude("_id");
+	        Integer randomFactor = houseMongoDTO.getRandomFactor() != null ? 
+	                               Math.min(Math.max(houseMongoDTO.getRandomFactor(), 0), 100) : 0;
 
-            // Combine the stages
-            Aggregation aggregation = Aggregation.newAggregation(groupByHouse, project);
+	        // Projection to rename _id to houseId
+	        ProjectionOperation project = Aggregation.project()
+	                .and("_id").as("houseId")
+	                .and("averageScore").as("averageScore")
+	                .andExpression("averageScore + (rand() * " + randomFactor + ")").as("averageScoreModified")
+	                .andExclude("_id");
 
-            // Get total count first
-            long total = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class).getMappedResults().size();
+	        // Combine the stages
+	        Aggregation aggregation = Aggregation.newAggregation(groupByHouse, project);
 
-            // Set pagination and sorting
-            Integer page = houseMongoDTO.getPage() != null ? houseMongoDTO.getPage() : PAGEABLE_DEFAULT_PAGE;
-            Integer size = houseMongoDTO.getLimit() != null ? houseMongoDTO.getLimit() : PAGEABLE_DEFAULT_LIMIT;
-            // Sorting
-            boolean sortDirection = houseMongoDTO.getDir() != null ? houseMongoDTO.getDir() : false;
-            String sortField = houseMongoDTO.getOrder() != null && houseMongoDTO.getOrder().length() != 0
-                    ? houseMongoDTO.getOrder()
-                    : "houseId"; // Default sort field
+	        // Execute the aggregation to get the results
+	        AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
+	        List<Map> mappedResults = results.getMappedResults();
 
-            // Add sorting and pagination to the aggregation
-            aggregation = aggregation.withOptions(Aggregation.newAggregationOptions()
-                    .allowDiskUse(true)
-                    .build());
+	        // Fetch house details one at a time and replace in output
+	        List<Map<String, Object>> output = new ArrayList<>();
+	        for (Map<String, Object> result : mappedResults) {
+	            UUID houseId = (UUID) result.get("houseId");
+	            House house = houseRepository.findById(houseId).orElse(null); // Fetch one house by houseId
 
-            // Execute the aggregation to get the results
-            AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
-            List<Map> mappedResults = results.getMappedResults();
+	            Map<String, Object> outputMap = new HashMap<>(result);
+	            outputMap.put("houseDetails", house); // Replace with actual house details
+	            output.add(outputMap);
+	        }
 
-            // Sort the results
-            List<Map<String, Object>> sortedResults = mappedResults.stream()
-                    .sorted((a, b) -> {
-                        Object val1 = a.get(sortField);
-                        Object val2 = b.get(sortField);
-                        return sortDirection ? ((Comparable) val2).compareTo(val1) : ((Comparable) val1).compareTo(val2);
-                    })
-                    .skip(page * size)
-                    .limit(size)
-                    .collect(Collectors.toList());
+	        // Pagination
+	        long total = output.size();
+	        Integer page = houseMongoDTO.getPage() != null ? houseMongoDTO.getPage() : PAGEABLE_DEFAULT_PAGE;
+	        Integer size = houseMongoDTO.getLimit() != null ? houseMongoDTO.getLimit() : PAGEABLE_DEFAULT_LIMIT;
 
-            // Return the results as a Page object
-            return new PageImpl<>(sortedResults, PageRequest.of(page, size), total);
-        }
-        return Page.empty();
-    }
+	        // Sort the results
+	        boolean sortDirection = houseMongoDTO.getDir() != null ? houseMongoDTO.getDir() : false;
+	        String sortField = houseMongoDTO.getOrder() != null && houseMongoDTO.getOrder().length() != 0
+	                ? houseMongoDTO.getOrder()
+	                : "houseId"; // Default sort field
+
+	        List<Map<String, Object>> sortedResults = output.stream()
+	                .sorted((a, b) -> {
+	                    Object val1 = a.get(sortField);
+	                    Object val2 = b.get(sortField);
+	                    return sortDirection ? ((Comparable) val2).compareTo(val1) : ((Comparable) val1).compareTo(val2);
+	                })
+	                .skip(page * size)
+	                .limit(size)
+	                .collect(Collectors.toList());
+
+	        // Return the results as a Page object
+	        return new PageImpl<>(sortedResults, PageRequest.of(page, size), total);
+	    }
+	    return Page.empty();
+	}
 	
 	public Map<String, Object> getClickCountsByHouseId(UUID userId, UUID houseId) {
         // Create the aggregation pipeline
@@ -200,13 +204,14 @@ public class HouseMongoService {
 		return null;
 	}
 
-	public Page<Map<String, Object>> countClicksForAllHouses(HouseMongoDTO houseMongoDTO) {
+	// 所有house的ID和點擊數
+	public Page<Map<String, Object>> countXXAndHouseForAllHouses(HouseMongoDTO houseMongoDTO, String clickOrShare) {
 	    // Default values for pagination
 	    Integer page = houseMongoDTO.getPage() != null ? houseMongoDTO.getPage() : PAGEABLE_DEFAULT_PAGE;
 	    Integer size = houseMongoDTO.getLimit() != null ? houseMongoDTO.getLimit() : PAGEABLE_DEFAULT_LIMIT;
 
 	    // Match criteria for aggregation
-	    Criteria matchCriteria = Criteria.where("clicked").is(true);
+	    Criteria matchCriteria = Criteria.where(clickOrShare).is(true);
 
 	    // Create the aggregation pipeline
 	    Aggregation aggregation = Aggregation.newAggregation(
@@ -225,21 +230,31 @@ public class HouseMongoService {
 	    // Get total count using the same match criteria
 	    long total = mongoTemplate.count(new Query(matchCriteria), HouseMongo.class);
 
-	    // Transform the output to include houseId and counts
-	    List<Map<String, Object>> response = mappedResults.stream()
-	            .map(result -> Map.of("houseId", result.get("_id"), "counts", result.get("counts")))
-	            .collect(Collectors.toList());
+	    // Transform the output to include houseId and counts, and replace with house details
+	    List<Map<String, Object>> response = new ArrayList<>();
+	    for (Map<String, Object> result : mappedResults) {
+	        UUID houseId = (UUID) result.get("_id");
+	        House house = houseRepository.findById(houseId).orElse(null); // Fetch one house by houseId
+
+	        Map<String, Object> outputMap = new HashMap<>();
+	        outputMap.put("houseId", houseId);
+	        outputMap.put("counts", result.get("counts"));
+	        outputMap.put("houseDetails", house); // Include house details
+
+	        response.add(outputMap);
+	    }
 
 	    return new PageImpl<>(response, PageRequest.of(page, size), total);
 	}
 	
-	public Page<Map<String, Object>> countSharesForAllHouses(HouseMongoDTO houseMongoDTO) {
+	// 所有house的ID和分享數
+	public Page<Map<String, Object>> countXXForAllHouses(HouseMongoDTO houseMongoDTO, String clickOrShare) {
 	    // Default values for pagination
 	    Integer page = houseMongoDTO.getPage() != null ? houseMongoDTO.getPage() : PAGEABLE_DEFAULT_PAGE;
 	    Integer size = houseMongoDTO.getLimit() != null ? houseMongoDTO.getLimit() : PAGEABLE_DEFAULT_LIMIT;
 
 	    // Match criteria for aggregation
-	    Criteria matchCriteria = Criteria.where("shared").is(true);
+	    Criteria matchCriteria = Criteria.where(clickOrShare).is(true);
 
 	    // Create the aggregation pipeline
 	    Aggregation aggregation = Aggregation.newAggregation(

@@ -1,0 +1,1127 @@
+{
+	"info": {
+		"_postman_id": "9293ec92-bc54-4d5e-8ef0-dd767ddc0961",
+		"name": "[Wu] Final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37759054",
+		"_collection_link": "https://eeit188.postman.co/workspace/EEIT188~f3baf4d8-e327-491e-8b1a-4b98247b0a0b/collection/37759054-9293ec92-bc54-4d5e-8ef0-dd767ddc0961?action=share&source=collection_link&creator=37759054"
+	},
+	"item": [
+		{
+			"name": "ticket",
+			"item": [
+				{
+					"name": "查詢一筆",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/ticket/107ad012-cec6-4394-b7a0-d59bf38e7468",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"ticket",
+								"107ad012-cec6-4394-b7a0-d59bf38e7468"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查詢多筆",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageNum\": 0,\r\n    \"pageSize\": 0,\r\n    \"desc\": false,\r\n    \"orderBy\": \"id\",\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/ticket/findAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"ticket",
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "新增",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"qrCode\": \"asdf\",\r\n    \"userId\": null,\r\n    \"houseId\": null,\r\n    \"startedAt\": \"2001-05-30\",\r\n    \"endedAt\": \"2020-01-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/ticket/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"ticket",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "修改",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"qrCode\": null,\r\n    \"userId\": null,\r\n    \"houseId\": null,\r\n    \"startedAt\": null,\r\n    \"endedAt\": \"2020-02-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/ticket/c427091b-3ebe-4ce2-b4ab-289047b0f0f2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"ticket",
+								"c427091b-3ebe-4ce2-b4ab-289047b0f0f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "刪除一筆",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"qrCode\": null,\r\n    \"userId\": null,\r\n    \"houseId\": null,\r\n    \"startedAt\": null,\r\n    \"endedAt\": \"2020-02-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/ticket/f1992a83-4ef8-4c67-8b23-3deb0acad611",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"ticket",
+								"f1992a83-4ef8-4c67-8b23-3deb0acad611"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "postulate",
+			"item": [
+				{
+					"name": "查詢一筆",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/postulate/05d322e1-42e4-4af1-92c3-33b657b053d2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"postulate",
+								"05d322e1-42e4-4af1-92c3-33b657b053d2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查詢多筆",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageNum\": 0,\r\n    \"pageSize\": 0,\r\n    \"desc\": false,\r\n    \"orderBy\": \"id\",\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/postulate/findAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"postulate",
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "新增",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postulate\": \"QWER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/postulate/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"postulate",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "修改",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postulate\": \"hhh\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/postulate/312c3d0e-028d-42aa-870c-0a3c0159bc8a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"postulate",
+								"312c3d0e-028d-42aa-870c-0a3c0159bc8a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "刪除一筆",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"qrCode\": null,\r\n    \"userId\": null,\r\n    \"houseId\": null,\r\n    \"startedAt\": null,\r\n    \"endedAt\": \"2020-02-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/postulate/eccd8ef3-6749-48a3-a02d-bcaccd4b2015",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"postulate",
+								"eccd8ef3-6749-48a3-a02d-bcaccd4b2015"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "house_postulate",
+			"item": [
+				{
+					"name": "查詢一筆",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/housePostulate/02DFD239-CEC9-4BE4-B041-A391A2D54EC7/1019B625-4A03-47D1-976A-4C1194AB6920",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"housePostulate",
+								"02DFD239-CEC9-4BE4-B041-A391A2D54EC7",
+								"1019B625-4A03-47D1-976A-4C1194AB6920"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查詢多筆",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageNum\": 0,\r\n    \"pageSize\": 0,\r\n    \"desc\": false,\r\n    \"orderBy\": \"id\",\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/housePostulate/findAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"housePostulate",
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "新增",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"houseId\":\"22CEAF8F-07AF-48B6-BBEE-28729C676A7F\",\r\n    \"postulateId\":\"1019B625-4A03-47D1-976A-4C1194AB6920\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/housePostulate/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"housePostulate",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "house_mongo",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"35509466-fbe1-419c-9052-434b8449bfb4\",\r\n    \"houseId\": \"b2272719-1a36-4d7e-ae98-13fde666b95b\",\r\n    \"score\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findOne",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/ee73f341-86ef-4dc1-a0f4-115efcae6d3f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"ee73f341-86ef-4dc1-a0f4-115efcae6d3f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rate(do not use this)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/66de794f50321008a5549978/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"66de794f50321008a5549978",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User設為/取消like 某House",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/like",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User對House評分",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\",\r\n    \"score\": 1\r\n    // 1~5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/rate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User點擊某House",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/click",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"click"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User分享某House",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/share",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"share"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset like",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/reset/like",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"reset",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset rate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/reset/rate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"reset",
+								"rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset click",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/reset/click",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"reset",
+								"click"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset share",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"f27a7b80-4d60-44cf-aa1c-9b44dd375698\",\r\n    \"houseId\": \"168eacba-c4ce-4017-9b8a-39c58494e71b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/reset/share",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"reset",
+								"share"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "分頁查詢全部",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\": 0,\r\n    \"limit\": 30,\r\n    \"dir\": false,\r\n    \"order\": \"score\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/page",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"page"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByUserIdAndHouseId",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n    \"userId\": \"4dbf08c5-421a-4e08-8cd0-009294304656\", \r\n    \"houseId\": \"d049dbbf-a658-461c-a554-2c3b29bc45bb\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/find",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"find"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByUserIdAndHouseId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // demo format: \"http://localhost:8080/house/mongo/find/{userId}/{houseId}\",\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/find/4dbf08c5-421a-4e08-8cd0-009294304656/d049dbbf-a658-461c-a554-2c3b29bc45bb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"find",
+								"4dbf08c5-421a-4e08-8cd0-009294304656",
+								"d049dbbf-a658-461c-a554-2c3b29bc45bb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查詢某House的點擊數",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n    \"houseId\": \"d049dbbf-a658-461c-a554-2c3b29bc45bb\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/count/click",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"count",
+								"click"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查詢某House的like數",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n    \"houseId\": \"d049dbbf-a658-461c-a554-2c3b29bc45bb\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/count/like",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"count",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查詢某House的分享數",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n    \"houseId\": \"d049dbbf-a658-461c-a554-2c3b29bc45bb\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/count/share",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"count",
+								"share"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "平均分數&House",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\": 0,\r\n    \"limit\": 20,\r\n    \"dir\": true,\r\n    // \"order\": \"averageScore\",\r\n    // 用原始分數排序，相當於randomFactor=0\r\n    \"order\": \"averageScoreModified\",\r\n    \"randomFactor\": 3\r\n    // 差距__分以內可能會調換排名，0~100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/scores/average-grouped-by-house",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"scores",
+								"average-grouped-by-house"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "點擊數&HouseId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/count/all/click",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"count",
+								"all",
+								"click"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "分享數&HouseId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/count/all/click",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"count",
+								"all",
+								"click"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "點擊數&House",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/count/all/obj/click",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"count",
+								"all",
+								"obj",
+								"click"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "分享數&House",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/count/all/obj/share",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"count",
+								"all",
+								"obj",
+								"share"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

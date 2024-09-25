@@ -61,11 +61,11 @@ public class HouseMongoController {
 		}
 		return null;
 	}
-	
+
 	// 使用userId和houseId查詢
 	@GetMapping("/find/{userId}/{houseId}")
-	public HouseMongo findByUserIdAndHouseId(@PathVariable UUID userId,@PathVariable UUID houseId) {
-			return houseMongoService.findByUserIdAndHouseId(userId, houseId);
+	public HouseMongo findByUserIdAndHouseId(@PathVariable UUID userId, @PathVariable UUID houseId) {
+		return houseMongoService.findByUserIdAndHouseId(userId, houseId);
 	}
 
 	// 新增
@@ -85,25 +85,37 @@ public class HouseMongoController {
 	public void deleteById(@PathVariable UUID id) {
 		houseMongoService.deleteById(id);
 	}
-	
+
 	// 所有house的ID和平均分數
 	@GetMapping("/scores/average-grouped-by-house")
-    public Page<Map<String, Object>> getAverageScoresGroupedByHouse(@RequestBody HouseMongoDTO houseMongoDTO) {
-        return houseMongoService.getAverageScoreGroupedByHouse(houseMongoDTO);
-    }
-	
-	// 所有house的ID和點擊數
+	public Page<Map<String, Object>> getAverageScoresGroupedByHouse(@RequestBody HouseMongoDTO houseMongoDTO) {
+		return houseMongoService.getAverageScoreGroupedByHouse(houseMongoDTO);
+	}
+
+	// 所有house的ID和點擊數(附帶House物件)
+	@GetMapping("/count/all/obj/click")
+	public Page<Map<String, Object>> getClickCountsAndHouseForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
+		return houseMongoService.countXXAndHouseForAllHouses(houseMongoDTO,"clicked");
+	}
+
+	// 所有house的ID和分享數(附帶House物件)
+	@GetMapping("/count/all/obj/share")
+	public Page<Map<String, Object>> getShareCountsAndHouseForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
+		return houseMongoService.countXXAndHouseForAllHouses(houseMongoDTO,"shared");
+	}
+
+	// 所有house的ID和點擊數(附帶HouseId)
 	@GetMapping("/count/all/click")
-    public Page<Map<String, Object>> getClickCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
-        return houseMongoService.countClicksForAllHouses(houseMongoDTO);
-    }
-	
-	// 所有house的ID和分享數
+	public Page<Map<String, Object>> getClickCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
+		return houseMongoService.countXXForAllHouses(houseMongoDTO,"clicked");
+	}
+
+	// 所有house的ID和分享數(附帶HouseId)
 	@GetMapping("/count/all/share")
-    public Page<Map<String, Object>> getShareCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
-        return houseMongoService.countSharesForAllHouses(houseMongoDTO);
-    }
-	
+	public Page<Map<String, Object>> getShareCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
+		return houseMongoService.countXXForAllHouses(houseMongoDTO,"shared");
+	}
+
 	// 計算愛心數
 	@PostMapping("/count/like")
 	public long countLikesForHouse(@RequestBody HouseMongoDTO houseMongoDto) {
