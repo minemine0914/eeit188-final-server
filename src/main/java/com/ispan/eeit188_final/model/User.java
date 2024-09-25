@@ -109,6 +109,7 @@ public class User {
 
     // 關聯 TransactionRecord
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     @Builder.Default
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
