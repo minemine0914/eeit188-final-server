@@ -74,11 +74,11 @@ public class User {
     @Column(name = "email", columnDefinition = "nvarchar(30)", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password", columnDefinition = "nvarchar(max)", nullable = false)
+    @Column(name = "password", columnDefinition = "nvarchar(255)", nullable = false)
     @JsonIgnore
     private String password;
 
-    @Column(name = "salt", columnDefinition = "nvarchar(max)")
+    @Column(name = "salt", columnDefinition = "nvarchar(50)")
     @JsonIgnore
     private String salt;
 
