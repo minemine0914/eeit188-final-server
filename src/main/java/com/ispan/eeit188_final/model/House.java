@@ -60,7 +60,8 @@ import lombok.Setter;
         @Index(name = "house_review_index", columnList = "review", unique = false),
         @Index(name = "house_user_id_index", columnList = "user_id", unique = false),
 })
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
