@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class HouseMongoController {
 		return houseMongoService.findAll();
 	}
 
-	// 複雜條件查詢(目前只有排序用的4個變數)
+	// 分頁查詢全部(傳排序用的4個變數)
 	@PostMapping("/page")
 	public Page<HouseMongo> findAll(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.findAll(houseMongoDTO);
@@ -84,7 +85,25 @@ public class HouseMongoController {
 	public void deleteById(@PathVariable UUID id) {
 		houseMongoService.deleteById(id);
 	}
-
+	
+	// 所有house的ID和平均分數
+	@GetMapping("/scores/average-grouped-by-house")
+    public Page<Map<String, Object>> getAverageScoresGroupedByHouse(@RequestBody HouseMongoDTO houseMongoDTO) {
+        return houseMongoService.getAverageScoreGroupedByHouse(houseMongoDTO);
+    }
+	
+	// 所有house的ID和點擊數
+	@GetMapping("/count/all/click")
+    public Page<Map<String, Object>> getClickCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
+        return houseMongoService.countClicksForAllHouses(houseMongoDTO);
+    }
+	
+	// 所有house的ID和分享數
+	@GetMapping("/count/all/share")
+    public Page<Map<String, Object>> getShareCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
+        return houseMongoService.countSharesForAllHouses(houseMongoDTO);
+    }
+	
 	// 計算愛心數
 	@PostMapping("/count/like")
 	public long countLikesForHouse(@RequestBody HouseMongoDTO houseMongoDto) {

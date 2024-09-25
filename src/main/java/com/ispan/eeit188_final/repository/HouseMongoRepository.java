@@ -17,5 +17,7 @@ public interface HouseMongoRepository extends MongoRepository<HouseMongo, UUID>,
 	long countByHouseIdAndLikedTrue(UUID houseId);
 	long countByHouseIdAndClickedTrue(UUID houseId);
 	long countByHouseIdAndSharedTrue(UUID houseId);
+	List<HouseMongo> findByClickedTrue();
+	List<HouseMongo> findBySharedTrue();
   
 }

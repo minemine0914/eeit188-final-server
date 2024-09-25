@@ -27,11 +27,13 @@ public class HouseMongoDTO {
 	public Date likeDate;
 	public Date shareDate;
 	public Date scoreDate;
-
+	
     // 用於分頁、排序
     private Integer page;
     private Integer limit;
     private Boolean dir;
     private String order;
 
+    public Integer randomFactor;
+    
 }
