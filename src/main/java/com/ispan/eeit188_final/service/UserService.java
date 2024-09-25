@@ -71,7 +71,8 @@ public class UserService {
                             .put("about", user.getAbout())
                             .put("createdAt", user.getCreatedAt())
                             .put("updatedAt", user.getUpdatedAt())
-                            .put("avatarBase64", user.getAvatarBase64());
+                            .put("avatarBase64", user.getAvatarBase64())
+                            .put("houseCount", user.getHouses().size());
 
                     return ResponseEntity.ok(obj.toString());
                 } catch (JSONException e) {
