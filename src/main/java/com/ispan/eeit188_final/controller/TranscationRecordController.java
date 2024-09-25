@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.controller;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +55,16 @@ public class TranscationRecordController {
         return ResponseEntity.notFound().build(); // Return 404 NotFound
     }
 
+    /** 查詢所有 JPQL */
+    // @GetMapping("/all")
+    // public ResponseEntity<List<Object[]>> getAllTransactionRecords() {
+    // List<Object[]> records = transactionRecordService.getAllTransactionRecords();
+    // return ResponseEntity.ok(records);
+    // }
+
     /** 查詢所有 */
     @GetMapping("/all")
-    public Page<TransactionRecord> all(@ModelAttribute TranscationRecordDTO dto) {
+    public Page<TransactionRecord> allTR(@ModelAttribute TranscationRecordDTO dto) {
         return transactionRecordService.findAll(dto);
     }
 

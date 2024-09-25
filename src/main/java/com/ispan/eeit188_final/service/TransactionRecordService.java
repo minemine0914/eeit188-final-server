@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -94,6 +95,11 @@ public class TransactionRecordService {
         // 是否排序
         Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
         return transactionRecordRepo.findAll(PageRequest.of(page, limit, sort));
+    }
+
+    public List<Object[]> getAllTransactionRecords() {
+        return transactionRecordRepo.findAllTransactionRecords();
+
     }
 
     // 條件查詢
