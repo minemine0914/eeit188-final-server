@@ -15,6 +15,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +119,7 @@ public class DiscussService {
     }
 
     public ResponseEntity<String> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize, Sort.by(Direction.DESC, "createdAt"));
         Page<Discuss> discusses = discussRepository.findByHouseId(houseId, pageRequest);
         System.out.println("Discuss count: " + discusses.getNumberOfElements());
         JSONArray jsonArray = new JSONArray();
@@ -127,12 +129,15 @@ public class DiscussService {
             System.out.println("Discuss: " + discuss);
             JSONObject obj = new JSONObject()
                     .put("id", discuss.getId())
-                    .put("discuss", discuss.getDiscuss())
+                    .put("discuss", discuss.getDiscuss() != null ? discuss.getDiscuss() : "")
                     .put("userId", discuss.getUser().getId())
                     .put("user", discuss.getUser().getName())
+                    .put("totalDiscussCount", countDiscussionsByUserId(discuss.getUser().getId()))
                     .put("house", discuss.getHouse().getName())
                     .put("houseId", discuss.getHouse().getId())
                     .put("avatar", discuss.getUser().getAvatarBase64())
+                    .put("createdAt", discuss.getCreatedAt())
+                    .put("updatedAt", discuss.getUpdatedAt())
                     .put("score", findHouseMongo != null ? findHouseMongo.getScore() : null);
 
             jsonArray.put(obj);
@@ -145,7 +150,7 @@ public class DiscussService {
                 .put("numberOfElements", discusses.getNumberOfElements())
                 .put("size", discusses.getSize())
                 .put("number", discusses.getNumber())
-                .put("empty", discusses.getTotalPages() == 0)
+                .put("empty", discusses.isEmpty())
                 .put("first", discusses.getNumber() == 0)
                 .put("last", discusses.getTotalPages() == discusses.getNumber() + 1);
 
@@ -153,7 +158,7 @@ public class DiscussService {
     }
 
     public ResponseEntity<String> getDiscussionsByUserId(UUID userId, int pageNo, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize, Sort.by(Direction.DESC, "createdAt"));
         Page<Discuss> discusses = discussRepository.findByUserId(userId, pageRequest);
 
         JSONArray jsonArray = new JSONArray();
@@ -166,7 +171,7 @@ public class DiscussService {
                     .getHouseExternalResourceRecords();
             JSONObject obj = new JSONObject()
                     .put("id", discuss.getId())
-                    .put("discuss", discuss.getDiscuss())
+                    .put("discuss", discuss.getDiscuss() != null ? discuss.getDiscuss() : "")
                     .put("house", discuss.getHouse().getName())
                     .put("houseId", discuss.getHouse().getId())
                     .put("user", discuss.getUser().getName())
