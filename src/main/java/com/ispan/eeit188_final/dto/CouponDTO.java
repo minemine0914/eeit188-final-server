@@ -27,6 +27,7 @@ public class CouponDTO {
     private Integer discount;
     private Integer expire;
     private Timestamp createdAt;
+    private String name;
     // search
     private Boolean isExpired;
     // 用於 分頁、排序
