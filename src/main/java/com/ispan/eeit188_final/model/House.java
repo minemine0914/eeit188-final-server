@@ -60,7 +60,8 @@ import lombok.Setter;
         @Index(name = "house_review_index", columnList = "review", unique = false),
         @Index(name = "house_user_id_index", columnList = "user_id", unique = false),
 })
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -199,6 +200,12 @@ public class House {
     @JsonProperty("userName")
     public String userName() {
         return user != null ? user.getName() : null;
+    }
+
+    // 自訂序列化 userName
+    @JsonProperty("userHouseCount")
+    public Integer userHouseCount() {
+        return user != null ? user.getHouses().size() : null;
     }
 
     @PrePersist

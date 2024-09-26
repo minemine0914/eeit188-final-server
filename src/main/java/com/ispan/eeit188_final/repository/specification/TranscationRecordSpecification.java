@@ -25,7 +25,7 @@ public class TranscationRecordSpecification {
     public static Specification<TransactionRecord> filterByUserId(UUID userId) {
         return (root, query, criteriaBuilder) -> {
             if (userId != null) {
-                return criteriaBuilder.equal(root.get("userId"), userId);
+                return criteriaBuilder.equal(root.get("user").get("id"), userId);
             }
             return null;
         };
