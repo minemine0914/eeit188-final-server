@@ -92,6 +92,12 @@ public class HouseMongoController {
 		return houseMongoService.getAverageScoreGroupedByHouse(houseMongoDTO);
 	}
 
+	// user的所有house的ID和平均分數
+	@GetMapping("/scores/average-of-user")
+	public Page<Map<String, Object>> getAverageScoreByUserHouse(@RequestBody HouseMongoDTO houseMongoDTO) {
+		return houseMongoService.getAverageScoreByUserHouse(houseMongoDTO);
+	}
+	
 	// 所有house的ID和點擊數(附帶House物件)
 	@GetMapping("/count/all/obj/click")
 	public Page<Map<String, Object>> getClickCountsAndHouseForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {

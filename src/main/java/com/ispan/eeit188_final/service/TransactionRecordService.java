@@ -27,6 +27,8 @@ public class TransactionRecordService {
     private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
     private static final Integer PAGEABLE_DEFAULT_LIMIT = 100;
 
+    private static final Integer COMMISSION = 5; // 平台抽成比例，單位(%)
+
     @Autowired
     private TransactionRecordRepository transactionRecordRepo;
 
@@ -123,6 +125,9 @@ public class TransactionRecordService {
                 // 更新屬性
                 if (dto.getCashFlow() != null) {
                     recordToUpdate.setCashFlow(dto.getCashFlow());
+                    if (dto.getPlatformIncome() == null) {
+                        recordToUpdate.setPlatformIncome(dto.getCashFlow() * COMMISSION / 100);
+                    }
                 }
                 if (dto.getDeal() != null) {
                     recordToUpdate.setDeal(dto.getDeal());

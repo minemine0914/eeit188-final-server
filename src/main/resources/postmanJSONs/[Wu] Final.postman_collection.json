@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "9293ec92-bc54-4d5e-8ef0-dd767ddc0961",
+		"_postman_id": "a6d84a03-2571-4475-bf69-d6d7f3d6562d",
 		"name": "[Wu] Final",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "37759054",
-		"_collection_link": "https://eeit188.postman.co/workspace/EEIT188~f3baf4d8-e327-491e-8b1a-4b98247b0a0b/collection/37759054-9293ec92-bc54-4d5e-8ef0-dd767ddc0961?action=share&source=collection_link&creator=37759054"
+		"_exporter_id": "37759054"
 	},
 	"item": [
 		{
@@ -980,6 +979,40 @@
 					"response": []
 				},
 				{
+					"name": "平均分數&House of host",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\": 0,\r\n    \"limit\": 2000,\r\n    \"dir\": true,\r\n    // 房東的ID，查詢名下的House\r\n    \"userId\":\"CC5F4A16-3E3D-4566-87A4-5BAE966D9E4E\",\r\n    \"order\": \"averageScore\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/house/mongo/scores/average-of-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"house",
+								"mongo",
+								"scores",
+								"average-of-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "點擊數&HouseId",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -1024,7 +1057,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
+							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 1,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1059,7 +1092,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
+							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\",\r\n    // 如果有已刪除的house紀錄，會回傳該筆資料，預設或false會回傳，設為true則不回傳\r\n    \"ignoreNull\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1095,7 +1128,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\"\r\n}",
+							"raw": "{\r\n    //注意：回傳的totalelement怪怪的，要用的話再看怎麼修\r\n    \"page\": 0,\r\n    \"limit\": 10,\r\n    \"dir\": true,\r\n    \"order\": \"counts\",\r\n    // 如果有已刪除的house紀錄，會回傳該筆資料，預設或false會回傳，設為true則不回傳\r\n    \"ignoreNull\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
