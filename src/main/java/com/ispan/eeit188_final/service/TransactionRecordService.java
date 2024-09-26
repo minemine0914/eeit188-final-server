@@ -25,7 +25,7 @@ import java.util.UUID;
 public class TransactionRecordService {
     // 預設值
     private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
-    private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
+    private static final Integer PAGEABLE_DEFAULT_LIMIT = 100;
 
     @Autowired
     private TransactionRecordRepository transactionRecordRepo;
