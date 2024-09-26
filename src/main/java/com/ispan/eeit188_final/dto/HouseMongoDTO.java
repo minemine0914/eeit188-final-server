@@ -35,6 +35,7 @@ public class HouseMongoDTO {
     private String order;
 
     private Integer randomFactor;
+    private Boolean ignoreNull;
 //    private Boolean getHouseObject;
 //    private String getHouseId;
     
