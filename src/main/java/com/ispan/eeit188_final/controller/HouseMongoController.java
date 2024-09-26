@@ -87,37 +87,37 @@ public class HouseMongoController {
 	}
 
 	// 所有house的ID和平均分數
-	@GetMapping("/scores/average-grouped-by-house")
+	@PostMapping("/scores/average-grouped-by-house")
 	public Page<Map<String, Object>> getAverageScoresGroupedByHouse(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.getAverageScoreGroupedByHouse(houseMongoDTO);
 	}
-
+	
 	// user的所有house的ID和平均分數
-	@GetMapping("/scores/average-of-user")
+	@PostMapping("/scores/average-of-user")
 	public Page<Map<String, Object>> getAverageScoreByUserHouse(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.getAverageScoreByUserHouse(houseMongoDTO);
 	}
 	
 	// 所有house的ID和點擊數(附帶House物件)
-	@GetMapping("/count/all/obj/click")
+	@PostMapping("/count/all/obj/click")
 	public Page<Map<String, Object>> getClickCountsAndHouseForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.countXXAndHouseForAllHouses(houseMongoDTO,"clicked");
 	}
 
 	// 所有house的ID和分享數(附帶House物件)
-	@GetMapping("/count/all/obj/share")
+	@PostMapping("/count/all/obj/share")
 	public Page<Map<String, Object>> getShareCountsAndHouseForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.countXXAndHouseForAllHouses(houseMongoDTO,"shared");
 	}
 
 	// 所有house的ID和點擊數(附帶HouseId)
-	@GetMapping("/count/all/click")
+	@PostMapping("/count/all/click")
 	public Page<Map<String, Object>> getClickCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.countXXForAllHouses(houseMongoDTO,"clicked");
 	}
 
 	// 所有house的ID和分享數(附帶HouseId)
-	@GetMapping("/count/all/share")
+	@PostMapping("/count/all/share")
 	public Page<Map<String, Object>> getShareCountsForAllHouses(@RequestBody HouseMongoDTO houseMongoDTO) {
 		return houseMongoService.countXXForAllHouses(houseMongoDTO,"shared");
 	}
