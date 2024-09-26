@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -755,5 +756,9 @@ public class UserService {
             return ResponseEntity.badRequest()
                     .body("{\"message\": \"User not found\"}");
         }
+    }
+    
+    public List<User> findAllHost(){
+    	return userRepository.findAllHost();
     }
 }
