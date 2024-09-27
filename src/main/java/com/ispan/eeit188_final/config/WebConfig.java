@@ -21,6 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/user/find/**",
                         "/user/find-users",
+                        "/user/find-hosts",
                         "/user/login",
                         "/user/system/login",
                         "/user/forgot-password",

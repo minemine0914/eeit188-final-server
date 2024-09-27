@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,7 +24,9 @@ import java.util.UUID;
 public class TransactionRecordService {
     // 預設值
     private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
-    private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
+    private static final Integer PAGEABLE_DEFAULT_LIMIT = 100;
+
+    private static final Integer COMMISSION = 5; // 平台抽成比例，單位(%)
 
     @Autowired
     private TransactionRecordRepository transactionRecordRepo;
@@ -95,6 +98,11 @@ public class TransactionRecordService {
         return transactionRecordRepo.findAll(PageRequest.of(page, limit, sort));
     }
 
+    public List<Object[]> getAllTransactionRecords() {
+        return transactionRecordRepo.findAllTransactionRecords();
+
+    }
+
     // 條件查詢
     public Page<TransactionRecord> find(TranscationRecordDTO dto) {
         // 頁數 限制 排序
@@ -116,6 +124,9 @@ public class TransactionRecordService {
                 // 更新屬性
                 if (dto.getCashFlow() != null) {
                     recordToUpdate.setCashFlow(dto.getCashFlow());
+                    if (dto.getPlatformIncome() == null) {
+                        recordToUpdate.setPlatformIncome(dto.getCashFlow() * COMMISSION / 100);
+                    }
                 }
                 if (dto.getDeal() != null) {
                     recordToUpdate.setDeal(dto.getDeal());

@@ -35,7 +35,8 @@ import lombok.Setter;
         @Index(name = "transaction_record_house_id_index", columnList = "house_id", unique = false),
         @Index(name = "transaction_record_user_id_index", columnList = "user_id", unique = false),
         @Index(name = "transaction_record_created_at_index", columnList = "created_at", unique = false) })
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class TransactionRecord {
 
     @Id

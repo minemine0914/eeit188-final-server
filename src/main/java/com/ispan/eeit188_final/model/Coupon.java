@@ -54,6 +54,9 @@ public class Coupon {
     @Column(name = "created_at", columnDefinition = "datetime2")
     private Timestamp createdAt;
 
+    @Column(name = "name", columnDefinition = "nvarchar(50)")
+    private String name;
+
     // 與 House 的關聯
     // @ManyToOne(fetch = FetchType.LAZY)
     // @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false,
