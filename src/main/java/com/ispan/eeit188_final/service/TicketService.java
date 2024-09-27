@@ -33,7 +33,7 @@ public class TicketService {
 
 	private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
 	private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
-	
+
 	@Autowired
 	private TicketRepository ticketRepository;
 
@@ -95,6 +95,7 @@ public class TicketService {
 
 		return ticketRepository.findAll(p);
 	}
+
 // don't use this, use DTO
 	public Page<Ticket> findAll(String json) {
 		Integer defalutPageNum = 0;
@@ -181,12 +182,8 @@ public class TicketService {
 			Optional<House> findHouse = houseRepository.findById(ticketDto.getHouseId());
 			Optional<User> findUser = userRepository.findById(ticketDto.getUserId());
 			if (findHouse.isPresent() && findUser.isPresent()) {
-				Ticket ticket = Ticket.builder()
-						.qrCode(ticketDto.getQrCode())
-						.user(findUser.get())
-						.house(findHouse.get())
-						.startedAt(ticketDto.getStartedAt())
-						.endedAt(ticketDto.getEndedAt())
+				Ticket ticket = Ticket.builder().qrCode(ticketDto.getQrCode()).user(findUser.get())
+						.house(findHouse.get()).startedAt(ticketDto.getStartedAt()).endedAt(ticketDto.getEndedAt())
 						.used(false)
 						.createdAt(ticketDto.getCreatedAt() == null ? new Timestamp(System.currentTimeMillis())
 								: ticketDto.getCreatedAt())
@@ -322,5 +319,15 @@ public class TicketService {
 		Specification<Ticket> spec = Specification.where(TicketSpecification.filterTickets(json));
 		return ticketRepository.findAll(spec, pageRequest);
 	}
-	
+
+	public Long countNotUsedTicketsByHouse(UUID houseId) {
+		if (houseId != null) {
+			House house = houseRepository.findById(houseId).orElse(null);
+			if (house != null) {
+				return ticketRepository.countNotUsedTicketsByHouse(house);
+			}
+		}
+		return 0L;
+	}
+
 }
