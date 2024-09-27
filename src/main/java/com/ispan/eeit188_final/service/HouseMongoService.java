@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
@@ -234,6 +235,51 @@ public class HouseMongoService {
 			return new PageImpl<>(sortedResults, PageRequest.of(page, size), total);
 		}
 		return Page.empty();
+	}
+
+	// Method to get total reviews, average score, and score counts from 1 to 5
+	public Map<String, Object> getScoreDetail(UUID houseId) {
+		// 匹配特定的 houseId
+		MatchOperation matchHouseId = Aggregation.match(Criteria.where("houseId").is(houseId));
+
+		// 根據 houseId 分組，以獲取總評價數量、平均分數和分數範圍的統計
+		GroupOperation groupByHouse = Aggregation.group("houseId")
+				.count().as("totalReviews")  // 總評價數量
+				.avg("score").as("averageScore")  // 計算平均分數
+				.sum(ConditionalOperators.when(Criteria.where("score").is(1)).then(1).otherwise(0)).as("scoresInRange0To1")
+				.sum(ConditionalOperators.when(Criteria.where("score").is(2)).then(1).otherwise(0)).as("scoresInRange1To2")
+				.sum(ConditionalOperators.when(Criteria.where("score").is(3)).then(1).otherwise(0)).as("scoresInRange2To3")
+				.sum(ConditionalOperators.when(Criteria.where("score").is(4)).then(1).otherwise(0)).as("scoresInRange3To4")
+				.sum(ConditionalOperators.when(Criteria.where("score").is(5)).then(1).otherwise(0)).as("scoresInRange4To5");
+	
+		// 組合聚合階段
+		Aggregation aggregation = Aggregation.newAggregation(matchHouseId, groupByHouse);
+	
+		// 執行聚合
+		AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
+	
+		// 創建結果地圖以存儲統計數據
+		Map<String, Object> result = new HashMap<>();
+		if (!results.getMappedResults().isEmpty()) {
+			Map<String, Object> scoreCounts = results.getMappedResults().get(0);
+			result.put("totalReviews", scoreCounts.get("totalReviews"));
+			result.put("averageScore", scoreCounts.get("averageScore"));
+			result.put("scoresInRange0To1", scoreCounts.get("scoresInRange0To1"));
+			result.put("scoresInRange1To2", scoreCounts.get("scoresInRange1To2"));
+			result.put("scoresInRange2To3", scoreCounts.get("scoresInRange2To3"));
+			result.put("scoresInRange3To4", scoreCounts.get("scoresInRange3To4"));
+			result.put("scoresInRange4To5", scoreCounts.get("scoresInRange4To5"));
+		} else {
+			result.put("totalReviews", 0);
+			result.put("averageScore", 0.0); // 默認平均分數
+			result.put("scoresInRange0To1", 0);
+			result.put("scoresInRange1To2", 0);
+			result.put("scoresInRange2To3", 0);
+			result.put("scoresInRange3To4", 0);
+			result.put("scoresInRange4To5", 0);
+		}
+	
+		return result;
 	}
 
 	public Map<String, Object> getClickCountsByHouseId(UUID userId, UUID houseId) {
