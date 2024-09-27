@@ -156,6 +156,12 @@ public class HouseSpecification {
                 : cb.equal(root.get("show"), show);
     }
 
+    // 是否上架
+    public static Specification<House> isReviewd(Boolean review) {
+        return (root, query, cb) -> review == null ? cb.conjunction()
+                : cb.equal(root.get("review"), review);
+    }
+
     // 擁有者ID
     public static Specification<House> hasUserId(UUID userId) {
         return (root, query, cb) -> {
@@ -235,6 +241,8 @@ public class HouseSpecification {
         spec = addIfNotNull(spec, dto.getBalcony(), HouseSpecification::hasBalcony);
         // 刊登顯示
         spec = addIfNotNull(spec, dto.getShow(), HouseSpecification::isShown);
+        // 審核顯示
+        spec = addIfNotNull(spec, dto.getReview(), HouseSpecification::isReviewd);
         // 擁有者ID
         spec = addIfNotNull(spec, dto.getUserId(), HouseSpecification::hasUserId);
         // 經緯度區間
