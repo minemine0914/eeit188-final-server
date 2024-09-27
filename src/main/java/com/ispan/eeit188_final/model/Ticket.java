@@ -61,6 +61,9 @@ public class Ticket {
 	@Column(name = "ended_at", columnDefinition = "datetime2")
 	private Timestamp endedAt;
 
+	@Column(name = "used", columnDefinition = "bit")
+	private Boolean used;
+
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
 
