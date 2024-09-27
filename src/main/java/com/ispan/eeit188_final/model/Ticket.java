@@ -55,6 +55,9 @@ public class Ticket {
 	// @Column(name = "house_id", columnDefinition = "uniqueidentifier")
 	// private UUID houseId;
 
+	@Column(name = "used", columnDefinition = "bit")
+	private Boolean used;
+
 	@Column(name = "started_at", columnDefinition = "datetime2")
 	private Timestamp startedAt;
 

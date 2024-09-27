@@ -33,7 +33,7 @@ public class TicketService {
 
 	private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
 	private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
-	
+
 	@Autowired
 	private TicketRepository ticketRepository;
 
@@ -152,9 +152,11 @@ public class TicketService {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 					Timestamp startedAt = Timestamp.valueOf(sdf.format(startedAtString));
 					Timestamp endedAt = Timestamp.valueOf((endedAtString));
+					Boolean used = false;
 
 					Ticket insert = Ticket.builder().qrCode(qrCode).user(findUser.isPresent() ? findUser.get() : null)
-							.house(findHouse.isPresent() ? findHouse.get() : null).startedAt(startedAt).endedAt(endedAt)
+							.house(findHouse.isPresent() ? findHouse.get() : null).used(used).startedAt(startedAt)
+							.endedAt(endedAt)
 							.build();
 
 					return ticketRepository.save(insert);
@@ -214,6 +216,7 @@ public class TicketService {
 						String qrCode = obj.isNull("qrCode") ? null : obj.getString("qrCode");
 						String startedAtString = obj.isNull("startedAt") ? null : obj.getString("startedAt");
 						String endedAtString = obj.isNull("endedAt") ? null : obj.getString("endedAt");
+						Boolean used = obj.isNull("used") ? null : obj.getBoolean("used");
 						Timestamp startedAt;
 						Timestamp endedAt;
 
@@ -226,6 +229,7 @@ public class TicketService {
 						dbData.setHouse(findHouse.isPresent() ? findHouse.get() : null);
 						dbData.setStartedAt(startedAt);
 						dbData.setEndedAt(endedAt);
+						dbData.setUsed(used);
 
 						return dbData;
 					}
@@ -270,6 +274,9 @@ public class TicketService {
 			}
 			if (ticketDto.getEndedAt() != null) {
 				oldTicket.setEndedAt(ticketDto.getEndedAt());
+			}
+			if (ticketDto.getUsed() != null) {
+				oldTicket.setUsed(ticketDto.getUsed());
 			}
 			return ticketRepository.save(oldTicket);
 		}
