@@ -13,4 +13,5 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID>, JpaSpecif
 
 	public List<Ticket> findByUserId(UUID userId);
 	public List<Ticket> findByHouseId(UUID houseId);
+//	public Long countByHouseIdAnd(UUID houseId);
 }

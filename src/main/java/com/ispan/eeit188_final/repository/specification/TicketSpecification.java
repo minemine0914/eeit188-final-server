@@ -51,12 +51,18 @@ public class TicketSpecification {
         return (Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> 
         houseId == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("houseId"), houseId);
     }
+    
+    public static Specification<Ticket> hasUsed(Boolean used) {
+        return (Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> 
+        used == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("used"), used);
+    }
 
     public static Specification<Ticket> filterTickets(String jsonString) {
         JSONObject obj = new JSONObject(jsonString);
 
         UUID userId = obj.isNull("userId") ? null : UUID.fromString(obj.getString("userId"));
         UUID houseId = obj.isNull("houseId") ? null : UUID.fromString(obj.getString("houseId"));
+        Boolean used = obj.isNull("used") ? null : obj.getBoolean("used");
         
         Timestamp minStart;
         Timestamp maxStart;
@@ -74,8 +80,11 @@ public class TicketSpecification {
 			System.out.println("日期格式有誤");
 			maxStart = null;
 		}
+        
+        
         return Specification.where(hasHouseId(houseId))
                 .and(hasUserId(userId))
+                .and(hasUsed(used))
                 .and(startedBetween(minStart, maxStart));
                 
     }

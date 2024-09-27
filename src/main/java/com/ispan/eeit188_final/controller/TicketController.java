@@ -47,6 +47,12 @@ public class TicketController {
     	return ResponseEntity.ok(tickets);
     }
     
+    @PostMapping("/find-condition")
+    public ResponseEntity<Page<Ticket>> findBySpecification(@RequestBody String json){
+    	Page<Ticket> tickets = ticketService.findBySpecification(json);
+    	return ResponseEntity.ok(tickets);
+    }
+    
     @PostMapping("/")
     public ResponseEntity<Ticket> create(@RequestBody TicketDTO ticketDto) {
     	Ticket create = ticketService.create(ticketDto);

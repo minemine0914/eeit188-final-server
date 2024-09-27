@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,6 +34,7 @@ import lombok.Setter;
 		@Index(name = "ticket_house_id_index", columnList = "house_id", unique = false),
 		@Index(name = "ticket_user_id_index", columnList = "user_id", unique = false)
 })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class Ticket {
 
 	@Id
@@ -63,6 +67,9 @@ public class Ticket {
 
 	@Column(name = "ended_at", columnDefinition = "datetime2")
 	private Timestamp endedAt;
+
+	@Column(name = "used", columnDefinition = "bit")
+	private Boolean used;
 
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;

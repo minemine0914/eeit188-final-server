@@ -21,6 +21,7 @@ public class TicketDTO {
 	private UUID houseId;
 	private Timestamp startedAt;
 	private Timestamp endedAt;
+	private Boolean used;
 	private Timestamp createdAt;
 	// 用於 分頁、排序
 	private Integer page;

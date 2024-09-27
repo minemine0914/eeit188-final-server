@@ -95,7 +95,7 @@ public class TicketService {
 
 		return ticketRepository.findAll(p);
 	}
-
+// don't use this, use DTO
 	public Page<Ticket> findAll(String json) {
 		Integer defalutPageNum = 0;
 		Integer defaultPageSize = 10;
@@ -189,6 +189,7 @@ public class TicketService {
 						.house(findHouse.get())
 						.startedAt(ticketDto.getStartedAt())
 						.endedAt(ticketDto.getEndedAt())
+						.used(false)
 						.createdAt(ticketDto.getCreatedAt() == null ? new Timestamp(System.currentTimeMillis())
 								: ticketDto.getCreatedAt())
 						.build();
@@ -306,4 +307,27 @@ public class TicketService {
 		return ticketRepository.findAll(spec, pageRequest);
 	}
 
+	public Page<Ticket> findBySpecification(String json) {
+		Integer defalutPageNum = 0;
+		Integer defaultPageSize = 10;
+
+		JSONObject obj = new JSONObject(json);
+		Integer pageNum = obj.isNull("pageNum") ? defalutPageNum : obj.getInt("pageNum");
+		Integer pageSize = obj.isNull("pageSize") || obj.getInt("pageSize") == 0 ? defaultPageSize
+				: obj.getInt("pageSize");
+		Boolean desc = obj.isNull("desc") ? false : obj.getBoolean("desc");
+		String orderBy = obj.isNull("orderBy") || obj.getString("orderBy").length() == 0 ? "id"
+				: obj.getString("orderBy");
+
+		PageRequest pageRequest;
+		if (orderBy != null) {
+			pageRequest = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
+		} else {
+			pageRequest = PageRequest.of(pageNum, pageSize);
+		}
+
+		Specification<Ticket> spec = Specification.where(TicketSpecification.filterTickets(json));
+		return ticketRepository.findAll(spec, pageRequest);
+	}
+	
 }
