@@ -51,6 +51,7 @@ public class CouponService {
                         .discountRate(dto.getDiscountRate())
                         .discount(dto.getDiscount())
                         .expire(dto.getExpire())
+                        .name(dto.getName())
                         .build();
                 return couponRepo.save(create);
             }
