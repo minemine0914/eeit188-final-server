@@ -29,21 +29,8 @@ import ecpay.payment.integration.domain.AioCheckOutALL;
 @Service
 public class PaymentService {
 
-    private static final String HTML_FAILED_STRING = "<html>\n" +
-            "    <head>\n" +
-            "        <meta charset=\"UTF-8\">\n" +
-            "        <title>NOMAD支付</title>\n" +
-            "    </head>\n" +
-            "    <body>\n" +
-            "        <div style=\"text-align: center; width: 100%;\">\n" +
-            "            <p>交易失敗，請關閉視窗重新預定房源!</p>\n" +
-            "            <button onclick=\"window.close();\">關閉視窗</button>\n" +
-            "        </div>\n" +
-            "    </body>\n" +
-            "</html>";
-
     @Value("${eeit188final.payment.platform-commission}")
-    private Integer platformCommission; // 0 ~ 100 (%)
+    private Double platformCommission; // 0 ~ 100 (%)
 
     @Autowired
     private HouseRepository houseRepo;
@@ -111,12 +98,23 @@ public class PaymentService {
                 Optional<Coupon> findCoupon = couponRepo.findById(paymentDTO.getCouponId());
                 if (findCoupon.isPresent()) {
                     Coupon coupon = findCoupon.get();
-                    currentAmount -= coupon.getDiscount(); // 應用折扣
+
+                    // 檢查是固定金額折扣還是百分比折扣
+                    if (coupon.getDiscountRate() != null && coupon.getDiscountRate() > 0) {
+                        // 應用百分比折扣
+                        currentAmount -= (int) (currentAmount * (coupon.getDiscountRate() / 100.0));
+                    } else if (coupon.getDiscount() != null && coupon.getDiscount() > 0) {
+                        // 應用固定金額折扣
+                        currentAmount -= coupon.getDiscount();
+                    }
+
+                    // 確保金額不會低於0
+                    currentAmount = Math.max(currentAmount, 0);
                 }
             }
 
             // 計算平台抽成
-            Integer platformIncome = (int) (currentAmount * platformCommission / 100);
+            Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
             Integer finalAmount = currentAmount - platformIncome;
 
             // 建立 交易紀錄
