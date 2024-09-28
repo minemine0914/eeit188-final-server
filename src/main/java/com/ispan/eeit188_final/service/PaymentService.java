@@ -108,7 +108,7 @@ public class PaymentService {
                 // 檢查是固定金額折扣還是百分比折扣
                 if (coupon.getDiscountRate() != null && coupon.getDiscountRate() > 0) {
                     // 應用百分比折扣
-                    currentAmount -= (int) (currentAmount * (coupon.getDiscountRate() / 100.0));
+                    currentAmount -= (int) (currentAmount * coupon.getDiscountRate());
                 } else if (coupon.getDiscount() != null && coupon.getDiscount() > 0) {
                     // 應用固定金額折扣
                     currentAmount -= coupon.getDiscount();
@@ -121,7 +121,7 @@ public class PaymentService {
 
         // 計算平台抽成
         Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
-        Integer finalAmount = currentAmount - platformIncome;
+        Integer finalAmount = currentAmount + platformIncome;
 
         // 建立 交易紀錄
         TranscationRecordDTO transcationRecordDTO = createTransactionRecord(findHouse.get(), findUser.get(),
@@ -141,7 +141,7 @@ public class PaymentService {
         String uniqueId = generateUniqueTradeNo();
 
         // 調用綠界支付 API
-        String ecpayPostForm = generateECPayForm(uniqueId, currentAmount, findHouse.get().getName());
+        String ecpayPostForm = generateECPayForm(uniqueId, finalAmount, findHouse.get().getName());
 
         // 返回自動提交表單的 HTML
         return createAutoSubmitForm(ecpayPostForm);
