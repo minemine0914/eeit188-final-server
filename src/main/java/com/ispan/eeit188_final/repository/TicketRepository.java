@@ -22,9 +22,9 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID>, JpaSpecif
 	Long countNotUsedTicketsByHouse(House house);
 
 	@Query("SELECT COUNT(t) FROM Ticket t WHERE t.house = :house " +
-			"AND (t.startedAt < :end AND t.endedAt > :start)")
-	Long countOverlappingTickets(
-			@Param("house") House house,
-			@Param("start") Timestamp start,
-			@Param("end") Timestamp end);
+       "AND (t.startedAt <= :end AND t.endedAt >= :start)")
+Long countOverlappingTickets(
+        @Param("house") House house,
+        @Param("start") Timestamp start,
+        @Param("end") Timestamp end);
 }

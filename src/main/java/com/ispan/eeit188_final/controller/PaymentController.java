@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ispan.eeit188_final.dto.PaymentDTO;
 import com.ispan.eeit188_final.service.PaymentService;
 
-import ecpay.payment.integration.domain.AioCheckOutALL;
-
 @CrossOrigin
 @RestController
 @RequestMapping("/payment")

@@ -1,6 +1,8 @@
 package com.ispan.eeit188_final.service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.NoSuchElementException;
@@ -48,105 +50,101 @@ public class PaymentService {
     private TransactionRecordService transactionRecordService;
 
     public String createOrder(PaymentDTO paymentDTO) {
-        try {
-            // 檢查 User 和 House ID 是否有效
-            if (paymentDTO.getUserId() == null || paymentDTO.getHouseId() == null) {
-                throw new IllegalArgumentException("Invalid User or House ID.");
-            }
-
-            Optional<House> findHouse = houseRepo.findById(paymentDTO.getHouseId());
-            Optional<User> findUser = userRepo.findById(paymentDTO.getUserId());
-
-            if (!findHouse.isPresent()) {
-                throw new NoSuchElementException("House not found.");
-            }
-
-            if (!findUser.isPresent()) {
-                throw new NoSuchElementException("User not found.");
-            }
-
-            // 確認日期範圍是否有效
-            Timestamp[] dateRange = paymentDTO.getDateRange();
-            if (dateRange == null || dateRange.length != 2) {
-                throw new IllegalArgumentException("Invalid date range.");
-            }
-
-            Timestamp start = dateRange[0];
-            Timestamp end = dateRange[1];
-
-            // 確認開始日期必須早於結束日期
-            if (start.after(end)) {
-                throw new IllegalArgumentException("Start date must be earlier than end date.");
-            }
-
-            // 檢查房屋在指定日期範圍內是否可用
-            Boolean isAvailable = ticketService.isHouseAvailable(findHouse.get(), start, end);
-            if (!isAvailable) {
-                throw new IllegalStateException("The house is not available for the selected date range.");
-            }
-
-            // 計算訂房的金額和天數
-            long daysBetween = ChronoUnit.DAYS.between(start.toLocalDateTime(), end.toLocalDateTime());
-            if (daysBetween <= 0) {
-                throw new IllegalArgumentException("Invalid booking duration.");
-            }
-
-            Integer currentAmount = findHouse.get().getPrice() * (int) daysBetween;
-
-            // 應用優惠券折扣
-            if (paymentDTO.getCouponId() != null) {
-                Optional<Coupon> findCoupon = couponRepo.findById(paymentDTO.getCouponId());
-                if (findCoupon.isPresent()) {
-                    Coupon coupon = findCoupon.get();
-
-                    // 檢查是固定金額折扣還是百分比折扣
-                    if (coupon.getDiscountRate() != null && coupon.getDiscountRate() > 0) {
-                        // 應用百分比折扣
-                        currentAmount -= (int) (currentAmount * (coupon.getDiscountRate() / 100.0));
-                    } else if (coupon.getDiscount() != null && coupon.getDiscount() > 0) {
-                        // 應用固定金額折扣
-                        currentAmount -= coupon.getDiscount();
-                    }
-
-                    // 確保金額不會低於0
-                    currentAmount = Math.max(currentAmount, 0);
-                }
-            }
-
-            // 計算平台抽成
-            Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
-            Integer finalAmount = currentAmount - platformIncome;
-
-            // 建立 交易紀錄
-            TranscationRecordDTO transcationRecordDTO = createTransactionRecord(findHouse.get(), findUser.get(),
-                    finalAmount, platformIncome);
-            TransactionRecord transactionRecord = transactionRecordService.create(transcationRecordDTO);
-
-            // 建立 票券
-            TicketDTO ticketDTO = createTicket(findHouse.get(), findUser.get(), transactionRecord, start, end);
-            Ticket ticket = ticketService.create(ticketDTO);
-
-            // 檢查是否成功創建交易和票券
-            if (transactionRecord == null || ticket == null) {
-                throw new IllegalStateException("Failed to create transaction or ticket.");
-            }
-
-            // 使用 UUID 生成唯一的訂單號
-            String uniqueId = generateUniqueTradeNo();
-
-            // 調用綠界支付 API
-            String ecpayPostForm = generateECPayForm(uniqueId, currentAmount, findHouse.get().getName());
-
-            // 返回自動提交表單的 HTML
-            return createAutoSubmitForm(ecpayPostForm);
-        } catch (IllegalArgumentException | NoSuchElementException | IllegalStateException e) {
-            // 捕捉已知錯誤並返回錯誤信息
-            return e.getMessage();
-        } catch (Exception e) {
-            // 捕捉其他非預期錯誤
-            e.printStackTrace();
-            return "An error occurred during the order creation.";
+        // 檢查 User 和 House ID 是否有效
+        if (paymentDTO.getUserId() == null || paymentDTO.getHouseId() == null) {
+            throw new IllegalArgumentException("Invalid User or House ID.");
         }
+
+        Optional<House> findHouse = houseRepo.findById(paymentDTO.getHouseId());
+        Optional<User> findUser = userRepo.findById(paymentDTO.getUserId());
+
+        if (!findHouse.isPresent()) {
+            throw new NoSuchElementException("找不到房源");
+        }
+
+        if (!findUser.isPresent()) {
+            throw new NoSuchElementException("找不到使用者");
+        }
+
+        // 確認日期範圍是否有效
+        Timestamp[] dateRange = paymentDTO.getDateRange();
+        if (dateRange == null || dateRange.length != 2) {
+            throw new IllegalArgumentException("非法的日期區間");
+        }
+
+        Timestamp start = dateRange[0];
+        Timestamp end = dateRange[1];
+
+        // 確認開始日期必須早於或等於結束日期
+        if (start.after(end)) {
+            throw new IllegalArgumentException("起始日期不能晚於結束日期");
+        }
+
+        // 計算訂房的金額和天數
+
+        // 將 Timestamp 轉換為 LocalDate
+        LocalDate startDate = start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // 計算訂房的金額和天數
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1; // +1 以包含結束日
+        if (daysBetween <= 0) {
+            throw new IllegalArgumentException("非法的日期區間，起始日期不能晚於結束日期");
+        }
+
+        // 檢查房屋在指定日期範圍內是否可用
+        Boolean isAvailable = ticketService.isHouseAvailable(findHouse.get(), start, end);
+        if (!isAvailable) {
+            throw new IllegalStateException("目前房源不可預定");
+        }
+
+        Integer currentAmount = findHouse.get().getPrice() * (int) daysBetween;
+
+        // 應用優惠券折扣
+        if (paymentDTO.getCouponId() != null) {
+            Optional<Coupon> findCoupon = couponRepo.findById(paymentDTO.getCouponId());
+            if (findCoupon.isPresent()) {
+                Coupon coupon = findCoupon.get();
+
+                // 檢查是固定金額折扣還是百分比折扣
+                if (coupon.getDiscountRate() != null && coupon.getDiscountRate() > 0) {
+                    // 應用百分比折扣
+                    currentAmount -= (int) (currentAmount * (coupon.getDiscountRate() / 100.0));
+                } else if (coupon.getDiscount() != null && coupon.getDiscount() > 0) {
+                    // 應用固定金額折扣
+                    currentAmount -= coupon.getDiscount();
+                }
+
+                // 確保金額不會低於0
+                currentAmount = Math.max(currentAmount, 0);
+            }
+        }
+
+        // 計算平台抽成
+        Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
+        Integer finalAmount = currentAmount - platformIncome;
+
+        // 建立 交易紀錄
+        TranscationRecordDTO transcationRecordDTO = createTransactionRecord(findHouse.get(), findUser.get(),
+                finalAmount, platformIncome);
+        TransactionRecord transactionRecord = transactionRecordService.create(transcationRecordDTO);
+
+        // 建立 票券
+        TicketDTO ticketDTO = createTicket(findHouse.get(), findUser.get(), transactionRecord, start, end);
+        Ticket ticket = ticketService.create(ticketDTO);
+
+        // 檢查是否成功創建交易和票券
+        if (transactionRecord == null || ticket == null) {
+            throw new IllegalStateException("無法建立交易紀錄或票券");
+        }
+
+        // 使用 UUID 生成唯一的訂單號
+        String uniqueId = generateUniqueTradeNo();
+
+        // 調用綠界支付 API
+        String ecpayPostForm = generateECPayForm(uniqueId, currentAmount, findHouse.get().getName());
+
+        // 返回自動提交表單的 HTML
+        return createAutoSubmitForm(ecpayPostForm);
     }
 
     // 設置交易紀錄
