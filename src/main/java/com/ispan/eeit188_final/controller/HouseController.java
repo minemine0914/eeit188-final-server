@@ -92,6 +92,7 @@ public class HouseController {
     public Page<House> all(@ModelAttribute HouseDTO houseDTO) {
         return houseService.findAll(houseDTO);
     }
+
     /** 查詢所有 */
     @GetMapping("/all-with-score")
     public Page<Map<String, Object>> allWithScore(@ModelAttribute HouseDTO houseDTO) {

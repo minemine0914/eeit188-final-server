@@ -26,8 +26,9 @@ public class TicketDTO {
 	private Timestamp createdAt;
 	private UUID transactionRecordId;
 	// 用於 分頁、排序
-    private Integer page;
-    private Integer limit;
-    private Boolean dir;
-    private String order;
+	private Integer page;
+	private Integer limit;
+	private Boolean dir;
+	private String order;
+	private Boolean used;
 }
