@@ -190,6 +190,11 @@ public class House {
     @Builder.Default
     private Set<Ticket> tickets = new HashSet<>();
 
+    // 與 Discuss 的關聯
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<Discuss> discusses = new HashSet<>();
+
     // 自訂序列化 userId
     @JsonProperty("userId")
     public UUID userId() {

@@ -34,7 +34,7 @@ import lombok.Setter;
 		@Index(name = "ticket_house_id_index", columnList = "house_id", unique = false),
 		@Index(name = "ticket_user_id_index", columnList = "user_id", unique = false)
 })
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Ticket {
 
 	@Id
@@ -58,9 +58,6 @@ public class Ticket {
 	private House house;
 	// @Column(name = "house_id", columnDefinition = "uniqueidentifier")
 	// private UUID houseId;
-
-	@Column(name = "used", columnDefinition = "bit")
-	private Boolean used;
 
 	@Column(name = "started_at", columnDefinition = "datetime2")
 	private Timestamp startedAt;
