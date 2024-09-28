@@ -19,9 +19,11 @@ import org.springframework.stereotype.Service;
 import com.ispan.eeit188_final.dto.TicketDTO;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Ticket;
+import com.ispan.eeit188_final.model.TransactionRecord;
 import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.TicketRepository;
+import com.ispan.eeit188_final.repository.TransactionRecordRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
 import com.ispan.eeit188_final.repository.specification.TicketSpecification;
 
@@ -42,6 +44,9 @@ public class TicketService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private TransactionRecordRepository transactionRecordRepo;
 
 	public Ticket findById(UUID id) {
 		if (id != null) {
@@ -183,10 +188,17 @@ public class TicketService {
 		if (ticketDto.getHouseId() != null && ticketDto.getUserId() != null) {
 			Optional<House> findHouse = houseRepository.findById(ticketDto.getHouseId());
 			Optional<User> findUser = userRepository.findById(ticketDto.getUserId());
+			Optional<TransactionRecord> findTransactionRecord = transactionRecordRepo.findById(ticketDto.getTransactionRecordId());
 			if (findHouse.isPresent() && findUser.isPresent()) {
-				Ticket ticket = Ticket.builder().qrCode(ticketDto.getQrCode()).user(findUser.get())
-						.house(findHouse.get()).startedAt(ticketDto.getStartedAt()).endedAt(ticketDto.getEndedAt())
+				Ticket ticket = Ticket.builder()
+					.qrCode(ticketDto.getQrCode())
+						.user(findUser.get())
+						.house(findHouse.get())
+						.startedAt(ticketDto.getStartedAt())
+						.endedAt(ticketDto.getEndedAt())
 						.used(false)
+						.review(false)
+						.transactionRecord(findTransactionRecord.get())
 						.createdAt(ticketDto.getCreatedAt() == null ? new Timestamp(System.currentTimeMillis())
 								: ticketDto.getCreatedAt())
 						.build();

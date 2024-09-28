@@ -172,8 +172,6 @@ public class PaymentService {
                 .houseId(house.getId())
                 .userId(user.getId())
                 .transactionRecordId(transactionRecord.getId())
-                .used(false)
-                .review(false)
                 .build();
     }
 
