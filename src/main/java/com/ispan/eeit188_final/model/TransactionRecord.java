@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -60,13 +61,15 @@ public class TransactionRecord {
     // 與 House 的關聯
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-    // @JsonIgnore
+    // @JsonIgnoreProperties({"tickets", "discusses"})
+    @JsonIgnore
     private House house;
 
     // 與 User 的關聯
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-    // @JsonIgnore
+    // @JsonIgnoreProperties("tickets")
+    @JsonIgnore
     private User user;
 
     @OneToOne(mappedBy = "transactionRecord", fetch = FetchType.LAZY)
