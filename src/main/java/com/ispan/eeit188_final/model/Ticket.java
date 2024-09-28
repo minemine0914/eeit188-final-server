@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -70,6 +71,10 @@ public class Ticket {
 
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
+
+	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transaction_record_id", referencedColumnName = "id", columnDefinition = "UNIQUEIDENTIFIER")
+    private TransactionRecord transactionRecord;
 
 	@PrePersist
 	public void onCreate() {

@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -67,6 +68,9 @@ public class TransactionRecord {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
     // @JsonIgnore
     private User user;
+
+    @OneToOne(mappedBy = "transactionRecord", fetch = FetchType.LAZY)
+    private Ticket ticket;
 
     // 自訂序列化 userName
     @JsonProperty("userGender")

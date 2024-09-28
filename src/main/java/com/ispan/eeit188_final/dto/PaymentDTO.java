@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.dto;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -21,18 +22,16 @@ import lombok.Setter;
 public class PaymentDTO {
 
     private String tradeNo;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss")
     private String tradeDate;
-
     private String totalAmount;
     private String tradeDesc;
     private String itemName;
 
-
-    //
+    // Create Params
     private UUID houseId;
     private UUID userId;
-
+    private UUID couponId;
+    private Timestamp[] dateRange;
 
 }

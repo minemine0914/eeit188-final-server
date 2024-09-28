@@ -96,7 +96,7 @@ public class TicketService {
 		return ticketRepository.findAll(p);
 	}
 
-// don't use this, use DTO
+	// don't use this, use DTO
 	public Page<Ticket> findAll(String json) {
 		Integer defalutPageNum = 0;
 		Integer defaultPageSize = 10;
@@ -328,6 +328,15 @@ public class TicketService {
 			}
 		}
 		return 0L;
+	}
+
+	// 房源 是否在期間可入住
+	public Boolean isHouseAvailable(House house, Timestamp start, Timestamp end) {
+		// 使用 TicketRepository 來查詢是否有重疊日期的票券
+		Long count = ticketRepository.countOverlappingTickets(house, start, end);
+
+		// 如果重疊的票券數為 0，則房屋可用
+		return count == 0;
 	}
 
 }
