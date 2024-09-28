@@ -30,5 +30,4 @@ public class TicketDTO {
 	private Integer limit;
 	private Boolean dir;
 	private String order;
-	private Boolean used;
 }
