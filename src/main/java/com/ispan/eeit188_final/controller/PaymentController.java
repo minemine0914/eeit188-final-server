@@ -60,8 +60,19 @@ public class PaymentController {
 
     @PostMapping("/house-available")
     public ResponseEntity<?> postMethodName(@RequestBody PaymentDTO paymentDTO) {
-        House findHouse = houseService.findById(paymentDTO.getHouseId());
+        if (paymentDTO.getDateRange() == null || paymentDTO.getHouseId() == null) {
+            return ResponseEntity.badRequest().body("HouseId or dateRange can not be null");
+        }
 
+        if (paymentDTO.getDateRange().length < 1) {
+            return ResponseEntity.badRequest().body("dateRange must have 'start' and 'end' of two array");
+        }
+
+        if (paymentDTO.getDateRange()[0] == null || paymentDTO.getDateRange()[1] == null) {
+            return ResponseEntity.badRequest().body("dateRange start or end date is null");
+        }
+
+        House findHouse = houseService.findById(paymentDTO.getHouseId());
         if (findHouse == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("House not found");
         }
@@ -72,7 +83,7 @@ public class PaymentController {
         if (houseAvailable) {
             return ResponseEntity.ok("House is available");
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("House is not available for the selected dates");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("入住期間已被其他人預定");
         }
     }
 
