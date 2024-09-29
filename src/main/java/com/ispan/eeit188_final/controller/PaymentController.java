@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.controller;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ispan.eeit188_final.dto.PaymentDTO;
+import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.service.HouseService;
 import com.ispan.eeit188_final.service.PaymentService;
+import com.ispan.eeit188_final.service.TicketService;
 
 @CrossOrigin
 @RestController
@@ -21,6 +25,10 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private TicketService ticketService;
+    @Autowired
+    private HouseService houseService;
 
     @PostMapping("/booking-house")
     public ResponseEntity<String> bookingHouse(@RequestBody PaymentDTO paymentDTO) {
@@ -47,6 +55,24 @@ public class PaymentController {
             // 處理其他異常
             e.printStackTrace(); // 紀錄錯誤日誌
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
+    }
+
+    @PostMapping("/house-available")
+    public ResponseEntity<?> postMethodName(@RequestBody PaymentDTO paymentDTO) {
+        House findHouse = houseService.findById(paymentDTO.getHouseId());
+
+        if (findHouse == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("House not found");
+        }
+
+        Boolean houseAvailable = ticketService.isHouseAvailable(findHouse, paymentDTO.getDateRange()[0],
+                paymentDTO.getDateRange()[1]);
+
+        if (houseAvailable) {
+            return ResponseEntity.ok("House is available");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("House is not available for the selected dates");
         }
     }
 
