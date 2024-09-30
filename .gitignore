@@ -44,6 +44,4 @@ replay_pid*
 .factorypath
 .settings
 /bin
-# /docker-compose/front/https/*
-# docker-compose/front/https/index.html
 /docker-compose/front/https
