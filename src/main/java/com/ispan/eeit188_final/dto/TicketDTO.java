@@ -21,10 +21,13 @@ public class TicketDTO {
 	private UUID houseId;
 	private Timestamp startedAt;
 	private Timestamp endedAt;
+	private Boolean used;
+	private Boolean review;
 	private Timestamp createdAt;
+	private UUID transactionRecordId;
 	// 用於 分頁、排序
-    private Integer page;
-    private Integer limit;
-    private Boolean dir;
-    private String order;
+	private Integer page;
+	private Integer limit;
+	private Boolean dir;
+	private String order;
 }

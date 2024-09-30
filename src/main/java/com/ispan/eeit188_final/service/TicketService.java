@@ -19,9 +19,11 @@ import org.springframework.stereotype.Service;
 import com.ispan.eeit188_final.dto.TicketDTO;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Ticket;
+import com.ispan.eeit188_final.model.TransactionRecord;
 import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.TicketRepository;
+import com.ispan.eeit188_final.repository.TransactionRecordRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
 import com.ispan.eeit188_final.repository.specification.TicketSpecification;
 
@@ -33,7 +35,7 @@ public class TicketService {
 
 	private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
 	private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
-	
+
 	@Autowired
 	private TicketRepository ticketRepository;
 
@@ -42,6 +44,9 @@ public class TicketService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private TransactionRecordRepository transactionRecordRepo;
 
 	public Ticket findById(UUID id) {
 		if (id != null) {
@@ -96,6 +101,7 @@ public class TicketService {
 		return ticketRepository.findAll(p);
 	}
 
+	// don't use this, use DTO
 	public Page<Ticket> findAll(String json) {
 		Integer defalutPageNum = 0;
 		Integer defaultPageSize = 10;
@@ -152,9 +158,11 @@ public class TicketService {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 					Timestamp startedAt = Timestamp.valueOf(sdf.format(startedAtString));
 					Timestamp endedAt = Timestamp.valueOf((endedAtString));
+					Boolean used = false;
 
 					Ticket insert = Ticket.builder().qrCode(qrCode).user(findUser.isPresent() ? findUser.get() : null)
-							.house(findHouse.isPresent() ? findHouse.get() : null).startedAt(startedAt).endedAt(endedAt)
+							.house(findHouse.isPresent() ? findHouse.get() : null).used(used).startedAt(startedAt)
+							.endedAt(endedAt)
 							.build();
 
 					return ticketRepository.save(insert);
@@ -180,13 +188,17 @@ public class TicketService {
 		if (ticketDto.getHouseId() != null && ticketDto.getUserId() != null) {
 			Optional<House> findHouse = houseRepository.findById(ticketDto.getHouseId());
 			Optional<User> findUser = userRepository.findById(ticketDto.getUserId());
+			Optional<TransactionRecord> findTransactionRecord = transactionRecordRepo.findById(ticketDto.getTransactionRecordId());
 			if (findHouse.isPresent() && findUser.isPresent()) {
 				Ticket ticket = Ticket.builder()
-						.qrCode(ticketDto.getQrCode())
+					.qrCode(ticketDto.getQrCode())
 						.user(findUser.get())
 						.house(findHouse.get())
 						.startedAt(ticketDto.getStartedAt())
 						.endedAt(ticketDto.getEndedAt())
+						.used(false)
+						.review(false)
+						.transactionRecord(findTransactionRecord.get())
 						.createdAt(ticketDto.getCreatedAt() == null ? new Timestamp(System.currentTimeMillis())
 								: ticketDto.getCreatedAt())
 						.build();
@@ -214,6 +226,7 @@ public class TicketService {
 						String qrCode = obj.isNull("qrCode") ? null : obj.getString("qrCode");
 						String startedAtString = obj.isNull("startedAt") ? null : obj.getString("startedAt");
 						String endedAtString = obj.isNull("endedAt") ? null : obj.getString("endedAt");
+						Boolean used = obj.isNull("used") ? null : obj.getBoolean("used");
 						Timestamp startedAt;
 						Timestamp endedAt;
 
@@ -226,6 +239,7 @@ public class TicketService {
 						dbData.setHouse(findHouse.isPresent() ? findHouse.get() : null);
 						dbData.setStartedAt(startedAt);
 						dbData.setEndedAt(endedAt);
+						dbData.setUsed(used);
 
 						return dbData;
 					}
@@ -271,6 +285,9 @@ public class TicketService {
 			if (ticketDto.getEndedAt() != null) {
 				oldTicket.setEndedAt(ticketDto.getEndedAt());
 			}
+			if (ticketDto.getUsed() != null) {
+				oldTicket.setUsed(ticketDto.getUsed());
+			}
 			return ticketRepository.save(oldTicket);
 		}
 		return null;
@@ -297,6 +314,48 @@ public class TicketService {
 
 		Specification<Ticket> spec = Specification.where(TicketSpecification.filterTickets(json));
 		return ticketRepository.findAll(spec, pageRequest);
+	}
+
+	public Page<Ticket> findBySpecification(String json) {
+		Integer defalutPageNum = 0;
+		Integer defaultPageSize = 10;
+
+		JSONObject obj = new JSONObject(json);
+		Integer pageNum = obj.isNull("pageNum") ? defalutPageNum : obj.getInt("pageNum");
+		Integer pageSize = obj.isNull("pageSize") || obj.getInt("pageSize") == 0 ? defaultPageSize
+				: obj.getInt("pageSize");
+		Boolean desc = obj.isNull("desc") ? false : obj.getBoolean("desc");
+		String orderBy = obj.isNull("orderBy") || obj.getString("orderBy").length() == 0 ? "id"
+				: obj.getString("orderBy");
+
+		PageRequest pageRequest;
+		if (orderBy != null) {
+			pageRequest = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
+		} else {
+			pageRequest = PageRequest.of(pageNum, pageSize);
+		}
+
+		Specification<Ticket> spec = Specification.where(TicketSpecification.filterTickets(json));
+		return ticketRepository.findAll(spec, pageRequest);
+	}
+
+	public Long countNotUsedTicketsByHouse(UUID houseId) {
+		if (houseId != null) {
+			House house = houseRepository.findById(houseId).orElse(null);
+			if (house != null) {
+				return ticketRepository.countNotUsedTicketsByHouse(house);
+			}
+		}
+		return 0L;
+	}
+
+	// 房源 是否在期間可入住
+	public Boolean isHouseAvailable(House house, Timestamp start, Timestamp end) {
+		// 使用 TicketRepository 來查詢是否有重疊日期的票券
+		Long count = ticketRepository.countOverlappingTickets(house, start, end);
+
+		// 如果重疊的票券數為 0，則房屋可用
+		return count == 0;
 	}
 
 }

@@ -68,7 +68,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"qrCode\": \"asdf\",\r\n    \"userId\": null,\r\n    \"houseId\": null,\r\n    \"startedAt\": \"2001-05-30\",\r\n    \"endedAt\": \"2020-01-10\"\r\n}",
+							"raw": "{\r\n    \"qrCode\": \"asdf\",\r\n    \"userId\": \"CC5F4A16-3E3D-4566-87A4-5BAE966D9E4E\",\r\n    \"houseId\": \"D049DBBF-A658-461C-A554-2C3B29BC45BB\",\r\n    \r\n    \"startedAt\": \"2001-05-30\",\r\n    \"endedAt\": \"2020-01-10\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -143,6 +143,68 @@
 							"path": [
 								"ticket",
 								"f1992a83-4ef8-4c67-8b23-3deb0acad611"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "條件查詢多筆",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageNum\": 0,\r\n    \"pageSize\": 0,\r\n    \"used\":false,\r\n    \"desc\": false,\r\n    \"orderBy\": \"id\",\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/ticket/find-condition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"ticket",
+								"find-condition"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查詢houseId的count",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/ticket/count/D049DBBF-A658-461C-A554-2C3B29BC45BB",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"ticket",
+								"count",
+								"D049DBBF-A658-461C-A554-2C3B29BC45BB"
 							]
 						}
 					},
@@ -1053,7 +1115,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/house/mongo/count/all/click",
+							"raw": "http://localhost:8080/house/mongo/count/all/share",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1064,7 +1126,7 @@
 								"mongo",
 								"count",
 								"all",
-								"click"
+								"share"
 							]
 						}
 					},
@@ -1131,6 +1193,31 @@
 								"all",
 								"obj",
 								"share"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "取得 房東清單",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/find-hosts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"find-hosts"
 							]
 						}
 					},

@@ -4,6 +4,10 @@ import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,6 +36,7 @@ import lombok.Setter;
 		@Index(name = "ticket_house_id_index", columnList = "house_id", unique = false),
 		@Index(name = "ticket_user_id_index", columnList = "user_id", unique = false)
 })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Ticket {
 
 	@Id
@@ -43,14 +49,12 @@ public class Ticket {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-	// @JsonBackReference
+	@JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses", "backgroundImageBlob", "avatarBase64" })
 	private User user;
-	// @Column(name = "user_id", columnDefinition = "uniqueidentifier")
-	// private UUID userId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-	// @JsonBackReference
+	@JsonIgnoreProperties({ "user", "tickets", "discusses" })
 	private House house;
 	// @Column(name = "house_id", columnDefinition = "uniqueidentifier")
 	// private UUID houseId;
@@ -61,8 +65,18 @@ public class Ticket {
 	@Column(name = "ended_at", columnDefinition = "datetime2")
 	private Timestamp endedAt;
 
+	@Column(name = "used", columnDefinition = "bit")
+	private Boolean used;
+
+	@Column(name = "review", columnDefinition = "bit")
+	private Boolean review;
+
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "transaction_record_id", referencedColumnName = "id", columnDefinition = "UNIQUEIDENTIFIER")
+	private TransactionRecord transactionRecord;
 
 	@PrePersist
 	public void onCreate() {

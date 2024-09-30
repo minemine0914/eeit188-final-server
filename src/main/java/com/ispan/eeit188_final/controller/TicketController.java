@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +46,18 @@ public class TicketController {
     public ResponseEntity<Page<Ticket>> findAll(@RequestBody TicketDTO ticketDTO){
     	Page<Ticket> tickets = ticketService.findAll(ticketDTO);
     	return ResponseEntity.ok(tickets);
+    }
+    
+    @PostMapping("/find-condition")
+    public ResponseEntity<Page<Ticket>> findBySpecification(@RequestBody String json){
+    	Page<Ticket> tickets = ticketService.findBySpecification(json);
+    	return ResponseEntity.ok(tickets);
+    }
+    
+    @GetMapping("/count/{houseId}")
+    public Long countNotUsedTicketsByHouse(@PathVariable UUID houseId) {
+    	return ticketService.countNotUsedTicketsByHouse(houseId);
+    	
     }
     
     @PostMapping("/")

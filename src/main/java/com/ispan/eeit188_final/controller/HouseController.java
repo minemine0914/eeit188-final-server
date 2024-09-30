@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.controller;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,12 @@ public class HouseController {
         return houseService.findAll(houseDTO);
     }
 
+    /** 查詢所有 */
+    @GetMapping("/all-with-score")
+    public Page<Map<String, Object>> allWithScore(@ModelAttribute HouseDTO houseDTO) {
+        return houseService.findAllWithScores(houseDTO);
+    }
+
     /**
      * 條件搜尋
      * JSON keys:
@@ -112,6 +119,11 @@ public class HouseController {
     @PostMapping("/search")
     public Page<House> search(@RequestBody HouseDTO houseDTO) {
         return houseService.find(houseDTO);
+    }
+
+    @PostMapping("/search-with-score")
+    public Page<Map<String, Object>> searchWithScore(@RequestBody HouseDTO houseDTO) {
+        return houseService.findWithScores(houseDTO);
     }
 
 }

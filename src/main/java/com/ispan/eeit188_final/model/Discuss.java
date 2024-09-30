@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
@@ -61,10 +62,12 @@ public class Discuss {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
+    @JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses" })
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
+    @JsonIgnoreProperties({"discusses"})
     private House house;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -74,6 +77,7 @@ public class Discuss {
     // Relationshp
     @OneToMany(mappedBy = "subDiscuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonIgnoreProperties({"user", "house"})
     private List<Discuss> discusses = new ArrayList<>();
 
     @OneToMany(mappedBy = "discuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
