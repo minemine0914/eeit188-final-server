@@ -81,7 +81,7 @@ public class HouseService {
                     .kitchen(Optional.ofNullable(houseDTO.getKitchen()).orElse(false))
                     .balcony(Optional.ofNullable(houseDTO.getBalcony()).orElse(false))
                     .show(Optional.ofNullable(houseDTO.getShow()).orElse(false))
-                    .review(Optional.ofNullable(houseDTO.getReview()).orElse(false))
+                    .review(Optional.ofNullable(houseDTO.getReview()).orElse(null))
                     .build();
             return houseRepo.save(house);
         }
