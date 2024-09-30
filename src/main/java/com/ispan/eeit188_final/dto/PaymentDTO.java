@@ -33,5 +33,6 @@ public class PaymentDTO {
     private UUID userId;
     private UUID couponId;
     private Timestamp[] dateRange;
+    private Integer people;
 
 }

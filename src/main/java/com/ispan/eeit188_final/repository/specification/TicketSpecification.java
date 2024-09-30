@@ -57,12 +57,18 @@ public class TicketSpecification {
         used == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("used"), used);
     }
 
+    public static Specification<Ticket> hasPeople(Integer people) {
+        return (Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> 
+        people == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("people"), people);
+    }
+    
     public static Specification<Ticket> filterTickets(String jsonString) {
         JSONObject obj = new JSONObject(jsonString);
 
         UUID userId = obj.isNull("userId") ? null : UUID.fromString(obj.getString("userId"));
         UUID houseId = obj.isNull("houseId") ? null : UUID.fromString(obj.getString("houseId"));
         Boolean used = obj.isNull("used") ? null : obj.getBoolean("used");
+		Integer people = obj.isNull("people") ? null : obj.getInt("people");
         
         Timestamp minStart;
         Timestamp maxStart;
@@ -85,6 +91,7 @@ public class TicketSpecification {
         return Specification.where(hasHouseId(houseId))
                 .and(hasUserId(userId))
                 .and(hasUsed(used))
+                .and(hasPeople(people))
                 .and(startedBetween(minStart, maxStart));
                 
     }

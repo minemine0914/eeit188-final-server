@@ -23,6 +23,7 @@ public class TicketDTO {
 	private Timestamp endedAt;
 	private Boolean used;
 	private Boolean review;
+	private Integer people;
 	private Timestamp createdAt;
 	private UUID transactionRecordId;
 	// 用於 分頁、排序
