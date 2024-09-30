@@ -358,4 +358,22 @@ public class TicketService {
 		return count == 0;
 	}
 
+	public Ticket updateUsedById(TicketDTO ticketDTO) {
+		if (ticketDTO != null && ticketDTO.getId() != null &&
+		// 假設以createdAt做驗證，檢查是否null
+				ticketDTO.getCreatedAt() != null) {
+			Ticket dbTicket = ticketRepository.findById(ticketDTO.getId()).orElse(null);
+			if (dbTicket != null && dbTicket.getUsed() != true) {
+				// 驗證，假設以createdAt做驗證
+				System.out.println(ticketDTO.getCreatedAt());
+				System.out.println(dbTicket.getCreatedAt());
+				if (ticketDTO.getCreatedAt().equals(dbTicket.getCreatedAt())) {
+					dbTicket.setUsed(true);
+					return dbTicket;
+				}
+			}
+		}
+		return null;
+	}
+
 }

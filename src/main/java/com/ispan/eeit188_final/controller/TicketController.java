@@ -93,6 +93,16 @@ public class TicketController {
     	}
     	return ResponseEntity.notFound().build();
     }
-    
-    
+
+    @PostMapping("/use")
+	public ResponseEntity<?> updateUsedById(@RequestBody TicketDTO ticketDTO) {
+		if (ticketDTO != null && ticketDTO.getId() != null) {
+			Ticket update = ticketService.updateUsedById(ticketDTO);
+			if (update != null) {
+				return ResponseEntity.ok(update);
+			}
+			return ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.notFound().build();
+	}
 }
