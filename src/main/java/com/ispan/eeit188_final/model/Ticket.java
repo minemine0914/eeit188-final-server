@@ -34,7 +34,8 @@ import lombok.Setter;
 @Builder
 @Table(name = "ticket", indexes = {
 		@Index(name = "ticket_house_id_index", columnList = "house_id", unique = false),
-		@Index(name = "ticket_user_id_index", columnList = "user_id", unique = false)
+		@Index(name = "ticket_user_id_index", columnList = "user_id", unique = false),
+		@Index(name = "transaction_record_id_index", columnList = "transaction_record_id", unique = false)
 })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Ticket {
@@ -49,7 +50,8 @@ public class Ticket {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-	@JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses", "backgroundImageBlob", "avatarBase64" })
+	@JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses", "backgroundImageBlob",
+			"avatarBase64" })
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -70,7 +72,7 @@ public class Ticket {
 
 	@Column(name = "review", columnDefinition = "bit")
 	private Boolean review;
-	
+
 	@Column(name = "people", columnDefinition = "int")
 	private Integer people;
 
