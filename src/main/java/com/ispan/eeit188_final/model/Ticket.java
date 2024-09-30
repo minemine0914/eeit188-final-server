@@ -70,6 +70,9 @@ public class Ticket {
 
 	@Column(name = "review", columnDefinition = "bit")
 	private Boolean review;
+	
+	@Column(name = "people", columnDefinition = "int")
+	private Integer people;
 
 	@Column(name = "created_at", columnDefinition = "datetime2")
 	private Timestamp createdAt;

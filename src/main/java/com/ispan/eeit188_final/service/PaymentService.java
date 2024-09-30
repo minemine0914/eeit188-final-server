@@ -123,13 +123,16 @@ public class PaymentService {
         Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
         Integer finalAmount = currentAmount + platformIncome;
 
+        // 如果沒有指定入住人數，或人數<0，帶入0
+		Integer people = paymentDTO.getPeople() == null || paymentDTO.getPeople() <= 0 ? 0 : paymentDTO.getPeople();
+
         // 建立 交易紀錄
         TranscationRecordDTO transcationRecordDTO = createTransactionRecord(findHouse.get(), findUser.get(),
                 finalAmount, platformIncome);
         TransactionRecord transactionRecord = transactionRecordService.create(transcationRecordDTO);
 
         // 建立 票券
-        TicketDTO ticketDTO = createTicket(findHouse.get(), findUser.get(), transactionRecord, start, end);
+        TicketDTO ticketDTO = createTicket(findHouse.get(), findUser.get(), transactionRecord, start, end, people);
         Ticket ticket = ticketService.create(ticketDTO);
 
         // 檢查是否成功創建交易和票券
@@ -161,13 +164,14 @@ public class PaymentService {
 
     // 設置票券
     private TicketDTO createTicket(House house, User user, TransactionRecord transactionRecord, Timestamp start,
-            Timestamp end) {
+            Timestamp end, Integer people) {
         return TicketDTO.builder()
                 .startedAt(start)
                 .endedAt(end)
                 .houseId(house.getId())
                 .userId(user.getId())
                 .transactionRecordId(transactionRecord.getId())
+                .people(people)
                 .build();
     }
 
