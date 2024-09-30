@@ -117,7 +117,15 @@ public class UserService {
             }
 
             JSONObject response = new JSONObject()
-                    .put("users", usersArray);
+                    .put("users", usersArray)
+                    .put("totalElements", users.getTotalElements())
+                    .put("totalPages", users.getTotalPages())
+                    .put("numberOfElements", users.getNumberOfElements())
+                    .put("size", users.getSize())
+                    .put("number", users.getNumber())
+                    .put("empty", users.isEmpty())
+                    .put("first", users.getNumber() == 0)
+                    .put("last", users.getTotalPages() == users.getNumber() + 1);
 
             return ResponseEntity.ok(response.toString());
         } catch (JSONException e) {
@@ -757,8 +765,8 @@ public class UserService {
                     .body("{\"message\": \"User not found\"}");
         }
     }
-    
-    public List<User> findAllHost(){
-    	return userRepository.findAllHost();
+
+    public List<User> findAllHost() {
+        return userRepository.findAllHost();
     }
 }
