@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,7 +44,7 @@ public class TicketController {
     }
     
     @GetMapping("/findAll")
-    public ResponseEntity<Page<Ticket>> findAll(@RequestBody TicketDTO ticketDTO){
+    public ResponseEntity<Page<Ticket>> findAll(@ModelAttribute TicketDTO ticketDTO){
     	Page<Ticket> tickets = ticketService.findAll(ticketDTO);
     	return ResponseEntity.ok(tickets);
     }
@@ -92,6 +93,16 @@ public class TicketController {
     	}
     	return ResponseEntity.notFound().build();
     }
-    
-    
+
+    @PostMapping("/use")
+	public ResponseEntity<?> updateUsedById(@RequestBody TicketDTO ticketDTO) {
+		if (ticketDTO != null && ticketDTO.getId() != null) {
+			Ticket update = ticketService.updateUsedById(ticketDTO);
+			if (update != null) {
+				return ResponseEntity.ok(update);
+			}
+			return ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.notFound().build();
+	}
 }

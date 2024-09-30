@@ -10,6 +10,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,7 +92,7 @@ public class UserService {
     }
 
     public ResponseEntity<String> getUsers(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<User> users = userRepository.findAll(pageable);
 
         try {
@@ -117,7 +118,15 @@ public class UserService {
             }
 
             JSONObject response = new JSONObject()
-                    .put("users", usersArray);
+                    .put("users", usersArray)
+                    .put("totalElements", users.getTotalElements())
+                    .put("totalPages", users.getTotalPages())
+                    .put("numberOfElements", users.getNumberOfElements())
+                    .put("size", users.getSize())
+                    .put("number", users.getNumber())
+                    .put("empty", users.isEmpty())
+                    .put("first", users.getNumber() == 0)
+                    .put("last", users.getTotalPages() == users.getNumber() + 1);
 
             return ResponseEntity.ok(response.toString());
         } catch (JSONException e) {
@@ -757,8 +766,8 @@ public class UserService {
                     .body("{\"message\": \"User not found\"}");
         }
     }
-    
-    public List<User> findAllHost(){
-    	return userRepository.findAllHost();
+
+    public List<User> findAllHost() {
+        return userRepository.findAllHost();
     }
 }

@@ -67,6 +67,9 @@ public class HouseService {
                     .region(Optional.ofNullable(houseDTO.getRegion()).orElse(null))
                     .address(Optional.ofNullable(houseDTO.getAddress()).orElse(null))
                     .price(Optional.ofNullable(houseDTO.getPrice()).orElse(null))
+                    .pricePerDay(Optional.ofNullable(houseDTO.getPricePerDay()).orElse(null))
+                    .pricePerWeek(Optional.ofNullable(houseDTO.getPricePerWeek()).orElse(null))
+                    .pricePerMonth(Optional.ofNullable(houseDTO.getPricePerMonth()).orElse(null))
                     .livingDiningRoom(Optional.ofNullable(houseDTO.getLivingDiningRoom()).orElse((short) 0))
                     .bedroom(Optional.ofNullable(houseDTO.getBedroom()).orElse((short) 0))
                     .restroom(Optional.ofNullable(houseDTO.getRestroom()).orElse((short) 0))
@@ -78,7 +81,7 @@ public class HouseService {
                     .kitchen(Optional.ofNullable(houseDTO.getKitchen()).orElse(false))
                     .balcony(Optional.ofNullable(houseDTO.getBalcony()).orElse(false))
                     .show(Optional.ofNullable(houseDTO.getShow()).orElse(false))
-                    .review(Optional.ofNullable(houseDTO.getReview()).orElse(false))
+                    .review(Optional.ofNullable(houseDTO.getReview()).orElse(null))
                     .build();
             return houseRepo.save(house);
         }
@@ -194,27 +197,27 @@ public class HouseService {
         Integer limit = Optional.ofNullable(houseDTO.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
         Boolean dir = Optional.ofNullable(houseDTO.getDir()).orElse(false);
         String order = Optional.ofNullable(houseDTO.getOrder()).orElse(null);
-    
+
         Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
-    
+
         Page<House> housePage = houseRepo.findAll(pageRequest);
-    
+
         // 2. 取得所有 House 的 ID
         List<UUID> houseIds = housePage.stream()
                 .map(House::getId)
                 .collect(Collectors.toList());
-    
+
         // 3. 批量查詢 MongoDB 中這些 houseId 的 score 和評分數量
         GroupOperation groupByHouse = Aggregation.group("houseId")
                 .avg("score").as("averageScore")
                 .count().as("totalScores"); // 計算每個 house 的總評分數量
         MatchOperation matchHouseIds = Aggregation.match(Criteria.where("houseId").in(houseIds));
         Aggregation aggregation = Aggregation.newAggregation(matchHouseIds, groupByHouse);
-    
+
         // Specify types for the AggregationResults
         AggregationResults<Map> mongoResults = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
-    
+
         // 4. 將 MongoDB 的結果轉換為 Map 方便後續查詢
         Map<UUID, Map<String, Object>> houseScores = mongoResults.getMappedResults().stream()
                 .collect(Collectors.toMap(
@@ -222,32 +225,32 @@ public class HouseService {
                         result -> {
                             Map<String, Object> scoreData = new HashMap<>();
                             scoreData.put("averageScore", result.get("averageScore"));
-                            scoreData.put("totalScores", ((Number) result.get("totalScores")).longValue()); // Cast to Long
+                            scoreData.put("totalScores", ((Number) result.get("totalScores")).longValue()); // Cast to
+                                                                                                            // Long
                             return scoreData;
                         }));
-    
+
         // 5. 合併 House 資料和 MongoDB 中的 Score 和總評分數量
         List<Map<String, Object>> resultList = new ArrayList<>();
         for (House house : housePage.getContent()) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("houseId", house.getId());
             resultMap.put("houseDetails", house);
-    
+
             // 如果有 MongoDB 中的分數和總評分數量則加入，否則設置為預設值
             Map<String, Object> scoreData = houseScores.getOrDefault(house.getId(), new HashMap<>());
             Double averageScore = (Double) scoreData.getOrDefault("averageScore", 0.0);
             Long totalScores = (Long) scoreData.getOrDefault("totalScores", 0L); // This is now safely cast
-    
+
             resultMap.put("averageScore", averageScore);
             resultMap.put("totalScores", totalScores); // 加入總評分數量
-    
+
             resultList.add(resultMap);
         }
-    
+
         // 6. 返回分頁結果
         return new PageImpl<>(resultList, pageRequest, housePage.getTotalElements());
     }
-    
 
     // 條件查詢
     public Page<House> find(HouseDTO houseDTO) {
