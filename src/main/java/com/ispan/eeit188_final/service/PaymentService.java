@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.service;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -49,7 +50,7 @@ public class PaymentService {
     @Autowired
     private TransactionRecordService transactionRecordService;
 
-    public String createOrder(PaymentDTO paymentDTO) {
+    public String createOrder(PaymentDTO paymentDTO) throws UnsupportedEncodingException {
         // 檢查 User 和 House ID 是否有效
         if (paymentDTO.getUserId() == null || paymentDTO.getHouseId() == null) {
             throw new IllegalArgumentException("Invalid User or House ID.");
@@ -185,7 +186,8 @@ public class PaymentService {
     }
 
     // 生成綠界支付表單
-    private String generateECPayForm(String tradeNo, Integer amount, String houseName) {
+    private String generateECPayForm(String tradeNo, Integer amount, String houseName)
+            throws UnsupportedEncodingException {
         AllInOne allInOne = new AllInOne("");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
