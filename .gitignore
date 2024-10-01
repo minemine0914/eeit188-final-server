@@ -45,3 +45,6 @@ replay_pid*
 .settings
 /bin
 /docker-compose/front/https
+/docker-compose/websocket-server/node_modules
+*.lock
+docker-compose/websocket-server/package-lock.json
