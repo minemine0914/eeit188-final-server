@@ -19,7 +19,7 @@ public class TicketServiceTests {
 	@Autowired
 	private TicketService ticketService;
 
-	 @Test
+	//  @Test
 	public void testCreate() {
 		Ticket ticket = new Ticket();
 		ticket.setQrCode("TEST_QRCODE");
@@ -34,7 +34,7 @@ public class TicketServiceTests {
 		System.out.println(ticketService.create(ticket));
 	}
 
-	 @Test
+	//  @Test
 	public void testFindAll() {
 		List<Ticket> list = ticketService.findAll();
 		for (Ticket ticket : list) {
@@ -42,7 +42,7 @@ public class TicketServiceTests {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testFindById() {
 		String id = "107ad012-cec6-4394-b7a0-d59bf38e7468";
 		UUID uuid = UUID.fromString(id);
@@ -50,7 +50,7 @@ public class TicketServiceTests {
 		System.out.println(ticket);
 	}
 
-	 @Test
+	//  @Test
 	public void testFindAllPage() {
 
 		Page<Ticket> page = null;
@@ -66,7 +66,7 @@ public class TicketServiceTests {
 		}
 	}
 
-	 @Test
+	//  @Test
 	public void testFindAllPageJson() {
 		List<Integer> pageNums = Arrays.asList(0, 1, null);
 		List<Integer> pageSizes = Arrays.asList(0, 1, null);

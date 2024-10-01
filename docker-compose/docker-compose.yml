@@ -1,0 +1,35 @@
+version: '3'
+services:
+  front-end:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    volumes:
+      - ./front/https/:/usr/share/nginx/html/ # This maps your local public directory volume
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      eeit:
+        ipv4_address: 172.28.0.2
+  back-end:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    networks:
+      eeit:
+        ipv4_address: 172.28.0.3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:sqlserver://host.docker.internal:1433;database=eeit188final;trustServerCertificate=true;characterEncoding=UTF-8
+      - SPRING_DATA_MONGODB_HOST=host.docker.internal
+
+networks:
+  eeit:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/24
+          gateway: 172.28.0.1

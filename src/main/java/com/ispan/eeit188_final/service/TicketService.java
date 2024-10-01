@@ -154,14 +154,15 @@ public class TicketService {
 					String qrCode = obj.isNull("qrCode") ? null : obj.getString("qrCode");
 					String startedAtString = obj.isNull("startedAt") ? null : obj.getString("startedAt");
 					String endedAtString = obj.isNull("endedAt") ? null : obj.getString("endedAt");
-
+					Integer people = obj.isNull("people") ? null : obj.getInt("people");
+					
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 					Timestamp startedAt = Timestamp.valueOf(sdf.format(startedAtString));
 					Timestamp endedAt = Timestamp.valueOf((endedAtString));
 					Boolean used = false;
 
 					Ticket insert = Ticket.builder().qrCode(qrCode).user(findUser.isPresent() ? findUser.get() : null)
-							.house(findHouse.isPresent() ? findHouse.get() : null).used(used).startedAt(startedAt)
+							.house(findHouse.isPresent() ? findHouse.get() : null).used(used).people(people).startedAt(startedAt)
 							.endedAt(endedAt)
 							.build();
 
@@ -198,6 +199,7 @@ public class TicketService {
 						.endedAt(ticketDto.getEndedAt())
 						.used(false)
 						.review(false)
+						.people(ticketDto.getPeople())
 						.transactionRecord(findTransactionRecord.get())
 						.createdAt(ticketDto.getCreatedAt() == null ? new Timestamp(System.currentTimeMillis())
 								: ticketDto.getCreatedAt())
@@ -227,6 +229,7 @@ public class TicketService {
 						String startedAtString = obj.isNull("startedAt") ? null : obj.getString("startedAt");
 						String endedAtString = obj.isNull("endedAt") ? null : obj.getString("endedAt");
 						Boolean used = obj.isNull("used") ? null : obj.getBoolean("used");
+						Integer people = obj.isNull("people") ? null : obj.getInt("people");
 						Timestamp startedAt;
 						Timestamp endedAt;
 
