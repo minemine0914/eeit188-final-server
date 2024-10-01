@@ -37,7 +37,7 @@ import lombok.Setter;
 		@Index(name = "ticket_user_id_index", columnList = "user_id", unique = false),
 		@Index(name = "transaction_record_id_index", columnList = "transaction_record_id", unique = false)
 })
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Ticket {
 
 	@Id
@@ -81,7 +81,7 @@ public class Ticket {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "transaction_record_id", referencedColumnName = "id", columnDefinition = "UNIQUEIDENTIFIER")
-	@JsonIgnoreProperties("house")
+	@JsonIgnoreProperties({"house", "user", "ticket"})
 	private TransactionRecord transactionRecord;
 
 	@PrePersist
