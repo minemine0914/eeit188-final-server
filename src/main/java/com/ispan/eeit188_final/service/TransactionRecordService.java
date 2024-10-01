@@ -8,6 +8,10 @@ import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.TransactionRecordRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
 import com.ispan.eeit188_final.repository.specification.TranscationRecordSpecification;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,9 +20,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.ispan.eeit188_final.dto.TranscationRecordDTO;
+import com.ispan.eeit188_final.model.House;
+import com.ispan.eeit188_final.model.TransactionRecord;
+import com.ispan.eeit188_final.model.User;
+import com.ispan.eeit188_final.repository.HouseRepository;
+import com.ispan.eeit188_final.repository.TransactionRecordRepository;
+import com.ispan.eeit188_final.repository.UserRepository;
+import com.ispan.eeit188_final.repository.specification.TranscationRecordSpecification;
 
 @Service
 public class TransactionRecordService {
@@ -43,12 +52,14 @@ public class TransactionRecordService {
             Optional<House> findHouse = houseRepo.findById(dto.getHouseId());
             Optional<User> findUser = userRepo.findById(dto.getUserId());
             if (findHouse.isPresent() && findUser.isPresent()) {
+            	System.out.println(dto.getCreatedAt());
                 TransactionRecord create = TransactionRecord.builder()
                         .house(findHouse.get())
                         .user(findUser.get())
                         .cashFlow(dto.getCashFlow())
                         .deal(dto.getDeal())
                         .platformIncome(dto.getPlatformIncome())
+                        .createdAt(dto.getCreatedAt()!=null?dto.getCreatedAt():new Timestamp(System.currentTimeMillis()))
                         .build();
                 return transactionRecordRepo.save(create);
             }
