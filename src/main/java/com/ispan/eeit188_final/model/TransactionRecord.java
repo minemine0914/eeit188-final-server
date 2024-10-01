@@ -3,6 +3,8 @@ package com.ispan.eeit188_final.model;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import org.json.JSONPropertyIgnore;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -61,18 +63,20 @@ public class TransactionRecord {
     // 與 House 的關聯
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-//    @JsonIgnoreProperties({"tickets", "discusses"})
-     @JsonIgnore
+    @JsonIgnoreProperties({ "user", "tickets", "discusses" })
+    // @JsonIgnore
     private House house;
 
     // 與 User 的關聯
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-//     @JsonIgnoreProperties({"tickets","carts","coupons","discusses","receivedChatRecords","sentChartRecords","userCollections"})
-    @JsonIgnore
+    @JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses", "backgroundImageBlob",
+            "avatarBase64", "sentChatRecords", "receivedChatRecords" })
+    // @JsonIgnore
     private User user;
 
     @OneToOne(mappedBy = "transactionRecord", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({ "house", "user", "transactionRecord" })
     private Ticket ticket;
 
     // 自訂序列化 userName
@@ -83,8 +87,8 @@ public class TransactionRecord {
 
     @PrePersist
     public void onCreate() {
-    	if(this.createdAt==null)
-        this.createdAt = new Timestamp(System.currentTimeMillis());
+        if (this.createdAt == null)
+            this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 
 }
