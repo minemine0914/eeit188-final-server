@@ -6,10 +6,13 @@ import java.util.UUID;
 import org.json.JSONObject;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.Ticket;
+import com.ispan.eeit188_final.model.User;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 
 public class TicketSpecification {
@@ -41,15 +44,27 @@ public class TicketSpecification {
             }
         };
     }
-    
-    public static Specification<Ticket> hasUserId(UUID userId) {
-        return (Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> 
-        userId == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("userId"), userId);
-    }
+
+	public static Specification<Ticket> hasUserId(UUID userId) {
+		return (Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+			if (userId == null) {
+				return criteriaBuilder.conjunction();
+			}
+			// 假設 House 實體中有一個與 User 實體的關聯
+			Join<Ticket, User> userJoin = root.join("user");
+			return criteriaBuilder.equal(userJoin.get("id"), userId);
+		};
+	}
     
     public static Specification<Ticket> hasHouseId(UUID houseId) {
-        return (Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> 
-        houseId == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("houseId"), houseId);
+    	return (Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+			if (houseId == null) {
+				return criteriaBuilder.conjunction();
+			}
+			// 假設 House 實體中有一個與 User 實體的關聯
+			Join<Ticket, User> userJoin = root.join("house");
+			return criteriaBuilder.equal(userJoin.get("id"), houseId);
+		};
     }
     
     public static Specification<Ticket> hasUsed(Boolean used) {

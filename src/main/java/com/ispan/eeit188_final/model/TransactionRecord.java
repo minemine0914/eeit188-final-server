@@ -61,15 +61,15 @@ public class TransactionRecord {
     // 與 House 的關聯
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-    @JsonIgnoreProperties({"tickets", "discusses"})
-    // @JsonIgnore
+//    @JsonIgnoreProperties({"tickets", "discusses"})
+     @JsonIgnore
     private House house;
 
     // 與 User 的關聯
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
-     @JsonIgnoreProperties({"tickets","carts","coupons","discusses","receivedChatRecords","sentChartRecords","userCollections"})
-//    @JsonIgnore
+//     @JsonIgnoreProperties({"tickets","carts","coupons","discusses","receivedChatRecords","sentChartRecords","userCollections"})
+    @JsonIgnore
     private User user;
 
     @OneToOne(mappedBy = "transactionRecord", fetch = FetchType.LAZY)
