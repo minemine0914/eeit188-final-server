@@ -83,6 +83,7 @@ public class TransactionRecord {
 
     @PrePersist
     public void onCreate() {
+    	if(this.createdAt==null)
         this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 
