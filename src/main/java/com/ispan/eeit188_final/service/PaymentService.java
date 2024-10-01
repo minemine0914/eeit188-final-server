@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.service;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -49,7 +50,7 @@ public class PaymentService {
     @Autowired
     private TransactionRecordService transactionRecordService;
 
-    public String createOrder(PaymentDTO paymentDTO) {
+    public String createOrder(PaymentDTO paymentDTO) throws UnsupportedEncodingException {
         // 檢查 User 和 House ID 是否有效
         if (paymentDTO.getUserId() == null || paymentDTO.getHouseId() == null) {
             throw new IllegalArgumentException("Invalid User or House ID.");
@@ -99,6 +100,10 @@ public class PaymentService {
 
         Integer currentAmount = findHouse.get().getPrice() * (int) daysBetween;
 
+        // 計算平台抽成
+        Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
+        Integer totalAmountWithCommission = currentAmount + platformIncome;
+
         // 應用優惠券折扣
         if (paymentDTO.getCouponId() != null) {
             Optional<Coupon> findCoupon = couponRepo.findById(paymentDTO.getCouponId());
@@ -108,23 +113,21 @@ public class PaymentService {
                 // 檢查是固定金額折扣還是百分比折扣
                 if (coupon.getDiscountRate() != null && coupon.getDiscountRate() > 0) {
                     // 應用百分比折扣
-                    currentAmount -= (int) (currentAmount * coupon.getDiscountRate());
+                    totalAmountWithCommission -= (int) (totalAmountWithCommission * coupon.getDiscountRate());
                 } else if (coupon.getDiscount() != null && coupon.getDiscount() > 0) {
                     // 應用固定金額折扣
-                    currentAmount -= coupon.getDiscount();
+                    totalAmountWithCommission -= coupon.getDiscount();
                 }
 
                 // 確保金額不會低於0
-                currentAmount = Math.max(currentAmount, 0);
+                totalAmountWithCommission = Math.max(totalAmountWithCommission, 0);
             }
         }
 
-        // 計算平台抽成
-        Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
-        Integer finalAmount = currentAmount + platformIncome;
+        Integer finalAmount = totalAmountWithCommission;
 
         // 如果沒有指定入住人數，或人數<0，帶入0
-		Integer people = paymentDTO.getPeople() == null || paymentDTO.getPeople() <= 0 ? 0 : paymentDTO.getPeople();
+        Integer people = paymentDTO.getPeople() == null || paymentDTO.getPeople() <= 0 ? 0 : paymentDTO.getPeople();
 
         // 建立 交易紀錄
         TranscationRecordDTO transcationRecordDTO = createTransactionRecord(findHouse.get(), findUser.get(),
@@ -183,7 +186,8 @@ public class PaymentService {
     }
 
     // 生成綠界支付表單
-    private String generateECPayForm(String tradeNo, Integer amount, String houseName) {
+    private String generateECPayForm(String tradeNo, Integer amount, String houseName)
+            throws UnsupportedEncodingException {
         AllInOne allInOne = new AllInOne("");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

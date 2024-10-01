@@ -51,7 +51,7 @@ public class Ticket {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, columnDefinition = "UNIQUEIDENTIFIER")
 	@JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses", "backgroundImageBlob",
-			"avatarBase64","sentChatRecords","receivedChatRecords" })
+			"avatarBase64", "sentChatRecords", "receivedChatRecords" })
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -81,6 +81,7 @@ public class Ticket {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "transaction_record_id", referencedColumnName = "id", columnDefinition = "UNIQUEIDENTIFIER")
+	@JsonIgnoreProperties("house")
 	private TransactionRecord transactionRecord;
 
 	@PrePersist
