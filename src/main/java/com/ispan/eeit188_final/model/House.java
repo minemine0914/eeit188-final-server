@@ -159,7 +159,7 @@ public class House {
     // 與 UserCollection 的關聯
     @OneToMany(mappedBy = "userCollectionId.house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonIgnore
+    @JsonIgnore 
     private Set<UserCollection> userCollections = new HashSet<>();
 
     // 自訂序列化 collectionCount
@@ -189,12 +189,13 @@ public class House {
     // 與 Ticket 的關聯
     @OneToMany(mappedBy = "house", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonIgnore 
     private Set<Ticket> tickets = new HashSet<>();
 
     // 與 Discuss 的關聯
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonIgnoreProperties({"user", "house"})
+    @JsonIgnoreProperties({"user", "house", "discusses", "discussExternalResources"})
     private Set<Discuss> discusses = new HashSet<>();
 
     // 自訂序列化 userId
