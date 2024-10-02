@@ -91,83 +91,93 @@ public class HouseMongoService {
 	// 所有house的ID和平均分數
 	public Page<Map<String, Object>> getAverageScoreGroupedByHouse(HouseMongoDTO houseMongoDTO) {
 		if (houseMongoDTO != null) {
-			// Create the aggregation pipeline
+			// 1. 先過濾掉 score 為 0 的資料
+			MatchOperation excludeZeroScores = Aggregation.match(Criteria.where("score").gt(0));
+
+			// 2. 分組計算平均分數和總評分數量
 			GroupOperation groupByHouse = Aggregation.group("houseId")
 					.avg("score").as("averageScore")
-					.count().as("totalScores"); // Count total scores
+					.count().as("totalScores"); // 計算總評分數量
 
 			Integer randomFactor = houseMongoDTO.getRandomFactor() != null
 					? Math.min(Math.max(houseMongoDTO.getRandomFactor(), 0), 100)
 					: 0;
 
-			// Projection to rename _id to houseId
+			// 3. 投影來重新命名 houseId 並應用隨機係數
 			ProjectionOperation project = Aggregation.project()
 					.and("_id").as("houseId")
 					.and("averageScore").as("averageScore")
-					.and("totalScores").as("totalScores") // Include totalScores in projection
+					.and("totalScores").as("totalScores")
 					.andExpression("averageScore + (rand() * " + randomFactor + ")").as("averageScoreModified")
 					.andExclude("_id");
 
-			// Combine the stages
-			Aggregation aggregation = Aggregation.newAggregation(groupByHouse, project);
+			// 4. 組合聚合查詢管道
+			Aggregation aggregation = Aggregation.newAggregation(excludeZeroScores, groupByHouse, project);
 
-			// Execute the aggregation to get the results
+			// 5. 執行聚合查詢
 			AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
 			List<Map> mappedResults = results.getMappedResults();
 
-			// Collect houseIds for batch fetching
+			// 6. 取得所有房屋ID，進行批量查詢房屋詳情
 			List<UUID> houseIds = mappedResults.stream()
 					.map(result -> (UUID) result.get("houseId"))
 					.collect(Collectors.toList());
-	
-			// Fetch all house details in one go
+
 			List<House> houses = houseRepository.findAllById(houseIds);
-	
-			// Create a map for quick lookup of house details by ID
+
+			// 7. 將房屋詳情轉換為快速查找的Map
 			Map<UUID, House> houseMap = houses.stream()
 					.collect(Collectors.toMap(House::getId, house -> house));
-	
-			// Prepare the output
+
+			// 8. 準備結果集，並過濾和組合結果
 			List<Map<String, Object>> output = new ArrayList<>();
 			for (Map<String, Object> result : mappedResults) {
 				UUID houseId = (UUID) result.get("houseId");
-				House house = houseMap.get(houseId); // Use the map for lookup
+				House house = houseMap.get(houseId);
 				if (house == null) {
 					continue;
 				}
+				// 根據 userId 過濾資料
 				if (houseMongoDTO.getUserId() != null && house.getUser() != null) {
 					if (!houseMongoDTO.getUserId().equals(house.getUser().getId())) {
 						continue;
 					}
 				}
 				Map<String, Object> outputMap = new HashMap<>(result);
-				outputMap.put("houseDetails", house); // Replace with actual house details
+				outputMap.put("houseDetails", house);
 				output.add(outputMap);
 			}
 
-			// Pagination
+			// 9. 處理分頁
 			long total = output.size();
 			Integer page = houseMongoDTO.getPage() != null ? houseMongoDTO.getPage() : PAGEABLE_DEFAULT_PAGE;
 			Integer size = houseMongoDTO.getLimit() != null ? houseMongoDTO.getLimit() : PAGEABLE_DEFAULT_LIMIT;
 
-			// Sort the results
+			// 10. 處理排序和分頁
 			boolean sortDirection = houseMongoDTO.getDir() != null ? houseMongoDTO.getDir() : false;
 			String sortField = houseMongoDTO.getOrder() != null && houseMongoDTO.getOrder().length() != 0
 					? houseMongoDTO.getOrder()
-					: "houseId"; // Default sort field
+					: "houseId"; // 預設排序欄位
 
 			List<Map<String, Object>> sortedResults = output.stream()
 					.sorted((a, b) -> {
 						Object val1 = a.get(sortField);
 						Object val2 = b.get(sortField);
-						return sortDirection ? ((Comparable) val2).compareTo(val1)
-								: ((Comparable) val1).compareTo(val2);
+						// 如果值為null，則認為它比任何非null值小
+						if (val1 == null) return sortDirection ? 1 : -1;
+						if (val2 == null) return sortDirection ? -1 : 1;
+						// 確保值是 Comparable 類型，否則跳過排序
+						if (val1 instanceof Comparable && val2 instanceof Comparable) {
+							return sortDirection ? ((Comparable) val2).compareTo(val1)
+									: ((Comparable) val1).compareTo(val2);
+						}
+						return 0;
 					})
-					.skip(page * size)
+					.skip((long) page * size) // 避免乘法溢出，使用long
 					.limit(size)
 					.collect(Collectors.toList());
 
-			// Return the results as a Page object
+			// 11. 返回分頁結果
 			return new PageImpl<>(sortedResults, PageRequest.of(page, size), total);
 		}
 		return Page.empty();

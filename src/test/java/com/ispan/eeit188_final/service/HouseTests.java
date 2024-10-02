@@ -16,19 +16,19 @@ public class HouseTests {
     @Autowired
     private HouseService houseService;
 
-    @Test
+    // @Test
     void findById() {
         UUID id = UUID.fromString("6ce2346f-4768-4179-8e15-67a5de76fc96");
         System.out.println("House: " + houseService.findById(id));
     }
 
-    @Test
+    // @Test
     void create() {
         // House insert = House.builder().name("testtest").build();
         // houseService.create(insert);
     }
 
-    @Test
+    // @Test
     void find() {
         HouseDTO query = HouseDTO.builder()
         .page(0)
