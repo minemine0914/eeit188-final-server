@@ -4,6 +4,8 @@ services:
         build:
             context: ./front
             dockerfile: Dockerfile
+        environment:
+            - TZ=Asia/Taipei
         volumes:
             - ./front/https/:/usr/share/nginx/html/ # This maps your local public directory volume
         ports:
@@ -25,15 +27,20 @@ services:
             - SPRING_DATASOURCE_URL=jdbc:sqlserver://host.docker.internal:1433;database=eeit188final;trustServerCertificate=true;characterEncoding=UTF-8
             - SPRING_DATA_MONGODB_HOST=host.docker.internal
             - SPRING_MAIL_HOST=172.28.0.5
+            - TZ=Asia/Taipei
     websocket-server:
         build:
             context: ./websocket-server
             dockerfile: Dockerfile
+        environment:
+            - TZ=Asia/Taipei
         networks:
             eeit:
                 ipv4_address: 172.28.0.4
     maildev:
         image: maildev/maildev
+        environment:
+            - TZ=Asia/Taipei
         ports:
             - "1080:1080" # Web interface
             - "1025:1025" # SMTP server
