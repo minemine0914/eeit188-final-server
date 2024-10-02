@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.repository;
 
 import java.util.UUID;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,9 @@ public interface HouseRepository extends JpaRepository<House, UUID>, JpaSpecific
     @NonNull
     @EntityGraph(attributePaths = {"priceRanges", "postulates", "transactionRecords", "tickets", "discusses", "userCollections"})
     Page<House> findAll(@NonNull Pageable pageable); 
+
+    @NonNull
+    @EntityGraph(attributePaths = {"priceRanges", "postulates", "transactionRecords", "tickets", "discusses", "userCollections"})
+    List<House> findAllById(@NonNull Iterable<UUID> ids);
 
 }
