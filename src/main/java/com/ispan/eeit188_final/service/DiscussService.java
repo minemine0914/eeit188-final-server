@@ -1,5 +1,6 @@
 package com.ispan.eeit188_final.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ispan.eeit188_final.dto.DiscussDTO;
 import com.ispan.eeit188_final.model.Discuss;
 import com.ispan.eeit188_final.model.House;
@@ -11,6 +12,7 @@ import com.ispan.eeit188_final.repository.HouseRepository;
 import com.ispan.eeit188_final.repository.UserRepository;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -98,17 +100,17 @@ public class DiscussService {
         }
 
         // 確認是否為討論板內回覆
-        if (discussDTO.getDiscussId() != null && !discussDTO.getDiscussId().toString().isEmpty()) {
-            Optional<Discuss> discussOptional = discussRepository.findById(discussDTO.getDiscussId());
+        // if (discussDTO.getDiscussId() != null && !discussDTO.getDiscussId().toString().isEmpty()) {
+        //     Optional<Discuss> discussOptional = discussRepository.findById(discussDTO.getDiscussId());
 
-            if (discussOptional.isPresent()) {
-                Discuss discuss = discussOptional.get();
-                saveDiscuss.setSubDiscuss(discuss);
-            } else {
-                return ResponseEntity.badRequest()
-                        .body(discussDTO.getDiscussNotFoundException());
-            }
-        }
+        //     if (discussOptional.isPresent()) {
+        //         Discuss discuss = discussOptional.get();
+        //         saveDiscuss.setSubDiscuss(discuss);
+        //     } else {
+        //         return ResponseEntity.badRequest()
+        //                 .body(discussDTO.getDiscussNotFoundException());
+        //     }
+        // }
 
         // 儲存並返回新增的Discuss
         return ResponseEntity.ok(discussRepository.save(saveDiscuss));
@@ -118,7 +120,7 @@ public class DiscussService {
         return discussRepository.findById(id);
     }
 
-    public ResponseEntity<String> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) {
+    public ResponseEntity<String> getDiscussionsByHouseId(UUID houseId, int pageNo, int pageSize) throws JsonProcessingException, JSONException {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize, Sort.by(Direction.DESC, "createdAt"));
         Page<Discuss> discusses = discussRepository.findByHouseId(houseId, pageRequest);
         System.out.println("Discuss count: " + discusses.getNumberOfElements());
