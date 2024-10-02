@@ -28,7 +28,7 @@ public class ChatRecordController {
     @GetMapping("/{userId}")
     public ResponseEntity<String> findByUserId(@PathVariable UUID userId,
             @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "100") int pageSize) {
+            @RequestParam(defaultValue = "1000") int pageSize) {
 
         return chatRecordService.findById(userId, pageNo, pageSize);
     }
