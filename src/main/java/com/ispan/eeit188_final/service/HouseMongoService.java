@@ -92,8 +92,9 @@ public class HouseMongoService {
 	public Page<Map<String, Object>> getAverageScoreGroupedByHouse(HouseMongoDTO houseMongoDTO) {
 		if (houseMongoDTO != null) {
 			// Create the aggregation pipeline
-			GroupOperation groupByHouse = Aggregation.group("houseId").avg("score").as("averageScore").count()
-					.as("totalScores"); // Count total scores
+			GroupOperation groupByHouse = Aggregation.group("houseId")
+					.avg("score").as("averageScore")
+					.count().as("totalScores"); // Count total scores
 
 			Integer randomFactor = houseMongoDTO.getRandomFactor() != null
 					? Math.min(Math.max(houseMongoDTO.getRandomFactor(), 0), 100)
@@ -114,12 +115,23 @@ public class HouseMongoService {
 			AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
 			List<Map> mappedResults = results.getMappedResults();
 
-			// Fetch house details one at a time and replace in output
+			// Collect houseIds for batch fetching
+			List<UUID> houseIds = mappedResults.stream()
+					.map(result -> (UUID) result.get("houseId"))
+					.collect(Collectors.toList());
+	
+			// Fetch all house details in one go
+			List<House> houses = houseRepository.findAllById(houseIds);
+	
+			// Create a map for quick lookup of house details by ID
+			Map<UUID, House> houseMap = houses.stream()
+					.collect(Collectors.toMap(House::getId, house -> house));
+	
+			// Prepare the output
 			List<Map<String, Object>> output = new ArrayList<>();
 			for (Map<String, Object> result : mappedResults) {
 				UUID houseId = (UUID) result.get("houseId");
-				House house = houseRepository.findById(houseId).orElse(null); // Fetch one house by houseId
-
+				House house = houseMap.get(houseId); // Use the map for lookup
 				if (house == null) {
 					continue;
 				}

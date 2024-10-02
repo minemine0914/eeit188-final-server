@@ -3,7 +3,9 @@ package com.ispan.eeit188_final.controller;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ispan.eeit188_final.dto.DiscussDTO;
 import com.ispan.eeit188_final.model.Discuss;
 import com.ispan.eeit188_final.service.DiscussService;
@@ -43,16 +46,16 @@ public class DiscussController {
     }
 
     // 查詢特定房源所有討論
-    @GetMapping("/house/{houseId}")
+    @GetMapping(value = "/house/{houseId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getDiscussionsByHouseId(@PathVariable UUID houseId,
             @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "10") int pageSize) throws JsonProcessingException, JSONException {
 
         return discussService.getDiscussionsByHouseId(houseId, pageNo, pageSize);
     }
 
     // 查詢特定使用者所有討論
-    @GetMapping("/user/{userId}")
+    @GetMapping(value = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getDiscussionsByUserId(@PathVariable UUID userId,
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize) {
@@ -60,7 +63,7 @@ public class DiscussController {
         return discussService.getDiscussionsByUserId(userId, pageNo, pageSize);
     }
     // 查詢特定使用者的特定房源討論
-    @GetMapping("/user/{userId}/{houseId}")
+    @GetMapping(value = "/user/{userId}/{houseId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDiscussionsByUserIdAndHouseId(@PathVariable UUID userId, @PathVariable UUID houseId) {
 
         return discussService.getDiscussionsByUserIdAndHouseId(userId, houseId);

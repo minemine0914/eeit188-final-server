@@ -1,50 +1,57 @@
-version: '3'
+version: "3"
 services:
-  front-end:
-    build:
-      context: ./front
-      dockerfile: Dockerfile
-    volumes:
-      - ./front/https/:/usr/share/nginx/html/ # This maps your local public directory volume
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      eeit:
-        ipv4_address: 172.28.0.2
-  back-end:
-    build:
-      context: ../
-      dockerfile: Dockerfile
-    networks:
-      eeit:
-        ipv4_address: 172.28.0.3
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:sqlserver://host.docker.internal:1433;database=eeit188final;trustServerCertificate=true;characterEncoding=UTF-8
-      - SPRING_DATA_MONGODB_HOST=host.docker.internal
-      - SPRING_MAIL_HOST=172.28.0.5
-  websocket-server:
-    build:
-      context: ./websocket-server
-      dockerfile: Dockerfile
-    networks:
-      eeit:
-        ipv4_address: 172.28.0.4
-  maildev:
-    image: maildev/maildev
-    ports:
-      - "1080:1080" # Web interface
-      - "1025:1025" # SMTP server
-    networks:
-      eeit:
-        ipv4_address: 172.28.0.5
+    front-end:
+        build:
+            context: ./front
+            dockerfile: Dockerfile
+        environment:
+            - TZ=Asia/Taipei
+        volumes:
+            - ./front/https/:/usr/share/nginx/html/ # This maps your local public directory volume
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            eeit:
+                ipv4_address: 172.28.0.2
+    back-end:
+        build:
+            context: ../
+            dockerfile: Dockerfile
+        networks:
+            eeit:
+                ipv4_address: 172.28.0.3
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:sqlserver://host.docker.internal:1433;database=eeit188final;trustServerCertificate=true;characterEncoding=UTF-8
+            - SPRING_DATA_MONGODB_HOST=host.docker.internal
+            - SPRING_MAIL_HOST=172.28.0.5
+            - TZ=Asia/Taipei
+    websocket-server:
+        build:
+            context: ./websocket-server
+            dockerfile: Dockerfile
+        environment:
+            - TZ=Asia/Taipei
+        networks:
+            eeit:
+                ipv4_address: 172.28.0.4
+    maildev:
+        image: maildev/maildev
+        environment:
+            - TZ=Asia/Taipei
+        ports:
+            - "1080:1080" # Web interface
+            - "1025:1025" # SMTP server
+        networks:
+            eeit:
+                ipv4_address: 172.28.0.5
 networks:
-  eeit:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.0.0/24
-          gateway: 172.28.0.1
+    eeit:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.28.0.0/24
+                  gateway: 172.28.0.1

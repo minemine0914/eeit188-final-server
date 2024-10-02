@@ -62,27 +62,28 @@ public class Discuss {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", columnDefinition = "uniqueidentifier")
-    @JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses" })
+    @JsonIgnoreProperties({ "houses", "tickets", "coupons", "userCollections", "discusses", "backgroundImageBlob",
+			"avatarBase64", "sentChatRecords", "receivedChatRecords" })
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id", columnDefinition = "uniqueidentifier")
-    @JsonIgnoreProperties({"discusses"})
+    @JsonIgnoreProperties({"discusses", "user"})
     private House house;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "discuss_id", columnDefinition = "uniqueidentifier")
-    private Discuss subDiscuss;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "discuss_id", columnDefinition = "uniqueidentifier")
+    // private Discuss subDiscuss;
 
     // Relationshp
-    @OneToMany(mappedBy = "subDiscuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    @JsonIgnoreProperties({"user", "house"})
-    private List<Discuss> discusses = new ArrayList<>();
+    // @OneToMany(mappedBy = "subDiscuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    // @Builder.Default
+    // @JsonIgnoreProperties({"user", "house"})
+    // private List<Discuss> discusses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "discuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<DiscussExternalResource> discussExternalResources = new ArrayList<>();
+    // @OneToMany(mappedBy = "discuss", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    // @Builder.Default
+    // private List<DiscussExternalResource> discussExternalResources = new ArrayList<>();
 
     @PrePersist
     public void onCreate() {
