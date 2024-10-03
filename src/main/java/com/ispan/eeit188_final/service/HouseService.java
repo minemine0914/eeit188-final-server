@@ -208,12 +208,13 @@ public class HouseService {
                 .map(House::getId)
                 .collect(Collectors.toList());
 
-        // 3. 批量查詢 MongoDB 中這些 houseId 的 score 和評分數量
+        // 3. 批量查詢 MongoDB 中這些 houseId 的 score 和評分數量，排除 score 為 0 的資料
+        MatchOperation matchHouseIds = Aggregation.match(Criteria.where("houseId").in(houseIds));
+        MatchOperation excludeZeroScores = Aggregation.match(Criteria.where("score").gt(0)); // 排除 score 為 0 的資料
         GroupOperation groupByHouse = Aggregation.group("houseId")
                 .avg("score").as("averageScore")
                 .count().as("totalScores"); // 計算每個 house 的總評分數量
-        MatchOperation matchHouseIds = Aggregation.match(Criteria.where("houseId").in(houseIds));
-        Aggregation aggregation = Aggregation.newAggregation(matchHouseIds, groupByHouse);
+        Aggregation aggregation = Aggregation.newAggregation(matchHouseIds, excludeZeroScores, groupByHouse);
 
         // Specify types for the AggregationResults
         AggregationResults<Map> mongoResults = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
@@ -289,12 +290,13 @@ public class HouseService {
             return Page.empty();
         }
 
-        // 4. 批量查詢 MongoDB 中這些 houseId 的分數和評分數量
+        // 4. 批量查詢 MongoDB 中這些 houseId 的 score 和評分數量，排除 score 為 0 的資料
+        MatchOperation matchHouseIds = Aggregation.match(Criteria.where("houseId").in(houseIds));
+        MatchOperation excludeZeroScores = Aggregation.match(Criteria.where("score").gt(0)); // 排除 score 為 0 的資料
         GroupOperation groupByHouse = Aggregation.group("houseId")
                 .avg("score").as("averageScore")
                 .count().as("totalScores"); // 計算每個 house 的總評分數量
-        MatchOperation matchHouseIds = Aggregation.match(Criteria.where("houseId").in(houseIds));
-        Aggregation aggregation = Aggregation.newAggregation(matchHouseIds, groupByHouse);
+        Aggregation aggregation = Aggregation.newAggregation(matchHouseIds, excludeZeroScores, groupByHouse);
 
         // Specify types for the AggregationResults
         AggregationResults<Map> mongoResults = mongoTemplate.aggregate(aggregation, HouseMongo.class,

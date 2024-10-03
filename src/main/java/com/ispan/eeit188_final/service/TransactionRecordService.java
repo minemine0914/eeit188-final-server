@@ -52,7 +52,7 @@ public class TransactionRecordService {
             Optional<House> findHouse = houseRepo.findById(dto.getHouseId());
             Optional<User> findUser = userRepo.findById(dto.getUserId());
             if (findHouse.isPresent() && findUser.isPresent()) {
-            	System.out.println(dto.getCreatedAt());
+//            	System.out.println(dto.getCreatedAt());
                 TransactionRecord create = TransactionRecord.builder()
                         .house(findHouse.get())
                         .user(findUser.get())

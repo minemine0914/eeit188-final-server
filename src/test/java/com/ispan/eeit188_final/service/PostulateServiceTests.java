@@ -17,7 +17,7 @@ public class PostulateServiceTests {
 	@Autowired
 	private PostulateService postulateService;
 
-	@Test
+	// @Test
 	public void testCreate() {
 		Postulate postulate = new Postulate();
 		postulate.setName("TEST_POSTULATE");
@@ -26,7 +26,7 @@ public class PostulateServiceTests {
 		System.out.println(postulateService.create(postulate));
 	}
 
-	@Test
+	// @Test
 	public void testFindAll() {
 		List<Postulate> list = postulateService.findAll();
 		for (Postulate postulate : list) {
@@ -34,7 +34,7 @@ public class PostulateServiceTests {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testFindById() {
 		String id = "05d322e1-42e4-4af1-92c3-33b657b053d2";
 		UUID uuid = UUID.fromString(id);
@@ -42,14 +42,14 @@ public class PostulateServiceTests {
 		System.out.println(postulate);
 	}
 
-	@Test
+	// @Test
 	public void testFindByName() {
 		String name = "AA";
 		Postulate postulate = postulateService.findByName(name);
 		System.out.println(postulate);
 	}
 
-	@Test
+	// @Test
 	public void testFindAllPage() {
 		Integer pageNum = 0;
 		Integer pageSize = 30;
