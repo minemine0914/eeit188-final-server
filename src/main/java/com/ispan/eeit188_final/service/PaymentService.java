@@ -98,7 +98,8 @@ public class PaymentService {
             throw new IllegalStateException("目前房源不可預定");
         }
 
-        Integer currentAmount = findHouse.get().getPrice() * (int) daysBetween;
+		// 抓取house的price，如果是null則設為1000
+		Integer currentAmount = (findHouse.get().getPrice() != null ? findHouse.get().getPrice() : 1000) * (int) daysBetween;
 
         // 計算平台抽成
         Integer platformIncome = (int) (currentAmount * (platformCommission != null ? platformCommission : 0));
@@ -129,9 +130,12 @@ public class PaymentService {
         // 如果沒有指定入住人數，或人數<0，帶入0
         Integer people = paymentDTO.getPeople() == null || paymentDTO.getPeople() <= 0 ? 0 : paymentDTO.getPeople();
 
+        // 抓取createdAt，如果是null會繼續照一般流程走
+        Timestamp createdAt = paymentDTO.getCreatedAt();
+        
         // 建立 交易紀錄
         TranscationRecordDTO transcationRecordDTO = createTransactionRecord(findHouse.get(), findUser.get(),
-                finalAmount, platformIncome);
+                finalAmount, platformIncome, createdAt); // 假資料用的createdAt如果是null會繼續照一般流程走
         TransactionRecord transactionRecord = transactionRecordService.create(transcationRecordDTO);
 
         // 建立 票券
@@ -165,6 +169,22 @@ public class PaymentService {
                 .build();
     }
 
+	// 設置交易紀錄(假資料)，如果沒有自訂createdAt，則呼叫一般的method
+	private TranscationRecordDTO createTransactionRecord(House house, User user, Integer cashFlow,
+			Integer platformIncome, Timestamp createdAt) {
+		if(createdAt!=null) {
+			return TranscationRecordDTO.builder()
+	                .houseId(house.getId())
+	                .userId(user.getId())
+	                .deal("確認付款中")
+	                .cashFlow(cashFlow)
+	                .platformIncome(platformIncome)
+	                .createdAt(createdAt)
+	                .build();
+		}
+		return createTransactionRecord(house, user, cashFlow, platformIncome);
+    }
+    
     // 設置票券
     private TicketDTO createTicket(House house, User user, TransactionRecord transactionRecord, Timestamp start,
             Timestamp end, Integer people) {

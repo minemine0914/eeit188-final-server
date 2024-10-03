@@ -27,6 +27,9 @@ public class PaymentDTO {
     private String totalAmount;
     private String tradeDesc;
     private String itemName;
+    
+    // 自訂建立日期 建立假資料用
+    private Timestamp createdAt;
 
     // Create Params
     private UUID houseId;
