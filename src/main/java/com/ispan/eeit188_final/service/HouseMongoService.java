@@ -91,9 +91,11 @@ public class HouseMongoService {
 	// 所有house的ID和平均分數
 	public Page<Map<String, Object>> getAverageScoreGroupedByHouse(HouseMongoDTO houseMongoDTO) {
 		if (houseMongoDTO != null) {
+			System.out.println(System.currentTimeMillis()+"++++++++++++++++++++++SERVICE START++++++++++++++++++"+System.currentTimeMillis()%100000);
 			// 1. 先過濾掉 score 為 0 的資料
 			MatchOperation excludeZeroScores = Aggregation.match(Criteria.where("score").gt(0));
 
+			System.out.println(System.currentTimeMillis()+"+++++++++++++++++++22222222222222222+++++++++++++++++"+System.currentTimeMillis()%100000);
 			// 2. 分組計算平均分數和總評分數量
 			GroupOperation groupByHouse = Aggregation.group("houseId")
 					.avg("score").as("averageScore")
@@ -103,6 +105,7 @@ public class HouseMongoService {
 					? Math.min(Math.max(houseMongoDTO.getRandomFactor(), 0), 100)
 					: 0;
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++++++33333333333333333++++++++++++++++"+System.currentTimeMillis()%100000);
 			// 3. 投影來重新命名 houseId 並應用隨機係數
 			ProjectionOperation project = Aggregation.project()
 					.and("_id").as("houseId")
@@ -111,13 +114,16 @@ public class HouseMongoService {
 					.andExpression("averageScore + (rand() * " + randomFactor + ")").as("averageScoreModified")
 					.andExclude("_id");
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++444444444444444++++++++++++++++++"+System.currentTimeMillis()%100000);
 			// 4. 組合聚合查詢管道
 			Aggregation aggregation = Aggregation.newAggregation(excludeZeroScores, groupByHouse, project);
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++5555555555555555++++++++++++++"+System.currentTimeMillis()%100000);
 			// 5. 執行聚合查詢
 			AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, HouseMongo.class, Map.class);
 			List<Map> mappedResults = results.getMappedResults();
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++6666666666666666++++++++++++++"+System.currentTimeMillis()%100000);
 			// 6. 取得所有房屋ID，進行批量查詢房屋詳情
 			List<UUID> houseIds = mappedResults.stream()
 					.map(result -> (UUID) result.get("houseId"))
@@ -125,10 +131,12 @@ public class HouseMongoService {
 
 			List<House> houses = houseRepository.findAllById(houseIds);
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++7777777777777++++++++++++++"+System.currentTimeMillis()%100000);
 			// 7. 將房屋詳情轉換為快速查找的Map
 			Map<UUID, House> houseMap = houses.stream()
 					.collect(Collectors.toMap(House::getId, house -> house));
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++888888888888888++++++++++++++"+System.currentTimeMillis()%100000);
 			// 8. 準備結果集，並過濾和組合結果
 			List<Map<String, Object>> output = new ArrayList<>();
 			for (Map<String, Object> result : mappedResults) {
@@ -148,11 +156,13 @@ public class HouseMongoService {
 				output.add(outputMap);
 			}
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++999999999999999++++++++++++++"+System.currentTimeMillis()%100000);
 			// 9. 處理分頁
 			long total = output.size();
 			Integer page = houseMongoDTO.getPage() != null ? houseMongoDTO.getPage() : PAGEABLE_DEFAULT_PAGE;
 			Integer size = houseMongoDTO.getLimit() != null ? houseMongoDTO.getLimit() : PAGEABLE_DEFAULT_LIMIT;
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++TTTTTTTTTTTTTTTTTTTT++++++++++++++"+System.currentTimeMillis()%100000);
 			// 10. 處理排序和分頁
 			boolean sortDirection = houseMongoDTO.getDir() != null ? houseMongoDTO.getDir() : false;
 			String sortField = houseMongoDTO.getOrder() != null && houseMongoDTO.getOrder().length() != 0
@@ -177,6 +187,7 @@ public class HouseMongoService {
 					.limit(size)
 					.collect(Collectors.toList());
 
+			System.out.println(System.currentTimeMillis()+"++++++++++++++SERVICE END++++++++++++++"+System.currentTimeMillis()%100000);
 			// 11. 返回分頁結果
 			return new PageImpl<>(sortedResults, PageRequest.of(page, size), total);
 		}

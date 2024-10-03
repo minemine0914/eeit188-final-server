@@ -268,6 +268,7 @@ public class HouseService {
     // 條件查詢 (包含分數)
     @SuppressWarnings("rawtypes")
     public Page<Map<String, Object>> findWithScores(HouseDTO houseDTO) {
+    	System.out.println(System.currentTimeMillis()+"***************SERVICE START*********");
         // 1. 頁數、限制和排序參數
         Integer page = Optional.ofNullable(houseDTO.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
         Integer limit = Optional.ofNullable(houseDTO.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
@@ -277,10 +278,12 @@ public class HouseService {
         // 是否有排序條件
         Sort sort = (order != null) ? Sort.by(dir ? Sort.Direction.DESC : Sort.Direction.ASC, order) : Sort.unsorted();
 
+        System.out.println(System.currentTimeMillis()+"***************22222222222222*********"+System.currentTimeMillis()%100000);
         // 2. 查詢符合條件的 House 資料
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
         Page<House> housePage = houseRepo.findAll(HouseSpecification.filterHouses(houseDTO), pageRequest);
 
+        System.out.println(System.currentTimeMillis()+"***************333333333333*********"+System.currentTimeMillis()%100000);
         // 3. 取得所有查詢結果中的 houseId
         List<UUID> houseIds = housePage.stream()
                 .map(House::getId)
@@ -290,6 +293,7 @@ public class HouseService {
             return Page.empty();
         }
 
+        System.out.println(System.currentTimeMillis()+"***************44444444*********"+System.currentTimeMillis()%100000);
         // 4. 批量查詢 MongoDB 中這些 houseId 的 score 和評分數量，排除 score 為 0 的資料
         MatchOperation matchHouseIds = Aggregation.match(Criteria.where("houseId").in(houseIds));
         MatchOperation excludeZeroScores = Aggregation.match(Criteria.where("score").gt(0)); // 排除 score 為 0 的資料
@@ -302,6 +306,7 @@ public class HouseService {
         AggregationResults<Map> mongoResults = mongoTemplate.aggregate(aggregation, HouseMongo.class,
                 Map.class);
 
+        System.out.println(System.currentTimeMillis()+"***************55555555555555*********"+System.currentTimeMillis()%100000);
         // 5. 將 MongoDB 的結果轉換為 Map，方便後續查詢
         Map<UUID, Map<String, Object>> houseScores = mongoResults.getMappedResults().stream()
                 .collect(Collectors.toMap(
@@ -314,6 +319,7 @@ public class HouseService {
                             return scoreData;
                         }));
 
+        System.out.println(System.currentTimeMillis()+"***************666666666666*********"+System.currentTimeMillis()%100000);
         // 6. 合併 House 資料和 MongoDB 中的 Score
         List<Map<String, Object>> resultList = new ArrayList<>();
         for (House house : housePage.getContent()) {
@@ -332,6 +338,7 @@ public class HouseService {
             resultList.add(resultMap);
         }
 
+        System.out.println(System.currentTimeMillis()+"***************SERVICE END*********"+System.currentTimeMillis()%100000);
         // 7. 返回合併後的分頁結果
         return new PageImpl<>(resultList, pageRequest, housePage.getTotalElements());
     }
