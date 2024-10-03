@@ -455,7 +455,30 @@ public class HouseMongoService {
 	}
 
 	public HouseMongo update(HouseMongo houseMongo) {
-		return houseMongoRepository.save(houseMongo);
+		if (houseMongo != null && houseMongo.getUserId() != null && houseMongo.getHouseId() != null) {
+			HouseMongo dbData = findByUserIdAndHouseId(houseMongo.getUserId(), houseMongo.getHouseId());
+			if (dbData != null) {
+				if (!dbData.getClicked() && houseMongo.getClicked() != null && houseMongo.getClicked()) {
+					dbData.setClicked(houseMongo.getClicked());
+					dbData.setClickDate(new Date());
+				}
+				if (!dbData.getLiked() && houseMongo.getLiked() != null && houseMongo.getLiked()) {
+					dbData.setLiked(houseMongo.getLiked());
+					dbData.setLikeDate(new Date());
+				}
+				if (!dbData.getShared() && houseMongo.getShared() != null && houseMongo.getShared()) {
+					dbData.setShared(houseMongo.getShared());
+					dbData.setShareDate(new Date());
+				}
+				if (dbData.getScore() == 0 && houseMongo.getScore() != null) {
+					dbData.setScore(houseMongo.getScore());
+					dbData.setScoreDate(new Date());
+				}
+				return dbData;
+			}
+			return houseMongoRepository.save(houseMongo);
+		}
+		return null;
 	}
 
 	public void deleteById(UUID id) {
