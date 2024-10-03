@@ -273,7 +273,7 @@ public class HouseMongoService {
 	// Method to get total reviews, average score, and score counts from 1 to 5
 	public Map<String, Object> getScoreDetail(UUID houseId) {
 		// 匹配特定的 houseId
-		MatchOperation matchHouseId = Aggregation.match(Criteria.where("houseId").is(houseId));
+		MatchOperation matchHouseId = Aggregation.match(Criteria.where("houseId").is(houseId).and("score").ne(0));
 
 		// 根據 houseId 分組，以獲取總評價數量、平均分數和分數範圍的統計
 		GroupOperation groupByHouse = Aggregation.group("houseId")
