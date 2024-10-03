@@ -15,16 +15,16 @@ import com.ispan.eeit188_final.model.House;
 
 public interface HouseRepository extends JpaRepository<House, UUID>, JpaSpecificationExecutor<House> {
 
-    @NonNull
-    @EntityGraph(attributePaths = {"priceRanges", "postulates", "transactionRecords", "tickets", "userCollections"})
-    Page<House> findAll(@NonNull Specification<House> spec, @NonNull Pageable pageable);
+    // @NonNull
+    // @EntityGraph(attributePaths = {"priceRanges", "postulates", "userCollections"})
+    // Page<House> findAll(@NonNull Specification<House> spec, @NonNull Pageable pageable);
 
-    @NonNull
-    @EntityGraph(attributePaths = {"priceRanges", "postulates", "transactionRecords", "tickets", "discusses", "userCollections"})
-    Page<House> findAll(@NonNull Pageable pageable); 
+    // @NonNull
+    // @EntityGraph(attributePaths = {"priceRanges", "postulates", "userCollections"})
+    // Page<House> findAll(@NonNull Pageable pageable); 
 
-    @NonNull
-    @EntityGraph(attributePaths = {"priceRanges", "postulates", "transactionRecords", "tickets", "userCollections"})
-    List<House> findAllById(@NonNull Iterable<UUID> ids);
+    // @NonNull
+    // @EntityGraph(attributePaths = {"priceRanges", "postulates", "userCollections"})
+    // List<House> findAllById(@NonNull Iterable<UUID> ids);
 
 }
