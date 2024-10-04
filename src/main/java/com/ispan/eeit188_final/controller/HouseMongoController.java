@@ -80,6 +80,12 @@ public class HouseMongoController {
 		return houseMongoService.update(houseMongo);
 	}
 
+	// 修改，傳入true/評分分數才改成true/評分，原本已經是true或原本有評分則不改動
+	@PutMapping("/set-true")
+	public HouseMongo setNewTrue(@RequestBody HouseMongo houseMongo) {
+		return houseMongoService.setNewTrue(houseMongo);
+	}
+
 	// 刪除
 	@DeleteMapping("/{id}")
 	public void deleteById(@PathVariable UUID id) {
