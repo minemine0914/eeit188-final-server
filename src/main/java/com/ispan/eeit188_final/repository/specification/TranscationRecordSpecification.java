@@ -6,16 +6,34 @@ import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.ispan.eeit188_final.dto.TranscationRecordDTO;
-import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.TransactionRecord;
 
 public class TranscationRecordSpecification {
 
+    // 根據 TransactionRecordId 查詢
+    public static Specification<TransactionRecord> filterById(UUID id) {
+        return (root, query, criteriaBuilder) -> {
+            if (id != null) {
+                return criteriaBuilder.equal(root.get("id"), id);
+            }
+            return null;
+        };
+    }
     // 根據 houseId 查詢
     public static Specification<TransactionRecord> filterByHouseId(UUID houseId) {
         return (root, query, criteriaBuilder) -> {
             if (houseId != null) {
                 return criteriaBuilder.equal(root.get("house").get("id"), houseId);
+            }
+            return null;
+        };
+    }
+
+    // 根據 houseName 查詢
+    public static Specification<TransactionRecord> filterByHouseName(String houseName) {
+        return (root, query, criteriaBuilder) -> {
+            if (houseName != null) {
+                return criteriaBuilder.like(root.get("house").get("name"), "%" + houseName + "%");
             }
             return null;
         };
@@ -75,14 +93,28 @@ public class TranscationRecordSpecification {
             }
         };
     }
+
+    // 根據房東ID
+    private static Specification<TransactionRecord> filterByHouseUserId(UUID hostId) {
+        return (root, query, criteriaBuilder) -> 
+            criteriaBuilder.equal(root.get("house").get("user").get("id"), hostId);
+    }
     
     // 組合多條件查詢
     public static Specification<TransactionRecord> filterTranscationRecords(TranscationRecordDTO dto) {
         Specification<TransactionRecord> spec = Specification.where(null);
 
+        // 添加 TransactionRecordId 查詢條件
+        if (dto.getId() != null) {
+            spec = spec.and(filterById(dto.getId()));
+        }
         // 添加 houseId 查詢條件
         if (dto.getHouseId() != null) {
             spec = spec.and(filterByHouseId(dto.getHouseId()));
+        }
+        // 添加 houseName 查詢條件
+        if (dto.getHouseName() != null) {
+            spec = spec.and(filterByHouseName(dto.getHouseName()));
         }
 
         // 添加 userId 查詢條件
@@ -108,6 +140,11 @@ public class TranscationRecordSpecification {
         // 添加 CreatedAt 範圍查詢條件
         if (dto.getMinCreatedAt() != null||dto.getMaxCreatedAt() != null) {
             spec = spec.and(hasCreatedAtBetween(dto.getMinCreatedAt(),dto.getMaxCreatedAt()));
+        }
+
+        // 添加 house 的 userId 查詢條件
+        if (dto.getHostId() != null) {
+            spec = spec.and(filterByHouseUserId(dto.getHostId()));
         }
         
         return spec;
