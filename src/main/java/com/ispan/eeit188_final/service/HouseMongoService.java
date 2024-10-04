@@ -455,6 +455,10 @@ public class HouseMongoService {
 	}
 
 	public HouseMongo update(HouseMongo houseMongo) {
+		return houseMongoRepository.save(houseMongo);
+	}
+
+	public HouseMongo setNewTrue(HouseMongo houseMongo) {
 		if (houseMongo != null && houseMongo.getUserId() != null && houseMongo.getHouseId() != null) {
 			HouseMongo dbData = findByUserIdAndHouseId(houseMongo.getUserId(), houseMongo.getHouseId());
 			if (dbData != null) {
@@ -474,13 +478,13 @@ public class HouseMongoService {
 					dbData.setScore(houseMongo.getScore());
 					dbData.setScoreDate(new Date());
 				}
-				return dbData;
+				return houseMongoRepository.save(dbData);
 			}
 			return houseMongoRepository.save(houseMongo);
 		}
 		return null;
 	}
-
+	
 	public void deleteById(UUID id) {
 		houseMongoRepository.deleteById(id);
 	}
