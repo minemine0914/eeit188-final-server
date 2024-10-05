@@ -1,30 +1,24 @@
 package com.ispan.eeit188_final.repository;
 
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.lang.NonNull;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.ispan.eeit188_final.model.House;
 
 public interface HouseRepository extends JpaRepository<House, UUID>, JpaSpecificationExecutor<House> {
 
-    // @NonNull
-    // @EntityGraph(attributePaths = {"priceRanges", "postulates", "userCollections"})
-    // Page<House> findAll(@NonNull Specification<House> spec, @NonNull Pageable pageable);
-
-    // @NonNull
-    // @EntityGraph(attributePaths = {"priceRanges", "postulates", "userCollections"})
-    // Page<House> findAll(@NonNull Pageable pageable); 
-
-    // @NonNull
-    // @EntityGraph(attributePaths = {"priceRanges", "postulates", "userCollections"})
-    // List<House> findAllById(@NonNull Iterable<UUID> ids);
+    @Query("SELECT COUNT(h), " +
+            "COUNT(CASE WHEN h.review IS NULL THEN 1 END), " +
+            "COUNT(CASE WHEN h.review = false THEN 1 END), " +
+            "COUNT(CASE WHEN h.review = true THEN 1 END), " +
+            "COUNT(CASE WHEN h.show = true THEN 1 END), " +
+            "COUNT(CASE WHEN h.show = false THEN 1 END) " +
+            "FROM House h WHERE h.user.id = :userId")
+    Object[] getHouseStatisticsByUserId(@Param("userId") UUID userId);
 
 }

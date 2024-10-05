@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @CrossOrigin
 @RestController
@@ -125,5 +127,11 @@ public class HouseController {
     public Page<Map<String, Object>> searchWithScore(@RequestBody HouseDTO houseDTO) {
         return houseService.findWithScores(houseDTO);
     }
+
+    @GetMapping("/host-review-detail/{hostId}")
+    public Map<String, Long> getMethodName(@PathVariable UUID hostId) {
+        return houseService.getHouseStatisticsByUserId(hostId);
+    }
+    
 
 }
