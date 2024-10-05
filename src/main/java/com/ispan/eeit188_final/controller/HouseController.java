@@ -128,7 +128,7 @@ public class HouseController {
         return houseService.findWithScores(houseDTO);
     }
 
-    @GetMapping("/host-review-detail/{hostId}")
+    @GetMapping("/host-count-detail/{hostId}")
     public Map<String, Long> getMethodName(@PathVariable UUID hostId) {
         return houseService.getHouseStatisticsByUserId(hostId);
     }
