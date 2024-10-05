@@ -2,6 +2,7 @@ package com.ispan.eeit188_final.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ispan.eeit188_final.dto.DiscussDTO;
+import com.ispan.eeit188_final.dto.HouseMongoDTO;
 import com.ispan.eeit188_final.model.Discuss;
 import com.ispan.eeit188_final.model.House;
 import com.ispan.eeit188_final.model.HouseExternalResource;
@@ -86,17 +87,11 @@ public class DiscussService {
 
         // 如果DTO有夾帶分數儲存分數
         if (discussDTO.getScore() != null) {
-            HouseMongo findHouseMongo = houseMongoService.findByUserIdAndHouseId(user.getId(), house.getId());
-            if (findHouseMongo != null) {
-                findHouseMongo.setScore(discussDTO.getScore());
-                houseMongoService.update(findHouseMongo);
-            } else {
-                houseMongoService.create(HouseMongo.builder()
-                        .houseId(house.getId())
-                        .userId(user.getId())
-                        .score(discussDTO.getScore())
-                        .build());
-            }
+            houseMongoService.rateHouse(HouseMongoDTO.builder()
+                    .houseId(discussDTO.getHouseId())
+                    .userId(discussDTO.getUserId())
+                    .score(discussDTO.getScore())
+                    .build());
         }
 
         // 確認是否為討論板內回覆

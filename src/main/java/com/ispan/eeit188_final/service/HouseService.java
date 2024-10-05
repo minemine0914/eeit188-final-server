@@ -1,5 +1,7 @@
 package com.ispan.eeit188_final.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,6 +40,9 @@ import com.ispan.eeit188_final.repository.specification.HouseSpecification;
 
 @Service
 public class HouseService {
+    // 使用 logger
+    private static final Logger logger = LoggerFactory.getLogger(HouseService.class);
+
     // 預設值
     private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
     private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
@@ -268,6 +273,7 @@ public class HouseService {
     // 條件查詢 (包含分數)
     @SuppressWarnings("rawtypes")
     public Page<Map<String, Object>> findWithScores(HouseDTO houseDTO) {
+        System.out.println(System.currentTimeMillis() + "***************SERVICE START*********");
         // 1. 頁數、限制和排序參數
         Integer page = Optional.ofNullable(houseDTO.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
         Integer limit = Optional.ofNullable(houseDTO.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
@@ -277,10 +283,14 @@ public class HouseService {
         // 是否有排序條件
         Sort sort = (order != null) ? Sort.by(dir ? Sort.Direction.DESC : Sort.Direction.ASC, order) : Sort.unsorted();
 
+        System.out.println(System.currentTimeMillis() + "***************22222222222222*********"
+                + System.currentTimeMillis() % 100000);
         // 2. 查詢符合條件的 House 資料
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
         Page<House> housePage = houseRepo.findAll(HouseSpecification.filterHouses(houseDTO), pageRequest);
 
+        System.out.println(System.currentTimeMillis() + "***************333333333333*********"
+                + System.currentTimeMillis() % 100000);
         // 3. 取得所有查詢結果中的 houseId
         List<UUID> houseIds = housePage.stream()
                 .map(House::getId)
@@ -290,6 +300,8 @@ public class HouseService {
             return Page.empty();
         }
 
+        System.out.println(
+                System.currentTimeMillis() + "***************44444444*********" + System.currentTimeMillis() % 100000);
         // 4. 批量查詢 MongoDB 中這些 houseId 的 score 和評分數量，排除 score 為 0 的資料
         MatchOperation matchHouseIds = Aggregation.match(Criteria.where("houseId").in(houseIds));
         MatchOperation excludeZeroScores = Aggregation.match(Criteria.where("score").gt(0)); // 排除 score 為 0 的資料
@@ -302,6 +314,8 @@ public class HouseService {
         AggregationResults<Map> mongoResults = mongoTemplate.aggregate(aggregation, HouseMongo.class,
                 Map.class);
 
+        System.out.println(System.currentTimeMillis() + "***************55555555555555*********"
+                + System.currentTimeMillis() % 100000);
         // 5. 將 MongoDB 的結果轉換為 Map，方便後續查詢
         Map<UUID, Map<String, Object>> houseScores = mongoResults.getMappedResults().stream()
                 .collect(Collectors.toMap(
@@ -314,6 +328,8 @@ public class HouseService {
                             return scoreData;
                         }));
 
+        System.out.println(System.currentTimeMillis() + "***************666666666666*********"
+                + System.currentTimeMillis() % 100000);
         // 6. 合併 House 資料和 MongoDB 中的 Score
         List<Map<String, Object>> resultList = new ArrayList<>();
         for (House house : housePage.getContent()) {
@@ -332,8 +348,67 @@ public class HouseService {
             resultList.add(resultMap);
         }
 
+        System.out.println(System.currentTimeMillis() + "***************SERVICE END*********"
+                + System.currentTimeMillis() % 100000);
         // 7. 返回合併後的分頁結果
         return new PageImpl<>(resultList, pageRequest, housePage.getTotalElements());
+    }
+
+    /**
+     * 根據 userId，計算該使用者所有房源的總數、審核狀態和上架狀態
+     * @param userId User 的 UUID
+     * @return 包含統計結果的 Map
+     */
+    public Map<String, Long> getHouseStatisticsByUserId(UUID userId) {
+        Map<String, Long> statistics = new HashMap<>();
+        try {
+            Object[] results = houseRepo.getHouseStatisticsByUserId(userId);
+            
+            if (results == null || results.length == 0) {
+                logger.warn("No results returned for user ID: {}", userId);
+                return statistics;
+            }
+
+            if (results.length == 1 && results[0] instanceof Object[]) {
+                // If the result is a nested array, use the nested array
+                results = (Object[]) results[0];
+            }
+
+            String[] keys = {"totalHouses", "reviewNull", "reviewFalse", "reviewTrue", "showTrue", "showFalse"};
+            
+            for (int i = 0; i < keys.length; i++) {
+                if (i < results.length) {
+                    statistics.put(keys[i], convertToLong(results[i]));
+                } else {
+                    statistics.put(keys[i], 0L);
+                    logger.warn("Missing data for '{}' for user ID: {}", keys[i], userId);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error occurred while fetching house statistics for user ID: {}", userId, e);
+        }
+        return statistics;
+    }
+
+    private Long convertToLong(Object value) {
+        if (value == null) {
+            return 0L;
+        }
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+        if (value instanceof Object[]) {
+            Object[] array = (Object[]) value;
+            if (array.length > 0) {
+                return convertToLong(array[0]);
+            }
+        }
+        try {
+            return Long.parseLong(value.toString());
+        } catch (NumberFormatException e) {
+            logger.warn("Failed to convert value to Long: {}", value);
+            return 0L;
+        }
     }
 
 }

@@ -27,6 +27,11 @@ public class TranscationRecordDTO {
     // 範圍查詢的上下界
     private Timestamp minCreatedAt;
     private Timestamp maxCreatedAt;
+
+    // 以房東ID查詢
+    private UUID hostId;
+    private String houseName;
+
     // 用於 分頁、排序
     private Integer page;
     private Integer limit;

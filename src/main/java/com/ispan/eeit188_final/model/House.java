@@ -195,7 +195,8 @@ public class House {
     // 與 Discuss 的關聯
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonIgnoreProperties({"user", "house", "discusses", "discussExternalResources"})
+    // @JsonIgnoreProperties({"user", "house", "discusses", "discussExternalResources"})
+    @JsonIgnore
     private Set<Discuss> discusses = new HashSet<>();
 
     // 自訂序列化 userId

@@ -1,17 +1,15 @@
 package com.ispan.eeit188_final.model;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -105,6 +103,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
 
     // 關聯 TransactionRecord
@@ -120,6 +119,8 @@ public class User {
     // 關聯 房源
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonIgnoreProperties({"user", "houses", "discusses", "discussExternalResources"})
+//    @JsonIgnore
     private Set<House> houses = new HashSet<>();
 
     @OneToMany(mappedBy = "userCollectionId.user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
