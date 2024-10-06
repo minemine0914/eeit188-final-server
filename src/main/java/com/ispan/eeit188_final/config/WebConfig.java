@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/user/find/**",
                         "/user/find-users",
                         "/user/find-hosts",
+                        "/user/find-condition",
                         "/user/login",
                         "/user/system/login",
                         "/user/forgot-password",
