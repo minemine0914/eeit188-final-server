@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ispan.eeit188_final.model.Ticket;
 import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.service.UserService;
 
@@ -159,5 +162,11 @@ public class UserController {
     public ResponseEntity<String> removeBackgroundImage(@PathVariable UUID id) {
 
         return userService.deleteBackgroundImage(id);
+    }
+
+    @PostMapping(value = "/find-condition", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> findBySpecification(@RequestBody String json){
+    	ResponseEntity<String> users = userService.findBySpecification(json);
+    	return users;
     }
 }

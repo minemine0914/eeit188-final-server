@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +31,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ispan.eeit188_final.model.Ticket;
 import com.ispan.eeit188_final.model.User;
 import com.ispan.eeit188_final.repository.UserRepository;
+import com.ispan.eeit188_final.repository.specification.TicketSpecification;
+import com.ispan.eeit188_final.repository.specification.UserSpecification;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -770,5 +775,64 @@ public class UserService {
 
     public List<User> findAllHost() {
         return userRepository.findAllHost();
+    }
+
+    public ResponseEntity<String> findBySpecification(String json) {
+        Integer defalutPageNum = 0;
+        Integer defaultPageSize = 10;
+
+        JSONObject obj = new JSONObject(json);
+        Integer pageNum = obj.isNull("pageNum") ? defalutPageNum : obj.getInt("pageNum");
+        Integer pageSize = obj.isNull("pageSize") || obj.getInt("pageSize") == 0 ? defaultPageSize
+                : obj.getInt("pageSize");
+        Boolean desc = obj.isNull("desc") ? false : obj.getBoolean("desc");
+        String orderBy = obj.isNull("orderBy") || obj.getString("orderBy").length() == 0 ? "id"
+                : obj.getString("orderBy");
+
+        PageRequest pageRequest;
+        if (orderBy != null) {
+            pageRequest = PageRequest.of(pageNum, pageSize, desc ? Direction.ASC : Direction.DESC, orderBy);
+        } else {
+            pageRequest = PageRequest.of(pageNum, pageSize);
+        }
+
+        Specification<User> spec = Specification.where(UserSpecification.filterUsers(json));
+        Page<User> users = userRepository.findAll(spec, pageRequest);
+
+        JSONArray usersArray = new JSONArray();
+
+        for (User user : users.getContent()) {
+            JSONObject resultObj = new JSONObject()
+                    .put("id", user.getId())
+                    .put("name", user.getName())
+                    .put("role", user.getRole())
+                    .put("gender", user.getGender())
+                    .put("birthday", user.getBirthday())
+                    .put("phone", user.getPhone())
+                    .put("mobilePhone", user.getMobilePhone())
+                    .put("address", user.getAddress())
+                    .put("email", user.getEmail())
+                    .put("about", user.getAbout())
+                    .put("createdAt", user.getCreatedAt())
+                    .put("updatedAt", user.getUpdatedAt())
+                    .put("avatarBase64", user.getAvatarBase64())
+                    .put("houseCount", user.getHouses().size());
+
+            usersArray.put(resultObj);
+        }
+
+        JSONObject response = new JSONObject()
+                .put("users", usersArray)
+                .put("totalElements", users.getTotalElements())
+                .put("totalPages", users.getTotalPages())
+                .put("numberOfElements", users.getNumberOfElements())
+                .put("size", users.getSize())
+                .put("number", users.getNumber())
+                .put("empty", users.isEmpty())
+                .put("first", users.getNumber() == 0)
+                .put("last", users.getTotalPages() == users.getNumber() + 1);
+
+        return ResponseEntity.ok(response.toString());
+
     }
 }

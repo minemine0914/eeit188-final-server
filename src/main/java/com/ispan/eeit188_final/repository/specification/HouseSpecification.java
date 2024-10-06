@@ -28,6 +28,15 @@ public class HouseSpecification {
             return cb.like(root.get("name"), "%" + name + "%"); // 使用 % 符號進行模糊搜尋
         };
     }
+    // 房源名稱
+    public static Specification<House> hasUserName(String name) {
+        return (root, query, cb) -> {
+            if (name == null || name.isEmpty()) {
+                return cb.conjunction(); // 如果 name 為 null 或空字串，返回無條件過濾
+            }
+            return cb.like(root.get("user").get("name"), "%" + name + "%"); // 使用 % 符號進行模糊搜尋
+        };
+    }
 
     // 類型
     public static Specification<House> hasCategory(String category) {
@@ -221,6 +230,7 @@ public class HouseSpecification {
         Specification<House> spec = Specification.where(null);
         // 房源基本資料
         spec = addIfNotNull(spec, dto.getName(), HouseSpecification::hasName);
+        spec = addIfNotNull(spec, dto.getUserName(), HouseSpecification::hasUserName);
         spec = addIfNotNull(spec, dto.getCategory(), HouseSpecification::hasCategory);
         spec = addIfNotNull(spec, dto.getCountry(), HouseSpecification::hasCountry);
         spec = addIfNotNull(spec, dto.getCity(), HouseSpecification::hasCity);

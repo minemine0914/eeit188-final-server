@@ -57,6 +57,7 @@ public class HouseDTO {
     private UUID postulateId;
     private List<UUID> postulateIds;
     private Boolean matchAllPostulates;
+    private String userName;
     // 用於 分頁、排序
     private Integer page;
     private Integer limit;

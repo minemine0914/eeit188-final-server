@@ -1,6 +1,7 @@
 package com.ispan.eeit188_final.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import com.ispan.eeit188_final.model.User;
@@ -8,7 +9,7 @@ import com.ispan.eeit188_final.model.User;
 import java.util.List;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificationExecutor<User>  {
 
     User findByEmail(String email);
 
