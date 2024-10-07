@@ -14,6 +14,7 @@ import com.ispan.eeit188_final.model.Postulate;
 import com.ispan.eeit188_final.model.User;
 
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
@@ -28,6 +29,7 @@ public class HouseSpecification {
             return cb.like(root.get("name"), "%" + name + "%"); // 使用 % 符號進行模糊搜尋
         };
     }
+
     // 房源名稱
     public static Specification<House> hasUserName(String name) {
         return (root, query, cb) -> {
@@ -198,9 +200,10 @@ public class HouseSpecification {
     public static Specification<House> hasPostulateIds(List<UUID> postulateIds) {
         return (root, query, cb) -> {
             if (postulateIds == null || postulateIds.isEmpty()) {
-                return cb.conjunction(); // 如果沒有提供 ID 列表，返回一個總是為真的條件
+                return cb.conjunction();
             }
-            Join<House, Postulate> postulatesJoin = root.join("postulates");
+            query.distinct(true);
+            Join<House, Postulate> postulatesJoin = root.join("postulates", JoinType.LEFT);
             return postulatesJoin.get("id").in(postulateIds);
         };
     }
