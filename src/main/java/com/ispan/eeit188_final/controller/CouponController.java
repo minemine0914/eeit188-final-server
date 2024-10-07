@@ -85,13 +85,13 @@ public class CouponController {
     }
 
     /** 查詢折扣比率優惠券 */
-    @PostMapping("/search/discount-rate")
+    @PostMapping("/search-discount-rate")
     public Page<Coupon> findDiscountRate(@RequestBody CouponDTO dto) {
         return couponService.findAllDiscountRate(dto);
     }
 
     /** 查詢折扣比率優惠券 */
-    @PostMapping("/search/discount")
+    @PostMapping("/search-discount")
     public Page<Coupon> findAllDiscount(@RequestBody CouponDTO dto) {
         return couponService.findAllDiscount(dto);
     }
