@@ -99,6 +99,16 @@ public class CouponSpecification {
         };
     }
 
+    // 查詢 discountRate 為 NULL 的條件
+    public static Specification<Coupon> hasDiscountRateIsNull() {
+        return (root, query, cb) -> cb.isNull(root.get("discountRate"));
+    }
+
+    // 查詢 discount 為 NULL 的條件
+    public static Specification<Coupon> hasDiscountIsNull() {
+        return (root, query, cb) -> cb.isNull(root.get("discount"));
+    }
+
     // 組合多條件查詢
     public static Specification<Coupon> filterCoupon(CouponDTO dto) {
         Specification<Coupon> spec = Specification.where(null);
@@ -140,6 +150,16 @@ public class CouponSpecification {
         // 添加是否過期查詢條件
         if (dto.getIsExpired() != null) {
             spec = spec.and(filterByExpirationStatus(dto.getIsExpired()));
+        }
+
+        // 
+        if (dto.getIsDiscountRateNull() != null) {
+            spec = spec.and(hasDiscountRateIsNull());
+        }
+
+        // 
+        if (dto.getIsDiscountNull() != null) {
+            spec = spec.and(hasDiscountIsNull());
         }
 
         return spec;

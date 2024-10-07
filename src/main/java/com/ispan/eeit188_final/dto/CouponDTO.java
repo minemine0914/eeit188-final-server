@@ -31,6 +31,8 @@ public class CouponDTO {
     private String name;
     // search
     private Boolean isExpired;
+    private Boolean isDiscountRateNull;
+    private Boolean isDiscountNull;
     // 用於 分頁、排序
     private Integer page;
     private Integer limit;

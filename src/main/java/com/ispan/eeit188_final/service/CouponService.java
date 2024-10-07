@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class CouponService {
 
     // 預設值
     private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
-    private static final Integer PAGEABLE_DEFAULT_LIMIT = 100;
+    private static final Integer PAGEABLE_DEFAULT_LIMIT = 10;
 
     @Autowired
     private CouponRepository couponRepo;
@@ -111,52 +112,6 @@ public class CouponService {
         // 是否排序
         Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
         return couponRepo.findAll(CouponSpecification.filterCoupon(dto), PageRequest.of(page, limit, sort));
-    }
-
-    public Page<Coupon> findAllDiscountRate(CouponDTO dto) {
-        // 頁數 限制 排序
-        Integer page = Optional.ofNullable(dto.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
-        Integer limit = Optional.ofNullable(dto.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
-        Boolean dir = Optional.ofNullable(dto.getDir()).orElse(false);
-        String order = Optional.ofNullable(dto.getOrder()).orElse(null);
-        // 是否排序
-        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
-        return couponRepo.findByDiscountIsNull(PageRequest.of(page, limit, sort));
-    }
-
-    public Page<Coupon> findAllDiscount(CouponDTO dto) {
-        // 頁數 限制 排序
-        Integer page = Optional.ofNullable(dto.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
-        Integer limit = Optional.ofNullable(dto.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
-        Boolean dir = Optional.ofNullable(dto.getDir()).orElse(false);
-        String order = Optional.ofNullable(dto.getOrder()).orElse(null);
-        // 是否排序
-        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
-        return couponRepo.findByDiscountRateIsNull(PageRequest.of(page, limit, sort));
-    }
-
-    public Page<Coupon> findDiscountRate(CouponDTO dto) {
-        // 頁數 限制 排序
-        Integer page = Optional.ofNullable(dto.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
-        Integer limit = Optional.ofNullable(dto.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
-        Boolean dir = Optional.ofNullable(dto.getDir()).orElse(false);
-        String order = Optional.ofNullable(dto.getOrder()).orElse(null);
-        // 是否排序
-        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
-        return couponRepo.findByDiscountIsNull(CouponSpecification.filterCoupon(dto),
-                PageRequest.of(page, limit, sort));
-    }
-
-    public Page<Coupon> findDiscount(CouponDTO dto) {
-        // 頁數 限制 排序
-        Integer page = Optional.ofNullable(dto.getPage()).orElse(PAGEABLE_DEFAULT_PAGE);
-        Integer limit = Optional.ofNullable(dto.getLimit()).orElse(PAGEABLE_DEFAULT_LIMIT);
-        Boolean dir = Optional.ofNullable(dto.getDir()).orElse(false);
-        String order = Optional.ofNullable(dto.getOrder()).orElse(null);
-        // 是否排序
-        Sort sort = (order != null) ? Sort.by(dir ? Direction.DESC : Direction.ASC, order) : Sort.unsorted();
-        return couponRepo.findByDiscountRateIsNull(CouponSpecification.filterCoupon(dto),
-                PageRequest.of(page, limit, sort));
     }
 
     // 為所有使用者新增優惠券
