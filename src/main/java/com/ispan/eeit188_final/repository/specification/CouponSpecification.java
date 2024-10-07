@@ -7,19 +7,20 @@ import java.sql.Timestamp;
 import java.util.List;
 import com.ispan.eeit188_final.dto.CouponDTO;
 import com.ispan.eeit188_final.model.Coupon;
+import com.ispan.eeit188_final.model.House;
 
 import jakarta.persistence.criteria.Expression;
 
 public class CouponSpecification {
     // 根據 houseId 查詢
-    public static Specification<Coupon> filterByHouseId(UUID houseId) {
-        return (root, query, criteriaBuilder) -> {
-            if (houseId != null) {
-                return criteriaBuilder.equal(root.get("house").get("id"), houseId);
-            }
-            return null;
-        };
-    }
+    // public static Specification<Coupon> filterByHouseId(UUID houseId) {
+    //     return (root, query, criteriaBuilder) -> {
+    //         if (houseId != null) {
+    //             return criteriaBuilder.equal(root.get("house").get("id"), houseId);
+    //         }
+    //         return null;
+    //     };
+    // }
 
     // 根據 userId 查詢
     public static Specification<Coupon> filterByUserId(UUID userId) {
@@ -28,6 +29,16 @@ public class CouponSpecification {
                 return criteriaBuilder.equal(root.get("user").get("id"), userId);
             }
             return null;
+        };
+    }
+
+    // 使用者名稱
+    public static Specification<Coupon> hasUserName(String name) {
+        return (root, query, cb) -> {
+            if (name == null || name.isEmpty()) {
+                return cb.conjunction(); // 如果 name 為 null 或空字串，返回無條件過濾
+            }
+            return cb.like(root.get("user").get("name"), "%" + name + "%"); // 使用 % 符號進行模糊搜尋
         };
     }
 
@@ -61,6 +72,16 @@ public class CouponSpecification {
         };
     }
 
+    // 優惠券名稱
+    public static Specification<Coupon> hasName(String name) {
+        return (root, query, cb) -> {
+            if (name == null || name.isEmpty()) {
+                return cb.conjunction(); // 如果 name 為 null 或空字串，返回無條件過濾
+            }
+            return cb.like(root.get("name"), "%" + name + "%"); // 使用 % 符號進行模糊搜尋
+        };
+    }
+
     // 根據是否過期查詢
     public static Specification<Coupon> filterByExpirationStatus(boolean isExpired) {
         return (root, query, criteriaBuilder) -> {
@@ -90,6 +111,15 @@ public class CouponSpecification {
         // 添加 userId 查詢條件
         if (dto.getUserId() != null) {
             spec = spec.and(filterByUserId(dto.getUserId()));
+        }
+
+        // 添加 userName 查詢條件
+        if (dto.getUserName() != null) {
+            spec = spec.and(hasUserName(dto.getUserName()));
+        }
+        // 添加 name 查詢條件
+        if (dto.getName() != null) {
+            spec = spec.and(hasName(dto.getName()));
         }
 
         // 添加 discountRate 查詢條件

@@ -67,10 +67,33 @@ public class CouponController {
     public Page<Coupon> all(@ModelAttribute CouponDTO dto) {
         return couponService.findAll(dto);
     }
+    /** 查詢所有 */
+    @GetMapping("/all-discount-rate")
+    public Page<Coupon> allDiscountRate(@ModelAttribute CouponDTO dto) {
+        return couponService.findAllDiscountRate(dto);
+    }
+    /** 查詢所有 */
+    @GetMapping("/all-discount")
+    public Page<Coupon> allDiscount(@ModelAttribute CouponDTO dto) {
+        return couponService.findAllDiscount(dto);
+    }
 
     /** 條件查詢 */
     @PostMapping("/search")
     public Page<Coupon> search(@RequestBody CouponDTO dto) {
         return couponService.find(dto);
     }
+
+    /** 查詢折扣比率優惠券 */
+    @PostMapping("/search/discount-rate")
+    public Page<Coupon> findDiscountRate(@RequestBody CouponDTO dto) {
+        return couponService.findAllDiscountRate(dto);
+    }
+
+    /** 查詢折扣比率優惠券 */
+    @PostMapping("/search/discount")
+    public Page<Coupon> findAllDiscount(@RequestBody CouponDTO dto) {
+        return couponService.findAllDiscount(dto);
+    }
+
 }

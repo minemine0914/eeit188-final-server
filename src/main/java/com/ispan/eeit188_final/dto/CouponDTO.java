@@ -23,6 +23,7 @@ public class CouponDTO {
     private UUID id;
     // private UUID houseId;
     private UUID userId;
+    private String userName;
     private Double discountRate;
     private Integer discount;
     private Integer expire;

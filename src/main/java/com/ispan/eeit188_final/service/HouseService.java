@@ -87,7 +87,17 @@ public class HouseService {
                     .balcony(Optional.ofNullable(houseDTO.getBalcony()).orElse(false))
                     .show(Optional.ofNullable(houseDTO.getShow()).orElse(false))
                     .review(Optional.ofNullable(houseDTO.getReview()).orElse(null))
+                    .postulates(new HashSet<>())
                     .build();
+            // 處理附加設施
+            Optional.ofNullable(houseDTO.getPostulateIds()).ifPresent(postulateIds -> {
+                List<Postulate> postulates = postulateRepo.findAllById(postulateIds);
+                // 如果附加設施的數量和提供的 ID 數量不一致，拋出異常
+                if (postulates.size() != postulateIds.size()) {
+                    throw new IllegalArgumentException("部分設施無效，請確認傳入的設施ID是否正確。");
+                }
+                house.getPostulates().addAll(postulates);
+            });
             return houseRepo.save(house);
         }
         return null;
@@ -356,6 +366,7 @@ public class HouseService {
 
     /**
      * 根據 userId，計算該使用者所有房源的總數、審核狀態和上架狀態
+     * 
      * @param userId User 的 UUID
      * @return 包含統計結果的 Map
      */
@@ -363,7 +374,7 @@ public class HouseService {
         Map<String, Long> statistics = new HashMap<>();
         try {
             Object[] results = houseRepo.getHouseStatisticsByUserId(userId);
-            
+
             if (results == null || results.length == 0) {
                 logger.warn("No results returned for user ID: {}", userId);
                 return statistics;
@@ -374,8 +385,8 @@ public class HouseService {
                 results = (Object[]) results[0];
             }
 
-            String[] keys = {"totalHouses", "reviewNull", "reviewFalse", "reviewTrue", "showTrue", "showFalse"};
-            
+            String[] keys = { "totalHouses", "reviewNull", "reviewFalse", "reviewTrue", "showTrue", "showFalse" };
+
             for (int i = 0; i < keys.length; i++) {
                 if (i < results.length) {
                     statistics.put(keys[i], convertToLong(results[i]));
