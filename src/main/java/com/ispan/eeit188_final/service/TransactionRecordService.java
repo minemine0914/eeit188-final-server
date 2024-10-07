@@ -33,7 +33,7 @@ import com.ispan.eeit188_final.repository.specification.TranscationRecordSpecifi
 public class TransactionRecordService {
     // 預設值
     private static final Integer PAGEABLE_DEFAULT_PAGE = 0;
-    private static final Integer PAGEABLE_DEFAULT_LIMIT = 100;
+    private static final Integer PAGEABLE_DEFAULT_LIMIT = 1000;
 
     private static final Integer COMMISSION = 5; // 平台抽成比例，單位(%)
 
@@ -52,14 +52,15 @@ public class TransactionRecordService {
             Optional<House> findHouse = houseRepo.findById(dto.getHouseId());
             Optional<User> findUser = userRepo.findById(dto.getUserId());
             if (findHouse.isPresent() && findUser.isPresent()) {
-//            	System.out.println(dto.getCreatedAt());
+                // System.out.println(dto.getCreatedAt());
                 TransactionRecord create = TransactionRecord.builder()
                         .house(findHouse.get())
                         .user(findUser.get())
                         .cashFlow(dto.getCashFlow())
                         .deal(dto.getDeal())
                         .platformIncome(dto.getPlatformIncome())
-                        .createdAt(dto.getCreatedAt()!=null?dto.getCreatedAt():new Timestamp(System.currentTimeMillis()))
+                        .createdAt(dto.getCreatedAt() != null ? dto.getCreatedAt()
+                                : new Timestamp(System.currentTimeMillis()))
                         .build();
                 return transactionRecordRepo.save(create);
             }
