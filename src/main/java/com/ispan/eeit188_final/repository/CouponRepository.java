@@ -3,6 +3,7 @@ package com.ispan.eeit188_final.repository;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,5 @@ public interface CouponRepository extends JpaRepository<Coupon, UUID>, JpaSpecif
     Page<Coupon> findByDiscountIsNull(Pageable pageable);
     // 定義查詢 discountRate 為 NULL 的方法
     Page<Coupon> findByDiscountIsNull(Specification<Coupon> specification ,Pageable pageable);
+    Page<Coupon> findByDiscountIsNull(Specification<Coupon> filterCoupon, PageRequest of);
 }
